@@ -11,7 +11,7 @@ export const RegisterPage = () => {
     return (
         <div className="auth-page">
         <div className="auth-form-wrapper picto-container">
-            <h1 className="auth-form-header">Login</h1>
+            <h1 className="auth-form-header">Create an account</h1>
             <AuthInput 
                 label="Email"
                 value={email} 
@@ -33,7 +33,7 @@ export const RegisterPage = () => {
             <button
                 className="auth-page-btn"
             >
-                Login
+                Sign up
             </button>
             <span className="auth-redirect-text">Already have an account?</span>
             <Link to="/login" className="auth-redirect-link">Sign in</Link>
