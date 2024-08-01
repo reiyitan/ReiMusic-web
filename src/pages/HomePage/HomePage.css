@@ -8,12 +8,6 @@
     gap: 5px;
 }
 
-.grid-element {
-    border: solid black;
-    background-color: rgb(220, 220, 220);
-    border-width: 2px;
-}
-
 #sidebar-top {
     grid-column: 1;
     grid-row: 1;

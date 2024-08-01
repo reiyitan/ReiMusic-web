@@ -1,6 +1,6 @@
 @font-face {
-    font-family: "Pictochat";
-    src: url("assets/fonts/pictochat.ttf");
+    font-family: "Pixel";
+    src: url("assets/fonts/Px437_IBM_Model3x_Alt2.ttf");
 }
 
 * {
@@ -10,5 +10,12 @@
 }
 
 body {
-    font-family: Pictochat;
+    font-family: Pixel;
+}
+
+.picto-container {
+    border: solid black;
+    background-color: rgb(220, 220, 220);
+    border-width: 1px;
+    border-radius: 2px;
 }

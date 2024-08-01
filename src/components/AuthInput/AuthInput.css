@@ -1,0 +1,27 @@
+.auth-input-container {
+    margin-top: 10px;
+    display: grid;
+    gap: 5px;
+    grid-template-columns: repeat(8, 1fr);
+}
+
+.auth-label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    grid-column: 1 / 4;
+    margin-left: 5px;
+    font-size: 16px;
+}
+
+.auth-input {
+    grid-column: 4 / -1;
+    background-color: rgb(255, 255, 255);
+    border: solid black 1px;
+    outline: none;
+    font-family: Pixel;
+    font-size: 16px;
+    height: 20px;
+    padding: 3px;
+    margin-right: 5px;
+}
