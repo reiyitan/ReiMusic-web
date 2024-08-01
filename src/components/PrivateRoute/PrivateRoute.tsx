@@ -1,6 +1,7 @@
 import React from "react"; 
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
+import { useAuth } from "../../ContextProviders";
 import "./PrivateRoute.css";
 
 interface PrivateRouteProps {
@@ -9,9 +10,9 @@ interface PrivateRouteProps {
 }
 
 export const PrivateRoute = ({ children, redirectPath }: PrivateRouteProps) => {
-    const [isAuth, setIsAuth] = useState<boolean>(true);
+    const auth = useAuth();
 
-    if (!isAuth) {
+    if (!auth.currentUser) {
         return (
             <Navigate to={redirectPath} />
         );
