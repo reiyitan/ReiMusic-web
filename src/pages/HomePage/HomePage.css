@@ -1,0 +1,42 @@
+#homepage-wrapper {
+    padding: 5px;
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(16, 1fr);
+    gap: 5px;
+}
+
+.grid-element {
+    border: solid black;
+    background-color: rgb(220, 220, 220);
+    border-width: 2px;
+}
+
+#sidebar-top {
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 200px;
+    min-height: 50px;
+}
+
+#sidebar-bottom {
+    grid-column: 1;
+    grid-row: 2 / 15;
+    min-width: 200px;
+    min-height: 250px;
+}
+
+#song-list {
+    grid-column: 2 / -1;
+    grid-row: 1 / 15;
+    min-width: 375px;
+}
+
+#bottom-bar {
+    grid-column: 1 / -1;
+    grid-row: 15 / -1;
+    min-width: 400px;
+    min-height: 100px;
+}
