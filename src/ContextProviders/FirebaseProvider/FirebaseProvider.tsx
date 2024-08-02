@@ -36,16 +36,14 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, user => {
             if (user) {
-                setIsLoading(false);
                 navigate("/home");
             }
             else if (location.pathname !== "/login" && location.pathname !== "/register") {
-                setIsLoading(false);
                 navigate("/login");
             }
+            setIsLoading(false);
             return unsubscribe;
         });
-
     }, []);
 
     const login = (email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>): void => {
