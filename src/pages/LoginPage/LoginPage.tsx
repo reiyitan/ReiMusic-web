@@ -18,6 +18,7 @@ export const LoginPage = () => {
         setMsg("");
         login(email, pass, setMsg);
     }
+
     return (
         <div className="auth-page">
             <h1 className="auth-page-header">Reidio</h1>

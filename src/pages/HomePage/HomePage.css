@@ -8,24 +8,34 @@
     gap: 5px;
 }
 
+#topbar {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 50px;
+}
+
+#topbar h1 {
+    font-weight: 100;
+    font-size: 26px;
+}
+
 #sidebar-top {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 2;
     min-width: 200px;
     min-height: 50px;
 }
 
 #sidebar-bottom {
     grid-column: 1;
-    grid-row: 2 / 15;
+    grid-row: 3 / 15;
     min-width: 200px;
     min-height: 250px;
-}
-
-#song-list {
-    grid-column: 2 / -1;
-    grid-row: 1 / 15;
-    min-width: 375px;
 }
 
 #bottom-bar {
