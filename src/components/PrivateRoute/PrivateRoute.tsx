@@ -1,5 +1,4 @@
 import React from "react"; 
-import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../../ContextProviders";
 import "./PrivateRoute.css";
@@ -13,15 +12,12 @@ export const PrivateRoute = ({ children, redirectPath }: PrivateRouteProps) => {
     const auth = useAuth();
 
     if (!auth.currentUser) {
-        return (
-            <Navigate to={redirectPath} />
-        );
+        return <Navigate to={redirectPath}/>
     }
-    else {
-        return (
-            <>
-                {children}
-            </>
-        );
-    }
+
+    return (
+        <>
+            {children}
+        </>
+    );
 }
