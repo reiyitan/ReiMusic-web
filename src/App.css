@@ -1,8 +1,3 @@
-@font-face {
-    font-family: "Pixel";
-    src: url("assets/fonts/Px437_IBM_Model3x_Alt2.ttf");
-}
-
 * {
     margin: 0;
     padding: 0;
@@ -10,7 +5,7 @@
 }
 
 body {
-    font-family: Pixel;
+    font-family: Anaheim;
 }
 
 .picto-container {
