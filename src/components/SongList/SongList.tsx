@@ -54,6 +54,7 @@ export const SongList = () => {
                                 artist={song.artist}
                                 duration={song.duration}
                                 uploader={song.uploader}
+                                key={song.title}
                             />
                         ))
                     }
