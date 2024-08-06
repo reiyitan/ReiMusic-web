@@ -11,7 +11,7 @@ export const HomePage = () => {
                 <h1>Reidio</h1>
             </div>
             <div className="picto-container" id="sidebar-top"></div>
-            <div className="picto-container" id="sidebar-bottom"></div>
+            <PlaylistsPanel />
             <SongsPanel />
             <div className="picto-container" id="bottom-bar"></div>
         </div>

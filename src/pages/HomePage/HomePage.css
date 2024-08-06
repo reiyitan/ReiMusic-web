@@ -31,13 +31,6 @@
     min-height: 50px;
 }
 
-#sidebar-bottom {
-    grid-column: 1;
-    grid-row: 3 / 15;
-    min-width: 200px;
-    min-height: 250px;
-}
-
 #bottom-bar {
     grid-column: 1 / -1;
     grid-row: 15 / -1;

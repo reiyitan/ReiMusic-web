@@ -9,8 +9,34 @@ interface ServerProviderProps {
     children: React.ReactNode
 }
 export const ServerProvider = ({ children }: ServerProviderProps) => {
+
+    const createUser = () => {
+
+    }
+
+    const createPlaylist = () => {
+
+    }
+
+    const deletePlaylist = () => {
+
+    }
+
+    const addToPlaylist = () => {
+
+    }
+
+    const removeFromPlaylist = () => {
+
+    }
+
+
+    const createSong = () => {
+
+    }
+
     return (
-        <ServerContext.Provider value={{}}>
+        <ServerContext.Provider value={{createUser, createPlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, createSong}}>
             {children}
         </ServerContext.Provider>
     );
