@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "../LoginRegister.css";
 import { AuthInput } from "../../components";
-import { useFirebase } from "../../ContextProviders";
+import { useFirebase, useServer } from "../../ContextProviders";
 import { Link } from "react-router-dom";
 
 export const RegisterPage = () => {
@@ -11,8 +11,9 @@ export const RegisterPage = () => {
     const [confPass, setConfPass] = useState<string>(""); 
     const [msg, setMsg] = useState<string>("");
     const { register } = useFirebase();
+    const { createUser } = useServer();
 
-    const handleRegister = (): void => {
+    const handleRegister = () => {
         if (!username || !email || !pass || !confPass) {
             setMsg("Fill out all fields");
             return;
@@ -30,7 +31,7 @@ export const RegisterPage = () => {
             return;
         }
         setMsg(""); 
-        register(username, email, pass, setMsg);
+        register(username, email, pass, setMsg, createUser);
     }
 
     return (
