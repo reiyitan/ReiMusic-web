@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
-
 interface ServerContextInterface {
-
+    createUser: (username: String, token: String) => void
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 
@@ -10,33 +9,44 @@ interface ServerProviderProps {
 }
 export const ServerProvider = ({ children }: ServerProviderProps) => {
 
-    const createUser = () => {
-
+    const createUser = (username: String, token: String): void => {
+        fetch("http://127.0.0.1:3000/api/user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                username: username
+            })
+        })
+        .then(res => console.log(res))
+        .catch(error => console.error(error));
     }
 
-    const createPlaylist = () => {
+    // const createPlaylist = () => {
 
-    }
+    // }
 
-    const deletePlaylist = () => {
+    // const deletePlaylist = () => {
 
-    }
+    // }
 
-    const addToPlaylist = () => {
+    // const addToPlaylist = () => {
 
-    }
+    // }
 
-    const removeFromPlaylist = () => {
+    // const removeFromPlaylist = () => {
 
-    }
+    // }
 
 
-    const createSong = () => {
+    // const createSong = () => {
 
-    }
+    // }
 
     return (
-        <ServerContext.Provider value={{createUser, createPlaylist, deletePlaylist, addToPlaylist, removeFromPlaylist, createSong}}>
+        <ServerContext.Provider value={{createUser}}>
             {children}
         </ServerContext.Provider>
     );
