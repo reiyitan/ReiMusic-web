@@ -20,7 +20,7 @@ const fsDb = getFirestore(fbApp);
 
 interface FirebaseContextInterface {
     login: (email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>) => void,
-    register: (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>) => void
+    register: (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function) => void
 }
 const FirebaseContext = createContext<FirebaseContextInterface | undefined>(undefined);
 
@@ -65,7 +65,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
         });
     }
 
-    const register = async (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>): Promise<void> => {
+    const register = async (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function): Promise<void> => {
         const docRef = doc(fsDb, "usernames", username);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
@@ -76,9 +76,12 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
         setPersistence(auth, browserLocalPersistence)
         .then(() => createUserWithEmailAndPassword(auth, email, pass))
         .then(userCredential => {
-            const user = userCredential.user;
             setDoc(doc(fsDb, "usernames", username), {});
-            //user.uid
+            const user = userCredential.user;
+            user.getIdToken(true)
+            .then(token => {
+                createUser(username, token);
+            });
         })
         .catch(error => {
             switch(error.code) {
