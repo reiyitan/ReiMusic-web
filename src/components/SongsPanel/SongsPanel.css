@@ -29,9 +29,9 @@
     height: 26px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
-    background-color: rgb(200, 200, 200);
-    border-top: solid rgba(150, 150, 150, 0.5) 1px;
-    border-bottom: solid rgba(150, 150, 150, 0.5) 1px;
+    background-color: var(--clr-bg-dark);
+    border-top: solid var(--clr-border-dark) 1px;
+    border-bottom: solid var(--clr-border-dark) 1px;
 }
 
 .song-list-category {
@@ -62,9 +62,9 @@
 #song-list-category-filler {
     flex-grow: 1;
     height: 26px;
-    background-color: rgb(200, 200, 200);
-    border-top: solid rgba(150, 150, 150, 0.5) 1px;
-    border-bottom: solid rgba(150, 150, 150, 0.5) 1px;
+    background-color: var(--clr-bg-dark);
+    border-top: solid var(--clr-border-dark) 1px;
+    border-bottom: solid var(--clr-border-dark) 1px;
 }
 
 #song-list {
