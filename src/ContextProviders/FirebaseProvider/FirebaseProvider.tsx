@@ -34,9 +34,21 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, user => {
+        const unsubscribe = onAuthStateChanged(auth, async user => {
             if (user) {
-                navigate("/home");
+                fetch(`http://127.0.0.1:3000/api/user?uid=${user.uid}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json", 
+                        "Authorization": `Bearer ${await user.getIdToken(true)}`
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.user) {
+                        navigate("/home");
+                    }
+                })
             }
             else if (location.pathname !== "/login" && location.pathname !== "/register") {
                 navigate("/login");
@@ -75,13 +87,10 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
 
         setPersistence(auth, browserLocalPersistence)
         .then(() => createUserWithEmailAndPassword(auth, email, pass))
-        .then(userCredential => {
+        .then(async () => {
             setDoc(doc(fsDb, "usernames", username), {});
-            const user = userCredential.user;
-            user.getIdToken(true)
-            .then(token => {
-                createUser(username, token);
-            });
+            await createUser(username);
+            navigate("/home");
         })
         .catch(error => {
             switch(error.code) {
