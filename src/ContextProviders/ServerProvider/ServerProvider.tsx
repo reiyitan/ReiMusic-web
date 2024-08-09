@@ -33,7 +33,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getUser = async (uid: String): Promise<User | undefined> => {
-        return fetch(`http://127.0.0.1:3000/api/user?uid=${uid}`, {
+        return fetch(`http://127.0.0.1:3000/api/user/${uid}`, {
             method: "GET", 
             headers: {
                 "Content-Type": "application/json",

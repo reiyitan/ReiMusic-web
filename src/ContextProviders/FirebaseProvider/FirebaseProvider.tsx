@@ -36,7 +36,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async user => {
             if (user) {
-                fetch(`http://127.0.0.1:3000/api/user?uid=${user.uid}`, {
+                fetch(`http://127.0.0.1:3000/api/user/${user.uid}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json", 
