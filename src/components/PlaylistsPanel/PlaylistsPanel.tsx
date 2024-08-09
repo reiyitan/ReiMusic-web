@@ -1,4 +1,5 @@
 import "./PlaylistsPanel.css";
+import { useState, useEffect } from "react"; 
 import { MouseEventHandler } from "react";
 import { useServer } from "../../ContextProviders";
 
@@ -14,9 +15,41 @@ const PlusIcon = (handleClick: MouseEventHandler<SVGElement>) => (
     </svg>
 )
 
-export const PlaylistsPanel = () => {
-    const handleCreatePlaylist = () => {
+interface Playlist {
+    _id: string,
+    name: string,
+    owner: string,
+    songs: string[]
+}
 
+interface PlaylistProps {
+    name: string,
+    id: string
+}
+const Playlist = ({ name, id }: PlaylistProps) => {
+    return (
+        <div className="playlist">{name}</div>
+    );
+}
+
+export const PlaylistsPanel = () => {
+    const { createPlaylist, getPlaylists } = useServer();
+    const [playlists, setPlaylists] = useState<Playlist[]>([]);
+
+    useEffect(() => {
+        getPlaylists()
+            .then(playlists => {
+                if (playlists) {  
+                    setPlaylists(playlists);
+                }
+            });
+    }, []); 
+    
+    const handleCreatePlaylist = async () => {
+        createPlaylist()
+            .then(newPlaylist => {
+                console.log(newPlaylist);
+            });
     }
     
     return (
@@ -25,7 +58,11 @@ export const PlaylistsPanel = () => {
                 {PlusIcon(handleCreatePlaylist)}
             </div>
             <div id="playlists-container">
-
+                {
+                    playlists.map((playlist) => (
+                        <Playlist name={playlist.name} id={playlist._id} key={playlist._id} />
+                    ))
+                }
             </div>
         </div>
     );

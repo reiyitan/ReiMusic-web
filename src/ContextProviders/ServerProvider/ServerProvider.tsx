@@ -2,14 +2,23 @@ import { createContext, useContext } from "react";
 import { useAuth } from "../FirebaseProvider";
 
 interface User {
-    _id: String, 
-    username: String, 
-    playlists: [String], 
-    uploadedSongs: [String]
+    _id: string,
+    username: string, 
+    playlists: string[], 
+    uploadedSongs: string[]
+}
+
+interface Playlist {
+    _id: string,
+    name: string,
+    owner: string,
+    songs: string[]
 }
 interface ServerContextInterface {
-    createUser: (username: String) => void,
-    getUser: (uid: String) => Promise<User | undefined>
+    createUser: (username: string) => void,
+    getUser: (uid: string) => Promise<User | undefined>,
+    createPlaylist: () => Promise<Playlist | undefined>,
+    getPlaylists: () => Promise<[Playlist] | undefined>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -18,7 +27,7 @@ interface ServerProviderProps {
 export const ServerProvider = ({ children }: ServerProviderProps) => {
     const auth = useAuth();
 
-    const createUser = async (username: String) => {
+    const createUser = async (username: string) => {
         fetch("http://127.0.0.1:3000/api/user", {
             method: "POST",
             headers: {
@@ -29,10 +38,10 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
                 username: username
             })
         })
-        .catch(error => console.error(error));
+            .catch(error => console.error(error));
     }
 
-    const getUser = async (uid: String): Promise<User | undefined> => {
+    const getUser = async (uid: string): Promise<User | undefined> => {
         return fetch(`http://127.0.0.1:3000/api/user/${uid}`, {
             method: "GET", 
             headers: {
@@ -40,22 +49,40 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
             }
         })
-        .then(res => res.json()) 
-        .then(userData => {
-            return userData
-        })
-        .catch(error => console.error(error));
+            .then(res => res.json()) 
+            .then(userData => {
+                return userData
+            })
+            .catch(error => console.error(error));
     }
 
-    // const createPlaylist = () => {
+    const createPlaylist = async (): Promise<Playlist | undefined> => {
+        return fetch("http://127.0.0.1:3000/api/playlist", {
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            },
+            body: JSON.stringify({
+                uid: auth.currentUser?.uid
+            })
+        })
+            .then(res => res.json())
+            .then(data => data)
+            .catch(error => console.error(error));
+    }
 
-    // }
-
+    const getPlaylists = async (): Promise<[Playlist] | undefined> => {
+        return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => data.playlists)
+            .catch(error => console.error(error));
+    }
     // const deletePlaylist = () => {
-
-    // }
-
-    // const getPlaylists = () => {
 
     // }
 
@@ -73,7 +100,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     // }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser}}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists}}>
             {children}
         </ServerContext.Provider>
     );
