@@ -18,7 +18,8 @@ interface ServerContextInterface {
     createUser: (username: string) => void,
     getUser: (uid: string) => Promise<User | undefined>,
     createPlaylist: () => Promise<Playlist | undefined>,
-    getPlaylists: () => Promise<[Playlist] | undefined>
+    getPlaylists: () => Promise<[Playlist] | undefined>,
+    deletePlaylist: (playlistId: string) => void
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -67,8 +68,19 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             })
         })
             .then(res => res.json())
-            .then(data => data)
-            .catch(error => console.error(error));
+            .then(data => {
+                const playlist = data.playlist;
+                return {
+                    _id: playlist._id,
+                    name: playlist.name,
+                    owner: playlist.owner,
+                    songs: playlist.songs
+                };
+            })
+            .catch(error => {
+                console.error(error);
+                return undefined;
+            });
     }
 
     const getPlaylists = async (): Promise<[Playlist] | undefined> => {
@@ -82,9 +94,16 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .then(data => data.playlists)
             .catch(error => console.error(error));
     }
-    // const deletePlaylist = () => {
 
-    // }
+    const deletePlaylist = async (playlistId: string) => {
+        fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            }
+        })
+            .catch(error => console.error(error));
+    }
 
     // const addToPlaylist = () => {
 
@@ -100,7 +119,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     // }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists}}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, deletePlaylist}}>
             {children}
         </ServerContext.Provider>
     );

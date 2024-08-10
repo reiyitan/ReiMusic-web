@@ -1,6 +1,7 @@
 import "./PlaylistsPanel.css";
 import { useState, useEffect, useLayoutEffect, useRef } from "react"; 
 import { MouseEventHandler, RefObject } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { useServer } from "../../ContextProviders";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
@@ -56,14 +57,16 @@ interface Playlist {
 
 interface PlaylistProps {
     name: string,
-    id: string,
-    playlistsContainerRef: RefObject<HTMLDivElement>
+    playlistId: string,
+    playlistsContainerRef: RefObject<HTMLDivElement>,
+    setPlaylists: Dispatch<SetStateAction<Playlist[]>>
 }
-const Playlist = ({ name, id, playlistsContainerRef }: PlaylistProps) => {
+const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: PlaylistProps) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const settingsPanelRef = useRef<HTMLDivElement>(null); 
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
+    const { deletePlaylist } = useServer();
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         setSettingsOpen(true);
@@ -86,7 +89,11 @@ const Playlist = ({ name, id, playlistsContainerRef }: PlaylistProps) => {
     }, []); 
 
     const handleDelete = () => {
-
+        deletePlaylist(playlistId);
+        setPlaylists(prevPlaylists => {
+            const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
+            return newPlaylists;
+        });
     }
 
     const handleRename = () => {
@@ -134,10 +141,12 @@ export const PlaylistsPanel = () => {
             });
     }, []); 
     
-    const handleCreatePlaylist = async () => {
+    const handleCreatePlaylist = () => {
         createPlaylist()
             .then(newPlaylist => {
-                console.log(newPlaylist);
+                if (newPlaylist) {
+                    setPlaylists(prevPlaylists => [newPlaylist, ...prevPlaylists]);
+                }
             });
     }
     
@@ -149,7 +158,13 @@ export const PlaylistsPanel = () => {
             <div id="playlists-container" ref={playlistsContainerRef}>
                 {
                     playlists.map((playlist) => (
-                        <Playlist name={playlist.name} id={playlist._id} key={playlist._id} playlistsContainerRef={playlistsContainerRef} />
+                        <Playlist 
+                            name={playlist.name} 
+                            playlistId={playlist._id} 
+                            key={playlist._id} 
+                            playlistsContainerRef={playlistsContainerRef} 
+                            setPlaylists={setPlaylists}
+                        />
                     ))
                 }
             </div>
