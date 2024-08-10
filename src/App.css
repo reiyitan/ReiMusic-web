@@ -7,6 +7,7 @@
 :root {
     --clr-bg-main: rgb(220, 220, 220);
     --clr-bg-light: rgb(230, 230, 230);
+    --clr-bg-light-hvr: rgb(215, 215, 215);
     --clr-bg-dark: rgb(200, 200, 200);
     --clr-border-dark: rgba(150, 150, 150, 0.5);
     --clr-border-light: rgba(180, 180, 180, 0.5);

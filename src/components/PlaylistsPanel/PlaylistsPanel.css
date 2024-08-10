@@ -19,10 +19,12 @@
 }
 
 #playlists-container {
+    position: relative;
     flex-grow: 1;
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 #playlists-controls-plus-icon {
@@ -34,4 +36,99 @@
 
 #playlists-controls-plus-icon:hover {
     fill: rgb(70, 70, 70);
+}
+
+.playlist {
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr);
+    background-color: var(--clr-bg-light);
+    border-bottom: solid var(--clr-border-light) 1px;
+    height: 26px;
+}
+
+.playlist:hover {
+    background-color: var(--clr-bg-light-hvr);
+}
+
+.playlist:hover .sidebar-playlist-dots-icon {
+    visibility: visible;
+}
+
+.sidebar-playlist-name {
+    padding-left: 5px;
+    display: inline-block;
+    line-height: 26px;
+    overflow: hidden;
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    grid-column: 1 / 6;
+}
+
+.sidebar-playlist-dots-icon {
+    visibility: hidden;
+    width: 20px;
+    grid-column: -1;
+    align-self: center;
+    margin-right: 5px;
+    stroke: rgb(100, 100, 100);
+}
+
+
+.sidebar-playlist-dots-icon:hover {
+    stroke: rgb(70, 70, 70);
+}
+
+.sidebar-playlist-settings-menu {
+    position: fixed;
+    width: 175px;
+    background-color: var(--clr-bg-light);
+    border-radius: 2px;
+    border: solid var(--clr-border-dark) 1px;
+}
+
+.visible {
+    visibility: visible;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.settings-control {
+    display: grid; 
+    grid-template-columns: repeat(5, 1fr);
+    border-bottom: solid var(--clr-border-dark) 1px;
+}
+
+.settings-control:hover {
+    background-color: var(--clr-bg-light-hvr);
+}
+
+.sidebar-playlist-control-icon {
+    grid-column: 1;
+    width: 20px;
+    align-self: center;
+}
+
+.sidebar-playlist-minus-icon {
+    stroke: rgb(100, 100, 100);
+}
+
+.settings-control:hover .sidebar-playlist-minus-icon {
+    stroke: rgb(70, 70, 70);
+}
+
+
+.sidebar-playlist-rename-icon {
+    fill: rgb(100, 100, 100);
+}
+
+.settings-control:hover .sidebar-playlist-rename-icon {
+    fill: rgb(70, 70, 70);
+}
+
+.settings-control-text {
+    grid-column: 2 / -1;
+    display: flex;
+    align-items: center;
 }
