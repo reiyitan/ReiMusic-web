@@ -1,5 +1,5 @@
 import "./HomePage.css"; 
-import { SongsPanel, PlaylistsPanel } from "../../components";
+import { SongsPanel, PlaylistsPanel, BottomBarPanel } from "../../components";
 
 export const HomePage = () => {
 
@@ -7,13 +7,13 @@ export const HomePage = () => {
         <div
             id="homepage-wrapper"
         >
-            <div className="picto-container" id="topbar">
+            <div id="topbar">
                 <h1>Reidio</h1>
             </div>
-            <div className="picto-container" id="sidebar-top"></div>
+            <div className="main-container shadow" id="sidebar-top"></div>
             <PlaylistsPanel />
             <SongsPanel />
-            <div className="picto-container" id="bottom-bar"></div>
+            <BottomBarPanel />
         </div>
     );
 }

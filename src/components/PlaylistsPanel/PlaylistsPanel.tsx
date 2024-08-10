@@ -104,10 +104,10 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
         <div 
             className="playlist"
         >
-            <span className="sidebar-playlist-name">{name}</span>
+            <span className="sidebar-playlist-name prevent-select">{name}</span>
             {DotsIcon(openSettings, dotsRef)}
             <div 
-                className={settingsOpen ? "sidebar-playlist-settings-menu visible" : "sidebar-playlist-settings-menu hidden"}
+                className={settingsOpen ? "sidebar-playlist-settings-menu shadow visible" : "sidebar-playlist-settings-menu hidden"}
                 style={{
                     left: settingsPanelPos.left,
                     top: settingsPanelPos.top
@@ -151,11 +151,11 @@ export const PlaylistsPanel = () => {
     }
     
     return (
-        <div className="picto-container" id="playlists-panel">
+        <div className="main-container shadow" id="playlists-panel">
             <div id="playlists-controls-container">
                 {PlusIcon(handleCreatePlaylist)}
             </div>
-            <div id="playlists-container" ref={playlistsContainerRef}>
+            <div id="playlists-container" className="scroller" ref={playlistsContainerRef}>
                 {
                     playlists.map((playlist) => (
                         <Playlist 

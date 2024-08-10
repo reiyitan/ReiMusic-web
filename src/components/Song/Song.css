@@ -2,8 +2,11 @@
     display: grid;
     grid-template-columns: repeat(24, 1fr);
     height: 26px;
-    border-bottom: solid var(--clr-border-light) 1px;
-    background-color: var(--clr-bg-light);
+    background-color: var(--clr-bg-main);
+}
+
+.song:hover {
+    background-color: var(--clr-bg-main-hvr);
 }
 
 .song-field {

@@ -10,10 +10,10 @@ interface SongProps {
 export const Song = ({ title, artist, duration, uploader }: SongProps) => {
     return (
         <div className="song">
-            <span className="song-field song-title">{title}</span>
-            <span className="song-field song-artist">{artist}</span>
-            <span className="song-field song-duration">{duration}</span>
-            <span className="song-field song-uploader">{uploader}</span>
+            <span className="song-field song-title prevent-select">{title}</span>
+            <span className="song-field song-artist prevent-select">{artist}</span>
+            <span className="song-field song-duration prevent-select">{duration}</span>
+            <span className="song-field song-uploader prevent-select">{uploader}</span>
         </div>
     );
 }

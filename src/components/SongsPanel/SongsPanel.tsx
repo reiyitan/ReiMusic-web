@@ -30,8 +30,8 @@ export const SongsPanel = () => {
     }, []);
 
     return (
-        <div className="picto-container" id="songs-panel">
-                <h1>Playlist Title</h1>
+        <div className="main-container shadow" id="songs-panel">
+                <h1 className="prevent-select">Playlist Title</h1>
                 <div id="song-list-categories-container">
                     <div 
                         id="song-list-categories"
@@ -39,14 +39,14 @@ export const SongsPanel = () => {
                             width: categoriesWidth
                         }}
                     >
-                        <span id="song-list-category-title" className="song-list-category">Title</span>
-                        <span id="song-list-category-artist" className="song-list-category">Artist</span>
-                        <span id="song-list-category-duration" className="song-list-category">Duration</span>
-                        <span id="song-list-category-uploader" className="song-list-category">Uploader</span>
+                        <span id="song-list-category-title" className="song-list-category prevent-select">Title</span>
+                        <span id="song-list-category-artist" className="song-list-category prevent-select">Artist</span>
+                        <span id="song-list-category-duration" className="song-list-category prevent-select">Duration</span>
+                        <span id="song-list-category-uploader" className="song-list-category prevent-select">Uploader</span>
                     </div>
                     <span id="song-list-category-filler" className="song-list-category"></span>
                 </div>
-                <div id="song-list" ref={songListRef}>
+                <div id="song-list" className="scroller" ref={songListRef}>
                     {
                         songs.map(song => (
                             <Song 

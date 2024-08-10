@@ -8,10 +8,7 @@
 }
 
 #playlists-controls-container {
-    border-top-left-radius: 2px;
-    border-top-right-radius: 2px;
-    background-color: var(--clr-bg-dark);
-    border-bottom: solid var(--clr-border-dark) 1px;
+    background-color: var(--clr-bg-main);
     display: flex; 
     align-items: center;
     justify-content: flex-end;
@@ -30,7 +27,7 @@
 #playlists-controls-plus-icon {
     width: 20px;
     height: 20px;
-    background-color: var(--clr-bg-dark);
+    background-color: var(--clr-bg-main);
     fill: rgb(100, 100, 100);
 }
 
@@ -41,13 +38,12 @@
 .playlist {
     display: grid; 
     grid-template-columns: repeat(5, 1fr);
-    background-color: var(--clr-bg-light);
-    border-bottom: solid var(--clr-border-light) 1px;
+    background-color: var(--clr-bg-main);
     height: 26px;
 }
 
 .playlist:hover {
-    background-color: var(--clr-bg-light-hvr);
+    background-color: var(--clr-bg-main-hvr);
 }
 
 .playlist:hover .sidebar-playlist-dots-icon {
@@ -81,9 +77,7 @@
 .sidebar-playlist-settings-menu {
     position: fixed;
     width: 175px;
-    background-color: var(--clr-bg-light);
-    border-radius: 2px;
-    border: solid var(--clr-border-dark) 1px;
+    background-color: var(--clr-bg-main);
 }
 
 .visible {
@@ -97,11 +91,12 @@
 .settings-control {
     display: grid; 
     grid-template-columns: repeat(5, 1fr);
-    border-bottom: solid var(--clr-border-dark) 1px;
+    height: 50px;
+    padding: 5px;
 }
 
 .settings-control:hover {
-    background-color: var(--clr-bg-light-hvr);
+    background-color: var(--clr-bg-main-hvr);
 }
 
 .sidebar-playlist-control-icon {

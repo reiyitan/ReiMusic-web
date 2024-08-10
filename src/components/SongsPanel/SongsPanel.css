@@ -12,8 +12,9 @@
 
 #songs-panel h1 {
     font-weight: 100;
-    font-size: 20px;
+    font-size: 30px;
     padding-left: 20px;
+    margin-top: 20px;
 }
 
 #song-list-categories-container {
@@ -29,9 +30,8 @@
     height: 26px;
     display: grid;
     grid-template-columns: repeat(24, 1fr);
-    background-color: var(--clr-bg-dark);
-    border-top: solid var(--clr-border-dark) 1px;
-    border-bottom: solid var(--clr-border-dark) 1px;
+    background-color: var(--clr-bg-main);
+    border-bottom: solid var(--clr-border) 1px;
 }
 
 .song-list-category {
@@ -62,8 +62,7 @@
 #song-list-category-filler {
     flex-grow: 1;
     height: 26px;
-    background-color: var(--clr-bg-dark);
-    border-top: solid var(--clr-border-dark) 1px;
+    background-color: var(--clr-bg-main);
     border-bottom: solid var(--clr-border-dark) 1px;
 }
 

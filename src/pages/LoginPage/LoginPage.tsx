@@ -22,7 +22,7 @@ export const LoginPage = () => {
     return (
         <div className="auth-page">
             <h1 className="auth-page-header">Reidio</h1>
-            <div className="auth-form-wrapper picto-container">
+            <div className="auth-form-wrapper main-container shadow">
                 <h2 className="auth-form-header">Login</h2>
                 <AuthInput 
                     label="Email"

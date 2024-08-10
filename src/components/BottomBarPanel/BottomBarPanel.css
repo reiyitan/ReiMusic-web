@@ -1,0 +1,6 @@
+#bottom-bar-panel {
+    grid-column: 1 / -1;
+    grid-row: 15 / -1;
+    min-width: 400px;
+    min-height: 100px;
+}

@@ -5,7 +5,7 @@
     height: 100vh;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(16, 1fr);
-    gap: 5px;
+    gap: 15px;
 }
 
 #topbar {
@@ -21,7 +21,7 @@
 
 #topbar h1 {
     font-weight: 100;
-    font-size: 26px;
+    font-size: 40px;
 }
 
 #sidebar-top {
@@ -29,11 +29,4 @@
     grid-row: 2;
     min-width: 200px;
     min-height: 50px;
-}
-
-#bottom-bar {
-    grid-column: 1 / -1;
-    grid-row: 15 / -1;
-    min-width: 400px;
-    min-height: 100px;
 }
