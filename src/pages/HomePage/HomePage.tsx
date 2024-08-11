@@ -8,7 +8,7 @@ export const HomePage = () => {
             id="homepage-wrapper"
         >
             <div id="topbar">
-                <h1>Reidio</h1>
+                <h1 className="prevent-select shadow">Reidio</h1>
             </div>
             <div className="main-container shadow" id="sidebar-top"></div>
             <PlaylistsPanel />
