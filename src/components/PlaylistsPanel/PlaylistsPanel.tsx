@@ -116,11 +116,11 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
             >
                 <div className="settings-control" onClick={handleDelete}>
                     {MinusIcon()}
-                    <p className="settings-control-text">Delete playlist</p>
+                    <p className="settings-control-text prevent-select">Delete playlist</p>
                 </div>
                 <div className="settings-control" onClick={handleRename}>
                     {RenameIcon()}
-                    <p className="settings-control-text">Rename playlist</p>
+                    <p className="settings-control-text prevent-select">Rename playlist</p>
                 </div>
             </div>
         </div>

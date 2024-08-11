@@ -40,8 +40,7 @@
 }
 
 #song-list-category-title {
-    grid-column: 1 / 10;
-    padding-left: 20px;
+    grid-column: 2 / 10;
     min-width: 220px;
 }
 
@@ -54,9 +53,16 @@
 }
 
 #song-list-category-uploader {
-    grid-column: 20 / -1;
+    grid-column: 20 / 24;
     padding-right: 20px;
     text-align: right;
+}
+
+#song-list-category-settings-filler {
+    visibility: hidden;
+    width: 20px;
+    grid-column: -1;
+    margin-right: 5px;
 }
 
 #song-list-category-filler {

@@ -2,7 +2,6 @@ import "./SongsPanel.css";
 import { useState, useRef, useLayoutEffect } from "react";
 import { tempsongs } from "./tempdata";
 import { Song } from "../Song";
-
 interface Song {
     title: string,
     artist: string,
@@ -43,6 +42,7 @@ export const SongsPanel = () => {
                         <span id="song-list-category-artist" className="song-list-category prevent-select">Artist</span>
                         <span id="song-list-category-duration" className="song-list-category prevent-select">Duration</span>
                         <span id="song-list-category-uploader" className="song-list-category prevent-select">Uploader</span>
+                        <span id="song-list-category-settings-filler"></span>
                     </div>
                     <span id="song-list-category-filler" className="song-list-category"></span>
                 </div>
