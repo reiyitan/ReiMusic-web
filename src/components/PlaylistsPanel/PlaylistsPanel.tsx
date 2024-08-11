@@ -151,13 +151,13 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
                 }}
                 ref={settingsPanelRef}
             >
-                <div className="settings-control" onClick={() => setDeleteModalVisible(true)}>
-                    {MinusIcon()}
-                    <p className="settings-control-text prevent-select">Delete playlist</p>
-                </div>
                 <div className="settings-control" onClick={() => setRenameModalVisible(true)}>
                     {RenameIcon()}
                     <p className="settings-control-text prevent-select">Rename playlist</p>
+                </div>
+                <div className="settings-control" onClick={() => setDeleteModalVisible(true)}>
+                    {MinusIcon()}
+                    <p className="settings-control-text prevent-select">Delete playlist</p>
                 </div>
             </div>
             <Modal isVisible={renameModalVisible} header="Rename playlist">

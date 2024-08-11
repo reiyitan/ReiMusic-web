@@ -116,17 +116,8 @@
     stroke: rgb(100, 100, 100);
 }
 
-.settings-control:hover .sidebar-playlist-minus-icon {
-    stroke: rgb(70, 70, 70);
-}
-
-
 .sidebar-playlist-rename-icon {
     fill: rgb(100, 100, 100);
-}
-
-.settings-control:hover .sidebar-playlist-rename-icon {
-    fill: rgb(70, 70, 70);
 }
 
 .settings-control-text {
