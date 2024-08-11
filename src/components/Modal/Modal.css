@@ -11,5 +11,30 @@
 }
 
 .modal {
+    display: flex;
+    flex-direction: column;
+    padding: 50px;
     background-color: var(--clr-bg-main);
+}
+
+.modal h2 {
+    font-size: 26px;
+    margin-bottom: 30px;
+}
+
+.modal input {
+    outline: none;
+    height: 30px;
+    font-size: 20px;
+    border: none;
+    border-bottom: solid var(--clr-border) 1px;
+    margin-bottom: 15px;
+}
+
+.modal button {
+    border: none;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    min-width: 240px;
 }

@@ -68,8 +68,9 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
     const { deletePlaylist, renamePlaylist } = useServer();
-    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>("");
+    const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         setSettingsOpen(true);
@@ -103,6 +104,10 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
             })
     }
 
+    const handleCancelDelete: MouseEventHandler<HTMLButtonElement> = () => {
+        setDeleteModalVisible(false);
+    }
+
     const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
         if (newName.length === 30) {
             return;
@@ -121,14 +126,14 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
                         ));
                         return newPlaylists;
                     });
-                    setModalVisible(false);
+                    setRenameModalVisible(false);
                     setNewName("");
                 }
             });
     }
     
-    const handleCancel: MouseEventHandler<HTMLButtonElement> = () => {
-        setModalVisible(false);
+    const handleCancelRename: MouseEventHandler<HTMLButtonElement> = () => {
+        setRenameModalVisible(false);
         setNewName("");
     }
 
@@ -146,28 +151,29 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
                 }}
                 ref={settingsPanelRef}
             >
-                <div className="settings-control" onClick={handleDelete}>
+                <div className="settings-control" onClick={() => setDeleteModalVisible(true)}>
                     {MinusIcon()}
                     <p className="settings-control-text prevent-select">Delete playlist</p>
                 </div>
-                <div className="settings-control" onClick={() => setModalVisible(true)}>
+                <div className="settings-control" onClick={() => setRenameModalVisible(true)}>
                     {RenameIcon()}
                     <p className="settings-control-text prevent-select">Rename playlist</p>
                 </div>
             </div>
-            <Modal isVisible={modalVisible}>
-                <div className="rename-container">
-                    <h2>Rename playlist</h2>
-                    <input 
-                        type="text"
-                        onChange={handleInput}
-                        value={newName}
-                        placeholder="Enter new name"
-                        autoCorrect="none"
-                    />
-                    <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
-                    <button onClick={handleCancel} className="rename-button-cancel">Cancel</button>
-                </div>
+            <Modal isVisible={renameModalVisible} header="Rename playlist">
+                <input 
+                    type="text"
+                    onChange={handleInput}
+                    value={newName}
+                    placeholder="Enter new name"
+                    autoCorrect="none"
+                />
+                <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
+                <button onClick={handleCancelRename} className="cancel-button">Cancel</button>
+            </Modal>
+            <Modal isVisible={deleteModalVisible} header="Delete playlist">
+                <button onClick={handleDelete} className="delete-button-confirm">Delete</button>
+                <button onClick={handleCancelDelete} className="cancel-button">Cancel</button>
             </Modal>
         </div>
     );

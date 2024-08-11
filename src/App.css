@@ -12,6 +12,8 @@
     --clr-border: rgba(150, 150, 150, 0.5);
     --clr-highlight: rgb(60, 45, 240);
     --clr-highlight-hvr: rgb(47, 32, 227);
+    --clr-warning: rgb(240, 40, 40);
+    --clr-warning-hvr: rgb(230, 30, 30);
     --clr-icon: rgb(100, 100, 100);
     --clr-icon-hvr: rgb(70, 70, 70);
     --clr-font-light: rgb(255, 255, 255);

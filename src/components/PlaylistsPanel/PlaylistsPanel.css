@@ -135,33 +135,6 @@
     align-items: center;
 }
 
-.rename-container {
-    display: flex;
-    flex-direction: column;
-    padding: 50px;
-}
-
-.rename-container h2 {
-    font-size: 26px;
-    margin-bottom: 30px;
-}
-
-.rename-container input {
-    outline: none;
-    height: 30px;
-    font-size: 20px;
-    border: none;
-    border-bottom: solid var(--clr-border) 1px;
-    margin-bottom: 15px;
-}
-
-.rename-container button {
-    border: none;
-    height: 30px;
-    font-size: 14px;
-    font-weight: bold;
-}
-
 .rename-button-confirm {
     margin-bottom: 10px;
     color: var(--clr-font-light);
@@ -172,10 +145,20 @@
     background-color: var(--clr-highlight-hvr);
 }
 
-.rename-button-cancel {
+.cancel-button {
     background-color: var(--clr-bg-dark);
 }
 
-.rename-button-cancel:hover {
+.cancel-button:hover {
     background-color: var(--clr-bg-dark-hvr);
+}
+
+.delete-button-confirm {
+    margin-bottom: 10px;
+    background-color: var(--clr-warning);
+    color: var(--clr-font-light);
+}
+
+.delete-button-confirm:hover {
+    background-color: var(--clr-warning-hvr);
 }
