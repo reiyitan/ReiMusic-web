@@ -1,24 +1,11 @@
 import { createContext, useContext } from "react";
 import { useAuth } from "../FirebaseProvider";
-
-interface User {
-    _id: string,
-    username: string, 
-    playlists: string[], 
-    uploadedSongs: string[]
-}
-
-interface Playlist {
-    _id: string,
-    name: string,
-    owner: string,
-    songs: string[]
-}
+import { SidebarPlaylistType, UserType } from "../../types";
 interface ServerContextInterface {
     createUser: (username: string) => void,
-    getUser: (uid: string) => Promise<User | undefined>,
-    createPlaylist: () => Promise<Playlist | undefined>,
-    getPlaylists: () => Promise<[Playlist] | undefined>,
+    getUser: (uid: string) => Promise<UserType | undefined>,
+    createPlaylist: () => Promise<SidebarPlaylistType | undefined>,
+    getPlaylists: () => Promise<SidebarPlaylistType[] | undefined>,
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>
 }
@@ -43,7 +30,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
-    const getUser = async (uid: string): Promise<User | undefined> => {
+    const getUser = async (uid: string): Promise<UserType | undefined> => {
         return fetch(`http://127.0.0.1:3000/api/user/${uid}`, {
             method: "GET", 
             headers: {
@@ -56,7 +43,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
-    const createPlaylist = async (): Promise<Playlist | undefined> => {
+    const createPlaylist = async (): Promise<SidebarPlaylistType | undefined> => {
         return fetch("http://127.0.0.1:3000/api/playlist", {
             method: "POST", 
             headers: {
@@ -82,7 +69,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             });
     }
 
-    const getPlaylists = async (): Promise<[Playlist] | undefined> => {
+    const getPlaylists = async (): Promise<SidebarPlaylistType[] | undefined> => {
         return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}`, {
             method: "GET",
             headers: {

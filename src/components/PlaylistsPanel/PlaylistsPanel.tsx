@@ -3,6 +3,7 @@ import { useState, useEffect, useLayoutEffect, useRef } from "react";
 import { ChangeEventHandler } from "react";
 import { MouseEventHandler, RefObject } from "react";
 import { Dispatch, SetStateAction } from "react";
+import { SidebarPlaylistType } from "../../types";
 import { useServer } from "../../ContextProviders";
 import { Modal } from "../Modal";
 
@@ -56,17 +57,10 @@ const RenameIcon = () => (
         <path fillRule="evenodd" clipRule="evenodd" d="M8.56078 20.2501L20.5608 8.25011L15.7501 3.43945L3.75012 15.4395V20.2501H8.56078ZM15.7501 5.56077L18.4395 8.25011L16.5001 10.1895L13.8108 7.50013L15.7501 5.56077ZM12.7501 8.56079L15.4395 11.2501L7.93946 18.7501H5.25012L5.25012 16.0608L12.7501 8.56079Z" />
     </svg>
 )
-interface Playlist {
-    _id: string,
-    name: string,
-    owner: string,
-    songs: string[]
-}
-
 interface PlaylistProps {
     name: string,
     playlistId: string,
-    setPlaylists: Dispatch<SetStateAction<Playlist[]>>
+    setPlaylists: Dispatch<SetStateAction<SidebarPlaylistType[]>>
 }
 const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -187,7 +181,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
 
 export const PlaylistsPanel = () => {
     const { createPlaylist, getPlaylists } = useServer();
-    const [playlists, setPlaylists] = useState<Playlist[]>([]);
+    const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
 
     useEffect(() => {
         getPlaylists()

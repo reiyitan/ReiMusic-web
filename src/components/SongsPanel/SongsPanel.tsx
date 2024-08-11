@@ -2,7 +2,8 @@ import "./SongsPanel.css";
 import { useState, useRef, useLayoutEffect } from "react";
 import { tempsongs } from "./tempdata";
 import { Song } from "../Song";
-interface Song {
+import { SongType } from "../../types";
+interface TempSong {
     title: string,
     artist: string,
     duration: string,
@@ -10,7 +11,7 @@ interface Song {
 }
 
 export const SongsPanel = () => {
-    const [songs, setSongs] = useState<Song[]>(tempsongs);
+    const [songs, setSongs] = useState<TempSong[]>(tempsongs);
     const songListRef = useRef<HTMLDivElement | null>(null);
     const [categoriesWidth, setCategoriesWidth] = useState<number>(0);
 

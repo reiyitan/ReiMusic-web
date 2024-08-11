@@ -1,7 +1,8 @@
-import { useContext, createContext, useState } from "react";
+import { useContext, createContext, useState, useRef } from "react";
 import { Dispatch, SetStateAction } from "react";
 
 interface Song {
+    _id: string,
     title: string,
     artist: string,
     duration: number,
@@ -9,6 +10,12 @@ interface Song {
     s3_key: string
 }
 
+interface Playlist {
+    _id: string,
+    name: string, 
+    owner: string, 
+    songs: Song[]
+}
 interface LayoutContextInterface {
     songs: Song[],
     setSongs: Dispatch<SetStateAction<Song[]>>
@@ -20,6 +27,8 @@ interface LayoutProviderProps {
 }
 export const LayoutProvider = ({ children }: LayoutProviderProps) => {
     const [songs, setSongs] = useState<Song[]>([]);
+    const [currentSong, setCurrentSong] = useState<Song | null>(null); 
+    const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
     return (
         <LayoutContext.Provider value={{songs, setSongs}}>
             {children}
