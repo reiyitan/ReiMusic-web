@@ -1,7 +1,7 @@
 .song {
     display: grid;
     grid-template-columns: repeat(24, 1fr);
-    height: 26px;
+    height: var(--playlist-song-height);
     background-color: var(--clr-bg-main);
 }
 
@@ -11,7 +11,7 @@
 
 .song-field {
     display: inline-block;
-    line-height: 26px;
+    line-height: var(--playlist-song-height);
     overflow: hidden;
     white-space:nowrap;
     text-overflow: ellipsis;

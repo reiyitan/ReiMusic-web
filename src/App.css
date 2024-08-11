@@ -18,6 +18,7 @@
     --clr-icon-hvr: rgb(255, 255, 255);
     --clr-txt: rgb(255, 255, 255);
     --clr-font-light: rgb(255, 255, 255);
+    --playlist-song-height: 32px;
     --app-font: Figtree;
     background-color: rgb(15, 15, 15);
 }
