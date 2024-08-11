@@ -1,8 +1,10 @@
 import "./PlaylistsPanel.css";
 import { useState, useEffect, useLayoutEffect, useRef } from "react"; 
+import { ChangeEventHandler } from "react";
 import { MouseEventHandler, RefObject } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { useServer } from "../../ContextProviders";
+import { Modal } from "../Modal";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
     <svg 
@@ -58,15 +60,16 @@ interface Playlist {
 interface PlaylistProps {
     name: string,
     playlistId: string,
-    playlistsContainerRef: RefObject<HTMLDivElement>,
     setPlaylists: Dispatch<SetStateAction<Playlist[]>>
 }
-const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: PlaylistProps) => {
+const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const settingsPanelRef = useRef<HTMLDivElement>(null); 
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
-    const { deletePlaylist } = useServer();
+    const { deletePlaylist, renamePlaylist } = useServer();
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [newName, setNewName] = useState<string>("");
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         setSettingsOpen(true);
@@ -77,7 +80,7 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
     }
 
     const handleClick = (e: MouseEvent) => {
-        if (settingsPanelRef.current && dotsRef.current && playlistsContainerRef.current) {
+        if (settingsPanelRef.current && dotsRef.current) {
             if (!settingsPanelRef.current.contains(e.target as Node) && !dotsRef.current.contains(e.target as Node)) {
                 setSettingsOpen(false);
             }
@@ -100,8 +103,33 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
             })
     }
 
-    const handleRename = () => {
+    const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
+        if (newName.length === 30) {
+            return;
+        }
+        setNewName(e.target.value);
+    }
 
+    const handleRename: MouseEventHandler<HTMLButtonElement> = () => {
+        if (newName.trim().length === 0) return;
+        renamePlaylist(playlistId, newName)
+            .then(status => {
+                if (status === 204) {
+                    setPlaylists(oldPlaylists => {
+                        const newPlaylists = oldPlaylists.map(playlist => (
+                            playlist._id === playlistId ? { ...playlist, name: newName } : playlist
+                        ));
+                        return newPlaylists;
+                    });
+                    setModalVisible(false);
+                    setNewName("");
+                }
+            });
+    }
+    
+    const handleCancel: MouseEventHandler<HTMLButtonElement> = () => {
+        setModalVisible(false);
+        setNewName("");
     }
 
     return (
@@ -122,11 +150,25 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
                     {MinusIcon()}
                     <p className="settings-control-text prevent-select">Delete playlist</p>
                 </div>
-                <div className="settings-control" onClick={handleRename}>
+                <div className="settings-control" onClick={() => setModalVisible(true)}>
                     {RenameIcon()}
                     <p className="settings-control-text prevent-select">Rename playlist</p>
                 </div>
             </div>
+            <Modal isVisible={modalVisible}>
+                <div className="rename-container">
+                    <h2>Rename playlist</h2>
+                    <input 
+                        type="text"
+                        onChange={handleInput}
+                        value={newName}
+                        placeholder="Enter new name"
+                        autoCorrect="none"
+                    />
+                    <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
+                    <button onClick={handleCancel} className="rename-button-cancel">Cancel</button>
+                </div>
+            </Modal>
         </div>
     );
 }
@@ -134,7 +176,6 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
 export const PlaylistsPanel = () => {
     const { createPlaylist, getPlaylists } = useServer();
     const [playlists, setPlaylists] = useState<Playlist[]>([]);
-    const playlistsContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         getPlaylists()
@@ -157,16 +198,16 @@ export const PlaylistsPanel = () => {
     return (
         <div className="main-container shadow" id="playlists-panel">
             <div id="playlists-controls-container">
+                <h1>Your Playlists</h1>
                 {PlusIcon(handleCreatePlaylist)}
             </div>
-            <div id="playlists-container" className="scroller" ref={playlistsContainerRef}>
+            <div id="playlists-container" className="scroller">
                 {
                     playlists.map((playlist) => (
                         <Playlist 
                             name={playlist.name} 
                             playlistId={playlist._id} 
                             key={playlist._id} 
-                            playlistsContainerRef={playlistsContainerRef} 
                             setPlaylists={setPlaylists}
                         />
                     ))

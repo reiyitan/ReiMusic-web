@@ -19,7 +19,8 @@ interface ServerContextInterface {
     getUser: (uid: string) => Promise<User | undefined>,
     createPlaylist: () => Promise<Playlist | undefined>,
     getPlaylists: () => Promise<[Playlist] | undefined>,
-    deletePlaylist: (playlistId: string) => Promise<number | void>
+    deletePlaylist: (playlistId: string) => Promise<number | void>,
+    renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -104,6 +105,19 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
+    const renamePlaylist = async (playlistId: string, newName: string): Promise<number | void> => {
+        return fetch(`http://127.0.0.1:3000/api/playlist/rename/${auth.currentUser?.uid}/${playlistId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            },
+            body: JSON.stringify({newName: newName})
+        })
+            .then(res => res.status)
+            .catch(error => console.error(error));
+    }
+
     // const addToPlaylist = () => {
 
     // }
@@ -118,7 +132,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     // }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, deletePlaylist}}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, deletePlaylist, renamePlaylist}}>
             {children}
         </ServerContext.Provider>
     );
