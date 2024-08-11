@@ -16,8 +16,10 @@
     width: 100%;
     border-bottom: solid var(--clr-border) 1px;
     outline: none;
-    font-family: Figtree;
+    font-family: var(--app-font);
     font-size: 16px;
+    color: var(--clr-txt);
     height: 30px;
     padding: 3px;
+
 }

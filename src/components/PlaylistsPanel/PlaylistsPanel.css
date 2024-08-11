@@ -73,12 +73,12 @@
     grid-column: -1;
     align-self: center;
     margin-right: 5px;
-    stroke: rgb(100, 100, 100);
+    stroke: var(--clr-icon);
 }
 
 
 .sidebar-playlist-dots-icon:hover {
-    stroke: rgb(70, 70, 70);
+    stroke: var(--clr-icon-hvr);
 }
 
 .sidebar-playlist-settings-menu {
@@ -113,11 +113,11 @@
 }
 
 .sidebar-playlist-minus-icon {
-    stroke: rgb(100, 100, 100);
+    stroke: var(--clr-icon);
 }
 
 .sidebar-playlist-rename-icon {
-    fill: rgb(100, 100, 100);
+    fill: var(--clr-icon);
 }
 
 .settings-control-text {

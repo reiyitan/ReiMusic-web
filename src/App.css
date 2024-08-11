@@ -5,23 +5,26 @@
 }
 
 :root {
-    --clr-bg-main: rgb(255, 255, 255);
-    --clr-bg-main-hvr: rgb(235, 235, 235);
+    --clr-bg-main: rgb(40, 40, 40);
+    --clr-bg-main-hvr: rgb(70, 70, 70);
     --clr-bg-dark: rgb(240, 240, 240);
-    --clr-bg-dark-hvr: rgb(230, 230, 230);
+    --clr-bg-dark-hvr: rgb(225, 225, 225);
     --clr-border: rgba(150, 150, 150, 0.5);
-    --clr-highlight: rgb(60, 45, 240);
-    --clr-highlight-hvr: rgb(47, 32, 227);
-    --clr-warning: rgb(240, 40, 40);
-    --clr-warning-hvr: rgb(225, 25, 25);
-    --clr-icon: rgb(100, 100, 100);
-    --clr-icon-hvr: rgb(70, 70, 70);
+    --clr-highlight: rgb(90, 80, 240);
+    --clr-highlight-hvr: rgb(80, 70, 230);
+    --clr-warning: rgb(240, 70, 70);
+    --clr-warning-hvr: rgb(225, 55, 55);
+    --clr-icon: rgb(180, 180, 180);
+    --clr-icon-hvr: rgb(255, 255, 255);
+    --clr-txt: rgb(255, 255, 255);
     --clr-font-light: rgb(255, 255, 255);
-    background-color: rgb(250, 250, 250);
+    --app-font: Figtree;
+    background-color: rgb(15, 15, 15);
 }
 
 body {
-    font-family: Figtree;
+    font-family: var(--app-font);
+    color: var(--clr-txt);
 }
 
 .main-container {
@@ -30,7 +33,11 @@ body {
 }
 
 .shadow {
-    box-shadow: rgba(50, 50, 105, 0.15) 0px 2px 5px 0px, rgba(0, 0, 0, 0.05) 0px 1px 1px 0px;
+	box-shadow:
+	/* offset-x | offset-y | blur-radius | spread-radius | color */
+	0px 2px 2px 0px hsla(0,0%,0%,0.14), 
+	0px 3px 1px -2px hsla(0,0%,0%,0.12), 
+	0px 1px 5px 0px hsla(0,0%,0%,0.2);
 }
 
 .prevent-select {
@@ -40,7 +47,7 @@ body {
 }
 
 .scroller {
-    --scrollbar-color-thumb: var(--clr-bg-dark);
+    --scrollbar-color-thumb: rgba(100, 100, 100, 0.5);
     --scrollbar-color-track: transparent;
     --scrollbar-width: thin;
     --scrollbar-width-legacy: 10px;
