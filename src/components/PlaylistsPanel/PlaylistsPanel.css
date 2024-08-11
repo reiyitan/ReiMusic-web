@@ -47,6 +47,7 @@
     grid-template-columns: repeat(5, 1fr);
     background-color: var(--clr-bg-main);
     height: var(--playlist-song-height);
+    padding-left: 10px;
 }
 
 .playlist:hover {
@@ -58,7 +59,6 @@
 }
 
 .sidebar-playlist-name {
-    padding-left: 5px;
     display: inline-block;
     line-height: var(--playlist-song-height);
     overflow: hidden;
