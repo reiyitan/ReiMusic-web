@@ -89,11 +89,15 @@ const Playlist = ({ name, playlistId, playlistsContainerRef, setPlaylists }: Pla
     }, []); 
 
     const handleDelete = () => {
-        deletePlaylist(playlistId);
-        setPlaylists(prevPlaylists => {
-            const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
-            return newPlaylists;
-        });
+        deletePlaylist(playlistId)
+            .then(status => {
+                if (status && status === 204) {
+                    setPlaylists(prevPlaylists => {
+                        const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
+                        return newPlaylists;
+                    });
+                }
+            })
     }
 
     const handleRename = () => {

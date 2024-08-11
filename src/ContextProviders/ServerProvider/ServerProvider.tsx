@@ -19,7 +19,7 @@ interface ServerContextInterface {
     getUser: (uid: string) => Promise<User | undefined>,
     createPlaylist: () => Promise<Playlist | undefined>,
     getPlaylists: () => Promise<[Playlist] | undefined>,
-    deletePlaylist: (playlistId: string) => void
+    deletePlaylist: (playlistId: string) => Promise<number | void>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -51,9 +51,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             }
         })
             .then(res => res.json()) 
-            .then(userData => {
-                return userData
-            })
+            .then(userData => userData)
             .catch(error => console.error(error));
     }
 
@@ -95,13 +93,14 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
-    const deletePlaylist = async (playlistId: string) => {
-        fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+    const deletePlaylist = async (playlistId: string): Promise<number | void> => {
+        return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
             }
         })
+            .then(res => res.status)
             .catch(error => console.error(error));
     }
 
