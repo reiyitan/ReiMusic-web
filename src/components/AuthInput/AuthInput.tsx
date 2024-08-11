@@ -15,7 +15,7 @@ export const AuthInput = ({ label, value, setValue, type }: AuthInputProps) => {
 
     return (
         <div className="auth-input-container">
-            <span className="auth-label">{label}:</span>
+            <span className="auth-label">{label}</span>
             <input 
                 type={type} 
                 className="auth-input"
