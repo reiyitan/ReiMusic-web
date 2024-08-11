@@ -63,7 +63,7 @@
     flex-grow: 1;
     height: 26px;
     background-color: var(--clr-bg-main);
-    border-bottom: solid var(--clr-border-dark) 1px;
+    border-bottom: solid var(--clr-border) 1px;
 }
 
 #song-list {
