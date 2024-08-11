@@ -20,7 +20,7 @@
 }
 
 #topbar h1 {
-    background-color: var(--clr-bg-main);
+    background-color: var(--clr-highlight);
     font-weight: bold;
     font-size: 30px;
     padding: 7.5px 30px 7.5px 30px;

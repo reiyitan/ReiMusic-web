@@ -7,14 +7,20 @@ import { useServer } from "../../ContextProviders";
 import { Modal } from "../Modal";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
+
     <svg 
         id="playlists-controls-plus-icon" 
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
         role="button"
         onClick={handleClick}
+        viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink"
     >
-        <path d="M11 13V20H13V13H20V11H13V4H11V11H4V13H11Z"/>
+        <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+            <g fill="#FFFFFF" transform="translate(65.929697, 65.929697)">
+                <polygon points="211.189225 2.36847579e-14 211.189225 168.95138 380.140606 168.95138 380.140606 211.189225 211.189225 211.189225 211.189225 380.140606 168.95138 380.140606 168.95138 211.189225 -1.42108547e-14 211.189225 -1.42108547e-14 168.95138 168.95138 168.95138 168.95138 -1.42108547e-14">
+
+                </polygon>
+            </g>
+        </g>
     </svg>
 )
 
