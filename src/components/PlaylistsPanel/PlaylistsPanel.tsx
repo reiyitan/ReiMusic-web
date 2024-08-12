@@ -1,8 +1,7 @@
 import "./PlaylistsPanel.css";
-import { useState, useEffect, useRef } from "react"; 
+import { useEffect, useRef } from "react"; 
 import { MouseEventHandler, RefObject, MouseEvent } from "react";
 import { useServer, useLayout } from "../../ContextProviders";
-import { PlaylistSettings } from "../PlaylistSettings";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
     <svg 
@@ -38,36 +37,14 @@ interface PlaylistProps {
     playlistId: string
 }
 const Playlist = ({ name, playlistId }: PlaylistProps) => {
-    const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
-    const settingsPanelRef = useRef<HTMLDivElement>(null); 
-    const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
-    const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const { registerCallback, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
+    const { currentPlaylist, setCurrentPlaylist, setSongsPanelType, openPlaylistSettings} = useLayout();
 
-    const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
-        setSettingsOpen(true);
-        if (settingsPanelRef.current) {
-            const settingsRect = settingsPanelRef.current.getBoundingClientRect();
-            setSettingsPanelPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3})
-        }
+    const handleOpenSettings: MouseEventHandler<SVGSVGElement> = (e) => {
+        openPlaylistSettings(e, playlistId, name);
     }
-
-    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
-        if (deleteModalVisible || renameModalVisible) return;
-        if (settingsPanelRef.current && dotsRef.current) {
-            if (!settingsPanelRef.current.contains(e.target as Node) && !dotsRef.current.contains(e.target as Node)) {
-                setSettingsOpen(false);
-            }
-        }
-    }
-
-    useEffect(() => {
-        registerCallback(`${playlistId}-sidebar`, handleClick);
-    }, [settingsOpen, renameModalVisible, deleteModalVisible]); 
 
     const handlePlaylistClick: MouseEventHandler<HTMLDivElement> = (e: MouseEvent<HTMLElement>) => {
         if (thisPlaylistDivRef.current && thisPlaylistSpanRef.current) {
@@ -92,19 +69,7 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
             onClick={handlePlaylistClick}
         >
             <span ref={thisPlaylistSpanRef} className="sidebar-playlist-name prevent-select overflow-ellipsis">{name}</span>
-            {DotsIcon(openSettings, dotsRef)}
-            <PlaylistSettings 
-                name={name}
-                playlistId={playlistId}
-                settingsOpen={settingsOpen}
-                setSettingsOpen={setSettingsOpen}
-                renameModalVisible={renameModalVisible}
-                setRenameModalVisible={setRenameModalVisible}
-                deleteModalVisible={deleteModalVisible}
-                setDeleteModalVisible={setDeleteModalVisible}
-                settingsPanelPos={settingsPanelPos}
-                settingsPanelRef={settingsPanelRef}
-            />
+            {DotsIcon(handleOpenSettings, dotsRef)}
         </div>
     );
 }

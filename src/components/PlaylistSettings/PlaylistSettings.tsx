@@ -1,6 +1,6 @@
 import "./PlaylistSettings.css";
-import { useState } from "react";
-import { RefObject, Dispatch, SetStateAction, MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
+import { useState, useEffect } from "react";
+import { MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
 import { useServer, useLayout } from "../../ContextProviders";
 import { MainPlaylistType } from "../../types";
@@ -25,75 +25,80 @@ const RenameIcon = () => (
     </svg>
 )
 
-interface PositionInterface {
-    left: number,
-    top: number
-}
-
-interface PlaylistSettingsProps {
-    name: string | undefined,
-    playlistId: string | undefined,
-    settingsOpen: boolean,
-    setSettingsOpen: Dispatch<SetStateAction<boolean>>,
-    renameModalVisible: boolean,
-    setRenameModalVisible: Dispatch<SetStateAction<boolean>>,
-    deleteModalVisible: boolean,
-    setDeleteModalVisible: Dispatch<SetStateAction<boolean>>,
-    settingsPanelPos: PositionInterface,
-    settingsPanelRef: RefObject<HTMLDivElement>
-}
-export const PlaylistSettings = ({ 
-    name, 
-    playlistId, 
-    settingsOpen, setSettingsOpen, 
-    renameModalVisible, setRenameModalVisible,
-    deleteModalVisible, setDeleteModalVisible,
-    settingsPanelPos, 
-    settingsPanelRef 
-}: PlaylistSettingsProps) => {
+export const PlaylistSettings = () => {
     const [newName, setNewName] = useState<string>("");
     const { deletePlaylist, renamePlaylist } = useServer();
-    const { setPlaylists, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
+    const { 
+        setPlaylists, 
+        currentPlaylist, 
+        setCurrentPlaylist, 
+        setSongsPanelType, 
+        playlistSettingsInfo, setPlaylistSettingsInfo,
+        settingsPanelPos,
+        settingsPanelRef,
+        registerCallback
+    } = useLayout();
+    const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
+    const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+
+    const handlePageClick = (e: MouseEvent<HTMLDivElement>) => {
+        if (deleteModalVisible || renameModalVisible) return;
+        if (settingsPanelRef.current) {
+            const targetAsSVG = e.target as SVGElement;
+            const targetAsHeading = e.target as HTMLHeadingElement;
+            const targetAsHTML = e.target as HTMLElement; 
+            if (!settingsPanelRef.current.contains(e.target as Node) 
+                && !targetAsSVG.classList.contains("sidebar-playlist-dots-icon") 
+                && targetAsHeading.id !== "songs-panel-header-playlist"
+                && !targetAsHTML.parentElement?.classList.contains("sidebar-playlist-dots-icon")
+            ) {
+                setPlaylistSettingsInfo(null);
+            }
+        }
+    }
+
+    useEffect(() => {
+        registerCallback("playlist-settings", handlePageClick);
+    }, [playlistSettingsInfo, renameModalVisible, deleteModalVisible]); 
+
+    const closePanel = () => {
+        setDeleteModalVisible(false);
+        setRenameModalVisible(false);
+        setPlaylistSettingsInfo(null);
+        setNewName("");
+    }
 
     const handleDelete = () => {
-        if (!playlistId) return;
-        deletePlaylist(playlistId)
+        if (!playlistSettingsInfo) return;
+        deletePlaylist(playlistSettingsInfo.playlistId)
             .then(status => {
                 if (status && status === 204) {
                     setPlaylists(prevPlaylists => {
-                        const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
+                        const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistSettingsInfo.playlistId); 
                         return newPlaylists;
                     });
                     setSongsPanelType(null);
+                    closePanel();
                 }
             })
     }
 
-    const handleCancelDelete: MouseEventHandler<HTMLButtonElement> = () => {
-        setDeleteModalVisible(false);
-        setSettingsOpen(false);
-    }
-
     const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (newName.length === 30) {
-            return;
-        }
-        setNewName(e.target.value);
+        if (newName.length < 30) setNewName(e.target.value);
     }
 
     const handleRename: MouseEventHandler<HTMLButtonElement> = () => {
-        if (newName.trim().length === 0) return;
-        if (!playlistId) return;
-        renamePlaylist(playlistId, newName)
+        if (newName.trim().length === 0 || !playlistSettingsInfo) return;
+        renamePlaylist(playlistSettingsInfo.playlistId, newName)
             .then(status => {
                 if (status === 204) {
                     setPlaylists(oldPlaylists => {
                         const newPlaylists = oldPlaylists.map(playlist => (
-                            playlist._id === playlistId ? { ...playlist, name: newName } : playlist
+                            playlist._id === playlistSettingsInfo.playlistId ? { ...playlist, name: newName } : playlist
                         ));
                         return newPlaylists;
                     });
-                    if (currentPlaylist?._id === playlistId) {
+                    if (currentPlaylist?._id === playlistSettingsInfo.playlistId) {
                         setCurrentPlaylist(prev => {
                             if (prev) {
                                 return ({ ...prev, name: newName })
@@ -101,22 +106,14 @@ export const PlaylistSettings = ({
                             else return null;
                         });
                     }
-                    setRenameModalVisible(false);
-                    setSettingsOpen(false);
-                    setNewName("");
+                    closePanel();
                 }
             });
     }
 
-    const handleCancelRename: MouseEventHandler<HTMLButtonElement> = () => {
-        setRenameModalVisible(false);
-        setNewName("");
-        setSettingsOpen(false);
-    }
-
     return (
         <div 
-            className={settingsOpen ? "playlist-settings-menu shadow visible" : "playlist-settings-menu hidden"}
+            className={playlistSettingsInfo ? "playlist-settings-menu shadow visible" : "playlist-settings-menu shadow hidden"}
             style={{
                 left: settingsPanelPos.left,
                 top: settingsPanelPos.top
@@ -136,16 +133,16 @@ export const PlaylistSettings = ({
                     type="text"
                     onChange={handleInput}
                     value={newName}
-                    placeholder={name}
+                    placeholder={playlistSettingsInfo?.playlistName}
                     autoCorrect="none"
                     spellCheck={false}
                 />
                 <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
-                <button onClick={handleCancelRename} className="cancel-button">Cancel</button>
+                <button onClick={closePanel} className="cancel-button">Cancel</button>
             </Modal>
-            <Modal isVisible={deleteModalVisible} header={`Delete ${name}`}>
+            <Modal isVisible={deleteModalVisible} header={`Delete ${playlistSettingsInfo?.playlistName}`}>
                 <button onClick={handleDelete} className="delete-button-confirm">Delete</button>
-                <button onClick={handleCancelDelete} className="cancel-button">Cancel</button>
+                <button onClick={closePanel} className="cancel-button">Cancel</button>
             </Modal>
         </div>
     );

@@ -2,6 +2,7 @@
     position: fixed;
     width: 175px;
     background-color: var(--clr-bg-main);
+    z-index: 2;
 }
 
 .visible {
