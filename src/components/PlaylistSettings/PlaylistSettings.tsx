@@ -93,12 +93,14 @@ export const PlaylistSettings = ({
                         ));
                         return newPlaylists;
                     });
-                    setCurrentPlaylist(prev => {
-                        if (prev) {
-                            return ({ ...prev, name: newName })
-                        }
-                        else return null;
-                     });
+                    if (currentPlaylist?._id === playlistId) {
+                        setCurrentPlaylist(prev => {
+                            if (prev) {
+                                return ({ ...prev, name: newName })
+                            }
+                            else return null;
+                        });
+                    }
                     setRenameModalVisible(false);
                     setSettingsOpen(false);
                     setNewName("");

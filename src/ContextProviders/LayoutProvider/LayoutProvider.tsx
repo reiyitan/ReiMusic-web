@@ -38,11 +38,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
-
-    useEffect(() => {
-        console.log(callbacks);
-    }, [callbacks]);
-
+    
     const registerCallback = (id: string, callback: Callback): void => {
         setCallbacks(prevCallbacks => {
             const filteredCallbacks = prevCallbacks.filter(prevCallback => prevCallback.id === id);

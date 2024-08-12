@@ -42,12 +42,13 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const settingsPanelRef = useRef<HTMLDivElement>(null); 
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
+    const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
+    const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
     const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
     const { registerCallback, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
-        e.stopPropagation();
         setSettingsOpen(true);
         if (settingsPanelRef.current) {
             const settingsRect = settingsPanelRef.current.getBoundingClientRect();
@@ -68,7 +69,11 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
         registerCallback(`${playlistId}-sidebar`, handleClick);
     }, [settingsOpen, renameModalVisible, deleteModalVisible]); 
 
-    const handlePlaylistClick = () => {
+    const handlePlaylistClick: MouseEventHandler<HTMLDivElement> = (e: MouseEvent<HTMLElement>) => {
+        if (thisPlaylistDivRef.current && thisPlaylistSpanRef.current) {
+            const clickedElement = e.target as HTMLElement;
+            if (clickedElement !== thisPlaylistDivRef.current && clickedElement !== thisPlaylistSpanRef.current) return;
+        }
         //TODO call setCurrentPlaylist with actual info from API
         if (currentPlaylist?._id === playlistId) return;
         setCurrentPlaylist({
@@ -83,9 +88,10 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
     return (
         <div 
             className="playlist"
+            ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
         >
-            <span className="sidebar-playlist-name prevent-select overflow-ellipsis">{name}</span>
+            <span ref={thisPlaylistSpanRef} className="sidebar-playlist-name prevent-select overflow-ellipsis">{name}</span>
             {DotsIcon(openSettings, dotsRef)}
             <PlaylistSettings 
                 name={name}
