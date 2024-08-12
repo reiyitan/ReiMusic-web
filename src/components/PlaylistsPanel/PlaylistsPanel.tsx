@@ -44,7 +44,7 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
-    const { registerCallback } = useLayout();
+    const { registerCallback, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         setSettingsOpen(true);
@@ -67,9 +67,22 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
         registerCallback(playlistId, handleClick);
     }, [renameModalVisible, deleteModalVisible]); 
 
+    const handlePlaylistClick = () => {
+        //TODO call setCurrentPlaylist with actual info from API
+        if (currentPlaylist?._id === playlistId) return;
+        setCurrentPlaylist({
+            name: name,
+            _id: playlistId,
+            owner: "temp owner",
+            songs: []
+        });
+        setSongsPanelType("playlist");
+    }
+
     return (
         <div 
             className="playlist"
+            onClick={handlePlaylistClick}
         >
             <span className="sidebar-playlist-name prevent-select overflow-ellipsis">{name}</span>
             {DotsIcon(openSettings, dotsRef)}
