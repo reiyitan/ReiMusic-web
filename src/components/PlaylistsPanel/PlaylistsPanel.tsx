@@ -47,6 +47,7 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const { registerCallback, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
+        e.stopPropagation();
         setSettingsOpen(true);
         if (settingsPanelRef.current) {
             const settingsRect = settingsPanelRef.current.getBoundingClientRect();
