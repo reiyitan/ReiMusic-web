@@ -1,15 +1,23 @@
 import { useContext, createContext, useState, MouseEvent } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { SongType, SidebarPlaylistType, MainPlaylistType } from "../../types";
+import { tempsongs } from "./tempdata";
 
 type Callback = (e: MouseEvent<HTMLDivElement>) => void;
 interface CallbackObject {
     id: string,
     callback: Callback
 }
+
+interface TempSongType {
+    title: string,
+    artist: string,
+    duration: string,
+    uploader: string
+}
 interface LayoutContextInterface {
-    songs: SongType[],
-    setSongs: Dispatch<SetStateAction<SongType[]>>,
+    songs: TempSongType[],
+    setSongs: Dispatch<SetStateAction<TempSongType[]>>,
     currentSong: SongType | null, 
     setCurrentSong: Dispatch<SetStateAction<SongType | null>>,
     currentPlaylist: MainPlaylistType | null, 
@@ -24,7 +32,7 @@ interface LayoutContextInterface {
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
-    const [songs, setSongs] = useState<SongType[]>([]);
+    const [songs, setSongs] = useState<TempSongType[]>([]); //TODO change to SongType
     const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
     const [currentPlaylist, setCurrentPlaylist] = useState<MainPlaylistType | null>(null);
     const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
@@ -71,7 +79,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
 export const useLayout = () => {
     const layoutContext = useContext(LayoutContext); 
     if (!layoutContext) {
-        throw new Error("layoutContext must be used within a LayoutProvider"); 
+        throw new Error("useLayout must be used within a LayoutProvider"); 
     }
     return layoutContext;
 }
