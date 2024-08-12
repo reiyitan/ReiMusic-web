@@ -30,8 +30,8 @@ interface PositionInterface {
 }
 
 interface PlaylistSettingsProps {
-    name: string,
-    playlistId: string,
+    name: string | undefined,
+    playlistId: string | undefined,
     settingsOpen: boolean,
     setSettingsOpen: Dispatch<SetStateAction<boolean>>,
     renameModalVisible: boolean,
@@ -55,6 +55,7 @@ export const PlaylistSettings = ({
     const { setPlaylists } = useLayout();
 
     const handleDelete = () => {
+        if (!playlistId) return;
         deletePlaylist(playlistId)
             .then(status => {
                 if (status && status === 204) {
@@ -80,6 +81,7 @@ export const PlaylistSettings = ({
 
     const handleRename: MouseEventHandler<HTMLButtonElement> = () => {
         if (newName.trim().length === 0) return;
+        if (!playlistId) return;
         renamePlaylist(playlistId, newName)
             .then(status => {
                 if (status === 204) {
