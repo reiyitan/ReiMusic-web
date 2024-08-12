@@ -61,9 +61,6 @@
 .sidebar-playlist-name {
     display: inline-block;
     line-height: var(--playlist-song-height);
-    overflow: hidden;
-    white-space:nowrap;
-    text-overflow: ellipsis;
     grid-column: 1 / 6;
 }
 

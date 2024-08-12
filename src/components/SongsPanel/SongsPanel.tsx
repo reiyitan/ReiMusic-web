@@ -2,6 +2,7 @@ import "./SongsPanel.css";
 import { useState, useRef, useLayoutEffect } from "react";
 import { tempsongs } from "./tempdata";
 import { Song } from "../Song";
+import { useLayout } from "../../ContextProviders";
 import { SongType } from "../../types";
 interface TempSong {
     title: string,
@@ -14,6 +15,7 @@ export const SongsPanel = () => {
     const [songs, setSongs] = useState<TempSong[]>(tempsongs);
     const songListRef = useRef<HTMLDivElement | null>(null);
     const [categoriesWidth, setCategoriesWidth] = useState<number>(0);
+    const { songsPanelType, currentPlaylist } = useLayout();
 
     const updateCategoriesWidth = () => {
         if (songListRef.current) {
@@ -31,7 +33,9 @@ export const SongsPanel = () => {
 
     return (
         <div className="main-container shadow" id="songs-panel">
-                <h1 className="prevent-select">Playlist Title</h1>
+                {!songsPanelType && <h1 className="prevent-select" id="songs-panel-header-nonplaylist">Open a playlist or search for some songs!</h1>}
+                {songsPanelType === "search" && <h1 className="prevent-select" id="songs-panel-header-nonplaylist">Search results</h1>}
+                {songsPanelType === "playlist" && <h1 className="prevent-select" id="songs-panel-header-playlist">{currentPlaylist?.name}</h1>}
                 <div id="song-list-categories-container">
                     <div 
                         id="song-list-categories"
@@ -62,5 +66,4 @@ export const SongsPanel = () => {
                 </div>
             </div>
     );
-
 }

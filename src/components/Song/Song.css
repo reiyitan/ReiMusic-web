@@ -12,9 +12,6 @@
 .song-field {
     display: inline-block;
     line-height: var(--playlist-song-height);
-    overflow: hidden;
-    white-space:nowrap;
-    text-overflow: ellipsis;
 }
 
 .song-title {

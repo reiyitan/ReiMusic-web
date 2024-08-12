@@ -45,10 +45,10 @@ export const Song = ({ title, artist, duration, uploader }: SongProps) => {
     return (
         <div className="song">
             {PlayIcon(handlePlaySong)}
-            <span className="song-field song-title prevent-select">{title}</span>
-            <span className="song-field song-artist prevent-select">{artist}</span>
-            <span className="song-field song-duration prevent-select">{duration}</span>
-            <span className="song-field song-uploader prevent-select">{uploader}</span>
+            <span className="song-field song-title prevent-select overflow-ellipsis">{title}</span>
+            <span className="song-field song-artist prevent-select overflow-ellipsis">{artist}</span>
+            <span className="song-field song-duration prevent-select overflow-ellipsis">{duration}</span>
+            <span className="song-field song-uploader prevent-select overflow-ellipsis">{uploader}</span>
             {DotsIcon(handleOpenSongSettings, dotsRef)}
         </div>
     );
