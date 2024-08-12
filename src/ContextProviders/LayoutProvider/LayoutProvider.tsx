@@ -1,4 +1,4 @@
-import { useContext, createContext, useState, MouseEvent } from "react";
+import { useContext, createContext, useState, MouseEvent, useEffect } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { SongType, SidebarPlaylistType, MainPlaylistType } from "../../types";
 import { tempsongs } from "./tempdata";
@@ -39,11 +39,15 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
 
+    useEffect(() => {
+        console.log(callbacks);
+    }, [callbacks]);
+
     const registerCallback = (id: string, callback: Callback): void => {
         setCallbacks(prevCallbacks => {
             const filteredCallbacks = prevCallbacks.filter(prevCallback => prevCallback.id === id);
             if (filteredCallbacks.length === 0) {
-                return [{id: id, callback: callback}];
+                return [...prevCallbacks, {id: id, callback: callback}];
             }
             return prevCallbacks.map(prevCallback => {
                 if (prevCallback.id === id) {

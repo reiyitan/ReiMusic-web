@@ -17,6 +17,10 @@
     background-color: var(--clr-bg-main);
 }
 
+#songs-panel-header-playlist:hover {
+    text-decoration: underline;
+}
+
 #song-list-categories-container {
     width: 100%;
     display: flex;

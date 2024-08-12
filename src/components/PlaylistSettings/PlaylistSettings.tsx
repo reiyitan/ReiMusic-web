@@ -3,6 +3,7 @@ import { useState } from "react";
 import { RefObject, Dispatch, SetStateAction, MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
 import { useServer, useLayout } from "../../ContextProviders";
+import { MainPlaylistType } from "../../types";
 
 const MinusIcon = () => (
     <svg 
@@ -52,7 +53,7 @@ export const PlaylistSettings = ({
 }: PlaylistSettingsProps) => {
     const [newName, setNewName] = useState<string>("");
     const { deletePlaylist, renamePlaylist } = useServer();
-    const { setPlaylists } = useLayout();
+    const { setPlaylists, currentPlaylist, setCurrentPlaylist, setSongsPanelType } = useLayout();
 
     const handleDelete = () => {
         if (!playlistId) return;
@@ -63,6 +64,7 @@ export const PlaylistSettings = ({
                         const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
                         return newPlaylists;
                     });
+                    setSongsPanelType(null);
                 }
             })
     }
@@ -91,6 +93,12 @@ export const PlaylistSettings = ({
                         ));
                         return newPlaylists;
                     });
+                    setCurrentPlaylist(prev => {
+                        if (prev) {
+                            return ({ ...prev, name: newName })
+                        }
+                        else return null;
+                     });
                     setRenameModalVisible(false);
                     setSettingsOpen(false);
                     setNewName("");

@@ -64,8 +64,8 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
     }
 
     useEffect(() => {
-        registerCallback(playlistId, handleClick);
-    }, [renameModalVisible, deleteModalVisible]); 
+        registerCallback(`${playlistId}-sidebar`, handleClick);
+    }, [settingsOpen, renameModalVisible, deleteModalVisible]); 
 
     const handlePlaylistClick = () => {
         //TODO call setCurrentPlaylist with actual info from API
