@@ -1,14 +1,13 @@
 import "./PlaylistsPanel.css";
 import { useState, useEffect, useLayoutEffect, useRef } from "react"; 
 import { ChangeEventHandler } from "react";
-import { MouseEventHandler, RefObject } from "react";
+import { MouseEventHandler, RefObject, MouseEvent } from "react";
 import { Dispatch, SetStateAction } from "react";
 import { SidebarPlaylistType } from "../../types";
-import { useServer } from "../../ContextProviders";
+import { useServer, useLayout } from "../../ContextProviders";
 import { Modal } from "../Modal";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
-
     <svg 
         id="playlists-controls-plus-icon" 
         role="button"
@@ -71,6 +70,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
     const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
     const [newName, setNewName] = useState<string>("");
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
+    const { registerCallback } = useLayout();
 
     const openSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         setSettingsOpen(true);
@@ -80,17 +80,18 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
         }
     }
 
-    const handleClick = (e: MouseEvent) => {
+    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
+        if (deleteModalVisible || renameModalVisible) return;
         if (settingsPanelRef.current && dotsRef.current) {
             if (!settingsPanelRef.current.contains(e.target as Node) && !dotsRef.current.contains(e.target as Node)) {
                 setSettingsOpen(false);
             }
         }
     }
-    useLayoutEffect(() => {
-        window.addEventListener("click", handleClick);
-        return () => window.removeEventListener("click", handleClick);
-    }, []); 
+
+    useEffect(() => {
+        registerCallback(playlistId, handleClick);
+    }, [renameModalVisible, deleteModalVisible]); 
 
     const handleDelete = () => {
         deletePlaylist(playlistId)
@@ -106,6 +107,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
 
     const handleCancelDelete: MouseEventHandler<HTMLButtonElement> = () => {
         setDeleteModalVisible(false);
+        setSettingsOpen(false);
     }
 
     const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -127,6 +129,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
                         return newPlaylists;
                     });
                     setRenameModalVisible(false);
+                    setSettingsOpen(false);
                     setNewName("");
                 }
             });
@@ -135,6 +138,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
     const handleCancelRename: MouseEventHandler<HTMLButtonElement> = () => {
         setRenameModalVisible(false);
         setNewName("");
+        setSettingsOpen(false);
     }
 
     return (
@@ -181,7 +185,7 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
 
 export const PlaylistsPanel = () => {
     const { createPlaylist, getPlaylists } = useServer();
-    const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
+    const { playlists, setPlaylists } = useLayout();
 
     useEffect(() => {
         getPlaylists()

@@ -1,24 +1,24 @@
-import { useContext, createContext, useState, useRef } from "react";
+import { useContext, createContext, useState, MouseEvent } from "react";
 import { Dispatch, SetStateAction } from "react";
+import { SongType, SidebarPlaylistType, MainPlaylistType } from "../../types";
 
-interface Song {
-    _id: string,
-    title: string,
-    artist: string,
-    duration: number,
-    uploader: string,
-    s3_key: string
+type Callback = (e: MouseEvent<HTMLDivElement>) => void;
+interface CallbackObject {
+    id: string,
+    callback: Callback
 }
 
-interface Playlist {
-    _id: string,
-    name: string, 
-    owner: string, 
-    songs: Song[]
-}
 interface LayoutContextInterface {
-    songs: Song[],
-    setSongs: Dispatch<SetStateAction<Song[]>>
+    songs: SongType[],
+    setSongs: Dispatch<SetStateAction<SongType[]>>,
+    currentSong: SongType | null, 
+    setCurrentSong: Dispatch<SetStateAction<SongType | null>>,
+    currentPlaylist: MainPlaylistType | null, 
+    setCurrentPlaylist: Dispatch<SetStateAction<MainPlaylistType | null>>,
+    playlists: SidebarPlaylistType[],
+    setPlaylists: Dispatch<SetStateAction<SidebarPlaylistType[]>>,
+    handleRootDivClick: (e: MouseEvent<HTMLDivElement>) => void,
+    registerCallback: (id: string, callback: Callback) => void
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
 
@@ -26,11 +26,43 @@ interface LayoutProviderProps {
     children: React.ReactNode
 }
 export const LayoutProvider = ({ children }: LayoutProviderProps) => {
-    const [songs, setSongs] = useState<Song[]>([]);
-    const [currentSong, setCurrentSong] = useState<Song | null>(null); 
-    const [currentPlaylist, setCurrentPlaylist] = useState<Playlist | null>(null);
+    const [songs, setSongs] = useState<SongType[]>([]);
+    const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
+    const [currentPlaylist, setCurrentPlaylist] = useState<MainPlaylistType | null>(null);
+    const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
+    const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
+
+    const registerCallback = (id: string, callback: Callback): void => {
+        setCallbacks(prevCallbacks => {
+            const filteredCallbacks = prevCallbacks.filter(prevCallback => prevCallback.id === id);
+            if (filteredCallbacks.length === 0) {
+                return [{id: id, callback: callback}];
+            }
+            return prevCallbacks.map(prevCallback => {
+                if (prevCallback.id === id) {
+                    return { id: id, callback: callback };
+                }
+                else {
+                    return prevCallback;
+                }
+            });
+        });
+    }
+
+    const handleRootDivClick = (e: MouseEvent<HTMLDivElement>) => {
+        callbacks.forEach(callback => {
+            callback.callback(e);
+        });
+    }
+
     return (
-        <LayoutContext.Provider value={{songs, setSongs}}>
+        <LayoutContext.Provider value={{
+            songs, setSongs, 
+            currentSong, setCurrentSong, 
+            currentPlaylist, setCurrentPlaylist, 
+            playlists, setPlaylists, 
+            handleRootDivClick, registerCallback
+        }}>
             {children}
         </LayoutContext.Provider>
     );
