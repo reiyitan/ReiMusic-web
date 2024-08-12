@@ -1,11 +1,8 @@
 import "./PlaylistsPanel.css";
 import { useState, useEffect, useRef } from "react"; 
-import { ChangeEventHandler } from "react";
 import { MouseEventHandler, RefObject, MouseEvent } from "react";
-import { Dispatch, SetStateAction } from "react";
-import { SidebarPlaylistType } from "../../types";
 import { useServer, useLayout } from "../../ContextProviders";
-import { Modal } from "../Modal";
+import { PlaylistSettings } from "../PlaylistSettings";
 
 const PlusIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
     <svg 
@@ -58,17 +55,14 @@ const RenameIcon = () => (
 )
 interface PlaylistProps {
     name: string,
-    playlistId: string,
-    setPlaylists: Dispatch<SetStateAction<SidebarPlaylistType[]>>
+    playlistId: string
 }
-const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
+const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
     const settingsPanelRef = useRef<HTMLDivElement>(null); 
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const dotsRef = useRef<SVGSVGElement>(null);
-    const { deletePlaylist, renamePlaylist } = useServer();
     const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
-    const [newName, setNewName] = useState<string>("");
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
     const { registerCallback } = useLayout();
 
@@ -93,92 +87,24 @@ const Playlist = ({ name, playlistId, setPlaylists }: PlaylistProps) => {
         registerCallback(playlistId, handleClick);
     }, [renameModalVisible, deleteModalVisible]); 
 
-    const handleDelete = () => {
-        deletePlaylist(playlistId)
-            .then(status => {
-                if (status && status === 204) {
-                    setPlaylists(prevPlaylists => {
-                        const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistId); 
-                        return newPlaylists;
-                    });
-                }
-            })
-    }
-
-    const handleCancelDelete: MouseEventHandler<HTMLButtonElement> = () => {
-        setDeleteModalVisible(false);
-        setSettingsOpen(false);
-    }
-
-    const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (newName.length === 30) {
-            return;
-        }
-        setNewName(e.target.value);
-    }
-
-    const handleRename: MouseEventHandler<HTMLButtonElement> = () => {
-        if (newName.trim().length === 0) return;
-        renamePlaylist(playlistId, newName)
-            .then(status => {
-                if (status === 204) {
-                    setPlaylists(oldPlaylists => {
-                        const newPlaylists = oldPlaylists.map(playlist => (
-                            playlist._id === playlistId ? { ...playlist, name: newName } : playlist
-                        ));
-                        return newPlaylists;
-                    });
-                    setRenameModalVisible(false);
-                    setSettingsOpen(false);
-                    setNewName("");
-                }
-            });
-    }
-    
-    const handleCancelRename: MouseEventHandler<HTMLButtonElement> = () => {
-        setRenameModalVisible(false);
-        setNewName("");
-        setSettingsOpen(false);
-    }
-
     return (
         <div 
             className="playlist"
         >
             <span className="sidebar-playlist-name prevent-select">{name}</span>
             {DotsIcon(openSettings, dotsRef)}
-            <div 
-                className={settingsOpen ? "sidebar-playlist-settings-menu shadow visible" : "sidebar-playlist-settings-menu hidden"}
-                style={{
-                    left: settingsPanelPos.left,
-                    top: settingsPanelPos.top
-                }}
-                ref={settingsPanelRef}
-            >
-                <div className="settings-control" onClick={() => setRenameModalVisible(true)}>
-                    {RenameIcon()}
-                    <p className="settings-control-text prevent-select">Rename playlist</p>
-                </div>
-                <div className="settings-control" onClick={() => setDeleteModalVisible(true)}>
-                    {MinusIcon()}
-                    <p className="settings-control-text prevent-select">Delete playlist</p>
-                </div>
-            </div>
-            <Modal isVisible={renameModalVisible} header="Rename playlist">
-                <input 
-                    type="text"
-                    onChange={handleInput}
-                    value={newName}
-                    placeholder="Enter new name"
-                    autoCorrect="none"
-                />
-                <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
-                <button onClick={handleCancelRename} className="cancel-button">Cancel</button>
-            </Modal>
-            <Modal isVisible={deleteModalVisible} header="Delete playlist">
-                <button onClick={handleDelete} className="delete-button-confirm">Delete</button>
-                <button onClick={handleCancelDelete} className="cancel-button">Cancel</button>
-            </Modal>
+            <PlaylistSettings 
+                name={name}
+                playlistId={playlistId}
+                settingsOpen={settingsOpen}
+                setSettingsOpen={setSettingsOpen}
+                renameModalVisible={renameModalVisible}
+                setRenameModalVisible={setRenameModalVisible}
+                deleteModalVisible={deleteModalVisible}
+                setDeleteModalVisible={setDeleteModalVisible}
+                settingsPanelPos={settingsPanelPos}
+                settingsPanelRef={settingsPanelRef}
+            />
         </div>
     );
 }
@@ -218,7 +144,6 @@ export const PlaylistsPanel = () => {
                             name={playlist.name} 
                             playlistId={playlist._id} 
                             key={playlist._id} 
-                            setPlaylists={setPlaylists}
                         />
                     ))
                 }

@@ -7,7 +7,6 @@ interface CallbackObject {
     id: string,
     callback: Callback
 }
-
 interface LayoutContextInterface {
     songs: SongType[],
     setSongs: Dispatch<SetStateAction<SongType[]>>,
@@ -18,19 +17,19 @@ interface LayoutContextInterface {
     playlists: SidebarPlaylistType[],
     setPlaylists: Dispatch<SetStateAction<SidebarPlaylistType[]>>,
     handleRootDivClick: (e: MouseEvent<HTMLDivElement>) => void,
-    registerCallback: (id: string, callback: Callback) => void
+    registerCallback: (id: string, callback: Callback) => void,
+    songsPanelType: string | null,
+    setSongsPanelType: Dispatch<SetStateAction<string | null>>
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
 
-interface LayoutProviderProps {
-    children: React.ReactNode
-}
-export const LayoutProvider = ({ children }: LayoutProviderProps) => {
+export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<SongType[]>([]);
     const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
     const [currentPlaylist, setCurrentPlaylist] = useState<MainPlaylistType | null>(null);
     const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
+    const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
 
     const registerCallback = (id: string, callback: Callback): void => {
         setCallbacks(prevCallbacks => {
@@ -61,7 +60,8 @@ export const LayoutProvider = ({ children }: LayoutProviderProps) => {
             currentSong, setCurrentSong, 
             currentPlaylist, setCurrentPlaylist, 
             playlists, setPlaylists, 
-            handleRootDivClick, registerCallback
+            handleRootDivClick, registerCallback,
+            songsPanelType, setSongsPanelType
         }}>
             {children}
         </LayoutContext.Provider>
