@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "../LoginRegister.css";
-import { AuthInput } from "../../components";
+import { TextInput } from "../../components";
 import { Link } from "react-router-dom";
 import { useFirebase } from "../../ContextProviders";
 
@@ -24,13 +24,13 @@ export const LoginPage = () => {
             <h1 className="auth-page-header">Reidio</h1>
             <div className="auth-form-wrapper main-container shadow">
                 <h2 className="auth-form-header">Login</h2>
-                <AuthInput 
+                <TextInput
                     label="Email"
                     value={email} 
                     setValue={setEmail}
                     type="text"
                 />
-                <AuthInput 
+                <TextInput
                     label="Password"
                     value={pass} 
                     setValue={setPass}

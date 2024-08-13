@@ -1,8 +1,8 @@
-.auth-input-container {
+.text-input-container {
     margin-top: 10px;
 }
 
-.auth-label {
+.input-label {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -10,7 +10,7 @@
     font-weight: 600;
 }
 
-.auth-input {
+.text-input {
     background-color: var(--clr-bg-main);
     border: none;
     width: 100%;
