@@ -43,7 +43,7 @@ export const Song = ({ title, artist, duration, uploader }: SongProps) => {
     }
 
     return (
-        <div className="song">
+        <div className="song clickable">
             {PlayIcon(handlePlaySong)}
             <span className="song-field song-title prevent-select overflow-ellipsis">{title}</span>
             <span className="song-field song-artist prevent-select overflow-ellipsis">{artist}</span>

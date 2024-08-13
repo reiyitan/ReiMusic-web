@@ -53,6 +53,10 @@ body {
     text-overflow: ellipsis;
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .scroller {
     --scrollbar-color-thumb: rgba(100, 100, 100, 0.5);
     --scrollbar-color-track: transparent;
