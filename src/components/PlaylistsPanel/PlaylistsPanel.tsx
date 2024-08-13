@@ -64,7 +64,7 @@ const Playlist = ({ name, playlistId }: PlaylistProps) => {
 
     return (
         <div 
-            className="playlist"
+            className="playlist clickable"
             ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
         >

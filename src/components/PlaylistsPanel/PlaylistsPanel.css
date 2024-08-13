@@ -1,6 +1,6 @@
 #playlists-panel {
     grid-column: 1;
-    grid-row: 3 / 15;
+    grid-row: 4 / 15;
     min-width: 200px;
     min-height: 250px;
     display: flex;
