@@ -1,0 +1,77 @@
+#upload-search-panel {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    min-width: 200px;
+    min-height: 100px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.upload-search-panel-control {
+    height: 50%;
+    display: grid;
+    grid-template-columns: 1fr minmax(10px, 6fr);
+    padding-left: 10px;
+}
+
+.upload-search-panel-control p {
+    display: flex; 
+    align-items: center;
+}
+
+#upload-container:hover {
+    background-color: var(--clr-bg-main-hvr);
+}
+
+.upload-search-icon {
+    grid-column: 1;
+    align-self: center;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+#upload-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+#search-container input {
+    align-self: center;
+    outline: none;
+    border: none;
+    border-radius: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 65%;
+    margin-right: 10px;
+    background-color: var(--clr-bg-main-hvr);
+    font-family: var(--app-font);
+    color: var(--clr-txt);
+    font-size: 16px;
+}
+
+#search-icon {
+    width: 20px;
+    height: 20px;
+    stroke: var(--clr-txt);
+}
+
+#upload-confirm-button {
+    background-color: var(--clr-highlight);
+    color: var(--clr-txt);
+    margin-bottom: 10px;
+}
+
+#upload-confirm-button:hover {
+    background-color: var(--clr-highlight-hvr);
+}
+
+#upload-cancel-button {
+    background-color: var(--clr-bg-dark);
+}
+
+#upload-cancel-button:hover {
+    background-color: var(--clr-bg-dark-hvr);
+}
