@@ -14,7 +14,7 @@ export const RegisterPage = () => {
     const { createUser } = useServer();
 
     const handleRegister = () => {
-        if (!username || !email || !pass || !confPass) {
+        if (!username.trim() || !email.trim() || !pass || !confPass) {
             setMsg("Fill out all fields");
             return;
         }
@@ -31,7 +31,23 @@ export const RegisterPage = () => {
             return;
         }
         setMsg(""); 
-        register(username, email, pass, setMsg, createUser);
+        register(username.trim(), email.trim(), pass, setMsg, createUser);
+    }
+
+    const handleUsernameInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        if (username.trim().length < 16) setUsername(e.target.value);
+    }
+
+    const handleEmailInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setEmail(e.target.value);
+    }
+
+    const handlePassInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setPass(e.target.value);
+    }
+
+    const handleConfPassInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setConfPass(e.target.value);
     }
 
     return (
@@ -42,26 +58,30 @@ export const RegisterPage = () => {
             <TextInput
                     label="Username"
                     value={username} 
-                    setValue={setUsername}
+                    handleInput={handleUsernameInput}
                     type="text"
+                    placeholder={undefined}
                 />
             <TextInput
                 label="Email"
                 value={email} 
-                setValue={setEmail}
+                handleInput={handleEmailInput}
                 type="text"
+                placeholder={undefined}
             />
             <TextInput
                 label="Password"
                 value={pass} 
-                setValue={setPass}
+                handleInput={handlePassInput}
                 type="password"
+                placeholder={undefined}
             />
             <TextInput
                 label="Confirm password"
                 value={confPass} 
-                setValue={setConfPass}
+                handleInput={handleConfPassInput}
                 type="password"
+                placeholder={undefined}
             />
             <p className="warning-msg">{msg}</p>
             <button

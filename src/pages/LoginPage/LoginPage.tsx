@@ -19,6 +19,14 @@ export const LoginPage = () => {
         login(email, pass, setMsg);
     }
 
+    const handleEmailChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setEmail(e.target.value);
+    }
+
+    const handlePassChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        setPass(e.target.value);
+    }
+
     return (
         <div className="auth-page">
             <h1 className="auth-page-header">Reidio</h1>
@@ -27,14 +35,16 @@ export const LoginPage = () => {
                 <TextInput
                     label="Email"
                     value={email} 
-                    setValue={setEmail}
+                    handleInput={handleEmailChange}
                     type="text"
+                    placeholder={undefined}
                 />
                 <TextInput
                     label="Password"
                     value={pass} 
-                    setValue={setPass}
+                    handleInput={handlePassChange}
                     type="password"
+                    placeholder={undefined}
                 />
                 <p className="warning-msg">{msg}</p>
                 <button

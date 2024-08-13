@@ -2,26 +2,24 @@ import { Dispatch, SetStateAction, ChangeEvent } from "react";
 import "./TextInput.css"; 
 
 interface TextInputProps {
-    label: string,
+    label: string | undefined,
     value: string,
-    setValue: Dispatch<SetStateAction<string>>,
-    type: string
+    handleInput: React.ChangeEventHandler<HTMLInputElement>,
+    type: string,
+    placeholder: string | undefined
 }
 
-export const TextInput = ({ label, value, setValue, type }: TextInputProps) => {
-    const handleInput = (e: ChangeEvent<HTMLInputElement>): void => {
-        setValue(e.target.value);
-    }
-
+export const TextInput = ({ label, value, handleInput, type, placeholder }: TextInputProps) => {
     return (
         <div className="text-input-container">
-            <span className="input-label">{label}</span>
+            {label && <span className="input-label">{label}</span>}
             <input 
                 type={type} 
                 className="text-input"
                 onChange={handleInput}
                 value={value}
                 spellCheck={false}
+                placeholder={placeholder || ""}
             />
         </div>
     );
