@@ -75,3 +75,11 @@
 #upload-cancel-button:hover {
     background-color: var(--clr-bg-dark-hvr);
 }
+
+.warning-msg {
+    margin-top: 5px;
+    padding-top: 5px;
+    min-height: 20px;
+    text-align: center;
+    color: var(--clr-warning);
+}

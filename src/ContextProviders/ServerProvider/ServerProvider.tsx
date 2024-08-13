@@ -1,13 +1,14 @@
 import { createContext, useContext } from "react";
 import { useAuth } from "../FirebaseProvider";
-import { SidebarPlaylistType, UserType } from "../../types";
+import { SidebarPlaylistType, UserType, SongType } from "../../types";
 interface ServerContextInterface {
     createUser: (username: string) => void,
     getUser: (uid: string) => Promise<UserType | undefined>,
     createPlaylist: () => Promise<SidebarPlaylistType | undefined>,
     getPlaylists: () => Promise<SidebarPlaylistType[] | undefined>,
     deletePlaylist: (playlistId: string) => Promise<number | void>,
-    renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>
+    renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
+    uploadSong: (title: string, artist: string, duration: number, file: File) => Promise<SongType>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -114,12 +115,12 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     // }
 
 
-    // const createSong = () => {
-
-    // }
+    const uploadSong = async (title: string, artist: string, duration: number, file: File): Promise<SongType> => {    
+        
+    }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, deletePlaylist, renamePlaylist}}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, deletePlaylist, renamePlaylist, uploadSong}}>
             {children}
         </ServerContext.Provider>
     );

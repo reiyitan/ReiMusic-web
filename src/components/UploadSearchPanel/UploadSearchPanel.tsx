@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
+import { useServer } from "../../ContextProviders";
 import "./UploadSearchPanel.css"; 
 
 const UploadIcon = () => (
@@ -32,10 +33,13 @@ const SearchIcon = () => (
 
 export const UploadSearchPanel = () => {
     const [uploadMenuOpen, setUploadMenuOpen] = useState<boolean>(false);
-    const [title, setTitle] = useState<string>(""); 
-    const [artist, setArtist] = useState<string>(""); 
-
+    const [title, setTitle] = useState<string | undefined>(undefined); 
+    const [artist, setArtist] = useState<string | undefined>(undefined); 
+    const [file, setFile] = useState<File | undefined>(undefined);
+    const [duration, setDuration] = useState<number | undefined>(undefined);
+    const [msg, setMsg] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>(""); 
+    const { uploadSong } = useServer();
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         if (e.target.value.length <= 30) setSearchValue(e.target.value);
@@ -45,6 +49,7 @@ export const UploadSearchPanel = () => {
         setUploadMenuOpen(false);
         setTitle(""); 
         setArtist("");
+        setMsg("");
     }
 
     const handleOpen: React.MouseEventHandler<HTMLDivElement> = (e) => {
@@ -53,8 +58,45 @@ export const UploadSearchPanel = () => {
         setUploadMenuOpen(true); 
     }
 
+    const handleAddFile: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+        if (!e.target.files) return;
+        const selectedFile = e.target.files[0]
+        const audioObject = new Audio(URL.createObjectURL(selectedFile));
+        if (!audioObject) {
+            setMsg("Error loading the file");
+            return;
+        }
+        setMsg("");
+        audioObject.onloadedmetadata = () => {
+            setDuration(audioObject.duration);
+        }
+        setFile(selectedFile);
+    }
+
     const handleUploadSong = () => {
-        //remember to trim the input
+        if (!title || !artist) {
+            setMsg("Fill out title and artist fields");
+            return;
+        }
+        if (!file) {
+            setMsg("Upload an .mp3 file");
+            return;
+        }
+        if (file.type !== "audio/mpeg") {
+            setMsg("Only .mp3 file type is supported");
+            return;
+        }
+        if (file.size / (1024 * 1024) > 8) {
+            setMsg("Files are limited to 8MB");
+            return;
+        }
+        if (!duration) {
+            setMsg("There was an error uploading the file");
+            return;
+        }
+        setMsg("");
+        uploadSong(title, artist, duration, file);
+        //TODO create loading component and display while waiting
     }
 
     const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -84,7 +126,9 @@ export const UploadSearchPanel = () => {
                     <input 
                         id="upload-song-file-input"
                         type="file"
+                        onChange={handleAddFile}
                     />
+                    <p className="warning-msg" style={{marginBottom: "10px"}}>{msg}</p>
                     <button id="upload-confirm-button" onClick={handleUploadSong}>Upload</button>
                     <button id="upload-cancel-button" onClick={closeUploadMenu}>Cancel</button>
                 </Modal>
