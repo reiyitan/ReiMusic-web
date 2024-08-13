@@ -18,7 +18,7 @@
 
 #playlists-controls-container h1 {
     font-size: 17px;
-    margin-left: 5px;
+    margin-left: 15px;
 }
 
 #playlists-controls-plus-icon {
@@ -47,7 +47,7 @@
     grid-template-columns: repeat(5, 1fr);
     background-color: var(--clr-bg-main);
     height: var(--playlist-song-height);
-    padding-left: 10px;
+    padding-left: 15px;
 }
 
 .playlist:hover {
