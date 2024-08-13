@@ -8,6 +8,7 @@
     width: 100vw;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
+    z-index: 100;
 }
 
 .modal {
@@ -23,7 +24,7 @@
     margin-bottom: 30px;
 }
 
-.modal input {
+.modal input[type="text"] {
     outline: none;
     height: 30px;
     font-size: 20px;
@@ -33,6 +34,25 @@
     font-family: var(--app-font);
     padding-left: 5px;
 }
+
+.modal input[type="file"] {
+    padding-left: 0;
+    margin-bottom: 10px;
+    font-family: var(--app-font);
+    font-size: 16px;
+}
+
+.modal input::file-selector-button {
+    border: none;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.modal input::file-selector-button:hover {
+    background-color: var(--clr-bg-dark-hvr);
+}
+
 
 .modal button {
     border: none;
