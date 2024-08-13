@@ -99,7 +99,7 @@ export const PlaylistsPanel = () => {
     return (
         <div className="main-container shadow" id="playlists-panel">
             <div id="playlists-controls-container">
-                <h1>Your Playlists</h1>
+                <h1 className="prevent-select">Your Playlists</h1>
                 {PlusIcon(handleCreatePlaylist)}
             </div>
             <div id="playlists-container" className="scroller">
