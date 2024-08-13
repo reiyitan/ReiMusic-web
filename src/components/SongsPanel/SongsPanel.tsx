@@ -40,7 +40,7 @@ export const SongsPanel = () => {
                     songsPanelType === "playlist" && 
                     <>
                         <h1 
-                            className="prevent-select" 
+                            className="prevent-select clickable" 
                             id="songs-panel-header-playlist"
                             onClick={handleOpenPlaylistSettings}
                             role="button"
