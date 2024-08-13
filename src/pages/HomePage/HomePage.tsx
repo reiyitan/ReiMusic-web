@@ -1,5 +1,5 @@
 import "./HomePage.css"; 
-import { SongsPanel, PlaylistsPanel, BottomBarPanel } from "../../components";
+import { SongsPanel, PlaylistsPanel, BottomBarPanel, PlaylistSettings } from "../../components";
 import { useLayout } from "../../ContextProviders";
 
 export const HomePage = () => {
@@ -17,6 +17,7 @@ export const HomePage = () => {
             <PlaylistsPanel />
             <SongsPanel />
             <BottomBarPanel />
+            <PlaylistSettings />
         </div>
     );
 }

@@ -1,7 +1,6 @@
-import { useContext, createContext, useState, useEffect, useRef } from "react";
-import { Dispatch, SetStateAction, RefObject, MouseEventHandler } from "react";
+import { useContext, createContext, useState, useRef } from "react";
+import { Dispatch, SetStateAction, RefObject } from "react";
 import { SongType, SidebarPlaylistType, MainPlaylistType } from "../../types";
-import { PlaylistSettings } from "../../components";
 import { tempsongs } from "./tempdata";
 
 type Callback = (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -94,9 +93,6 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             settingsPanelRef,
             openPlaylistSettings
         }}>
-            <PlaylistSettings
-
-            />
             {children}
         </LayoutContext.Provider>
     );
