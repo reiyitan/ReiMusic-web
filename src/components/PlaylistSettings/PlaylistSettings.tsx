@@ -2,6 +2,7 @@ import "./PlaylistSettings.css";
 import { useState, useEffect } from "react";
 import { MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
+import { TextInput } from "../TextInput";
 import { useServer, useLayout } from "../../ContextProviders";
 import { MainPlaylistType } from "../../types";
 
@@ -84,7 +85,7 @@ export const PlaylistSettings = () => {
     }
 
     const handleInput: ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (newName.length < 30) setNewName(e.target.value);
+        if (e.target.value.length <= 30) setNewName(e.target.value);
     }
 
     const handleRename: MouseEventHandler<HTMLButtonElement> = () => {
@@ -129,13 +130,12 @@ export const PlaylistSettings = () => {
                 <p className="settings-control-text prevent-select">Delete playlist</p>
             </div>
             <Modal isVisible={renameModalVisible} header="Rename playlist">
-                <input 
-                    type="text"
-                    onChange={handleInput}
+                <TextInput 
+                    label={undefined}
                     value={newName}
+                    handleInput={handleInput}
+                    type="text"
                     placeholder={playlistSettingsInfo?.playlistName}
-                    autoCorrect="none"
-                    spellCheck={false}
                 />
                 <button onClick={handleRename} className="rename-button-confirm">Confirm</button>
                 <button onClick={closePanel} className="cancel-button">Cancel</button>

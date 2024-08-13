@@ -35,7 +35,7 @@ export const RegisterPage = () => {
     }
 
     const handleUsernameInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (username.trim().length < 16) setUsername(e.target.value);
+        if (e.target.value.length <= 16) setUsername(e.target.value);
     }
 
     const handleEmailInput: React.ChangeEventHandler<HTMLInputElement> = (e) => {
