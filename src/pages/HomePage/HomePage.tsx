@@ -1,5 +1,5 @@
 import "./HomePage.css"; 
-import { SongsPanel, PlaylistsPanel, BottomBarPanel, PlaylistSettings } from "../../components";
+import { SongsPanel, PlaylistsPanel, BottomBarPanel, PlaylistSettings, UploadSearchPanel } from "../../components";
 import { useLayout } from "../../ContextProviders";
 
 export const HomePage = () => {
@@ -13,7 +13,7 @@ export const HomePage = () => {
             <div id="topbar">
                 <h1 className="prevent-select shadow">Reidio</h1>
             </div>
-            <div className="main-container shadow" id="sidebar-top"></div>
+            <UploadSearchPanel />
             <PlaylistsPanel />
             <SongsPanel />
             <BottomBarPanel />

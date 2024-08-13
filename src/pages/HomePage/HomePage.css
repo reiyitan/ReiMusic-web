@@ -25,10 +25,3 @@
     font-size: 30px;
     padding: 7.5px 30px 7.5px 30px;
 }
-
-#sidebar-top {
-    grid-column: 1;
-    grid-row: 2;
-    min-width: 200px;
-    min-height: 50px;
-}
