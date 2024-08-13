@@ -6,3 +6,4 @@ export { PlaylistsPanel } from "./PlaylistsPanel";
 export { BottomBarPanel } from "./BottomBarPanel";
 export { PlaylistSettings } from "./PlaylistSettings";
 export { UploadSearchPanel } from "./UploadSearchPanel";
+export { Playlist } from "./Playlist";

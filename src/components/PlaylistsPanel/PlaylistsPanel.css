@@ -41,39 +41,3 @@
     overflow-y: scroll;
     overflow-x: hidden;
 }
-
-.playlist {
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr);
-    background-color: var(--clr-bg-main);
-    height: var(--playlist-song-height);
-    padding-left: 15px;
-}
-
-.playlist:hover {
-    background-color: var(--clr-bg-main-hvr);
-}
-
-.playlist:hover .sidebar-playlist-dots-icon {
-    visibility: visible;
-}
-
-.sidebar-playlist-name {
-    display: inline-block;
-    line-height: var(--playlist-song-height);
-    grid-column: 1 / 6;
-}
-
-.sidebar-playlist-dots-icon {
-    visibility: hidden;
-    width: 20px;
-    grid-column: -1;
-    align-self: center;
-    margin-right: 5px;
-    stroke: var(--clr-icon);
-}
-
-
-.sidebar-playlist-dots-icon:hover {
-    stroke: var(--clr-icon-hvr);
-}
