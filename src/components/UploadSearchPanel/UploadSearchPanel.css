@@ -68,6 +68,12 @@
     background-color: var(--clr-highlight-hvr);
 }
 
+#upload-button-waiting {
+    background-color: var(--clr-highlight-hvr);
+    margin-bottom: 10px;
+    color: var(--clr-txt);
+}
+
 #upload-cancel-button {
     background-color: var(--clr-bg-dark);
 }

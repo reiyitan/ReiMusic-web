@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
-import { useServer } from "../../ContextProviders";
+import { useServer, useAuth } from "../../ContextProviders";
 import "./UploadSearchPanel.css"; 
 
 const UploadIcon = () => (
@@ -39,7 +39,9 @@ export const UploadSearchPanel = () => {
     const [duration, setDuration] = useState<number | undefined>(undefined);
     const [msg, setMsg] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>(""); 
-    const { uploadSong } = useServer();
+    const { uploadSong, getUser } = useServer();
+    const auth = useAuth();
+    const [waiting, setWaiting] = useState<boolean>(false);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         if (e.target.value.length <= 30) setSearchValue(e.target.value);
@@ -73,7 +75,7 @@ export const UploadSearchPanel = () => {
         setFile(selectedFile);
     }
 
-    const handleUploadSong = () => {
+    const handleUploadSong = async () => {
         if (!title || !artist) {
             setMsg("Fill out title and artist fields");
             return;
@@ -90,12 +92,22 @@ export const UploadSearchPanel = () => {
             setMsg("Files are limited to 8MB");
             return;
         }
-        if (!duration) {
+        if (!duration || !auth.currentUser) {
             setMsg("There was an error uploading the file");
             return;
         }
-        setMsg("");
-        uploadSong(title, artist, duration, file);
+        const user = await getUser(auth.currentUser.uid);
+        if (!user) {
+            setMsg("There was an error uploading the file"); 
+            return;
+        }
+        setWaiting(true);
+        uploadSong(title, artist, duration, file, user.username)
+            .then(song => {
+                console.log(song);
+                setWaiting(false);
+                closeUploadMenu();
+            });
         //TODO create loading component and display while waiting
     }
 
@@ -129,8 +141,8 @@ export const UploadSearchPanel = () => {
                         onChange={handleAddFile}
                     />
                     <p className="warning-msg" style={{marginBottom: "10px"}}>{msg}</p>
-                    <button id="upload-confirm-button" onClick={handleUploadSong}>Upload</button>
-                    <button id="upload-cancel-button" onClick={closeUploadMenu}>Cancel</button>
+                    <button id={waiting ? "upload-button-waiting" : "upload-confirm-button"} onClick={handleUploadSong} disabled={waiting}>{waiting ? "Uploading..." : "Upload"}</button>
+                    <button id={waiting ? "cancel-button-waiting" : "upload-cancel-button"} onClick={closeUploadMenu} disabled={waiting}>Cancel</button>
                 </Modal>
             </div>
             <div id="search-container" className="upload-search-panel-control">

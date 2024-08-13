@@ -8,7 +8,7 @@ interface ServerContextInterface {
     getPlaylists: () => Promise<SidebarPlaylistType[] | undefined>,
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
-    uploadSong: (title: string, artist: string, duration: number, file: File) => Promise<SongType>
+    uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -40,7 +40,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             }
         })
             .then(res => res.json()) 
-            .then(userData => userData)
+            .then(userData => userData.user)
             .catch(error => console.error(error));
     }
 
@@ -115,8 +115,24 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     // }
 
 
-    const uploadSong = async (title: string, artist: string, duration: number, file: File): Promise<SongType> => {    
-        
+    const uploadSong = async (title: string, artist: string, duration: number, file: File, username: string): Promise<SongType> => {    
+        const formData = new FormData();
+        formData.append("title", title); 
+        formData.append("artist", artist); 
+        formData.append("duration", duration.toString()); 
+        formData.append("username", username);
+        formData.append("file", file); 
+
+        return fetch(`http://127.0.0.1:3000/api/song`, {
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            },
+            body: formData
+        })
+            .then(res => res.json()) 
+            .then(data => data.song)
+            .catch(error => console.error(error));
     }
 
     return (
