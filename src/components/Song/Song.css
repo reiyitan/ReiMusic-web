@@ -2,11 +2,23 @@
     display: grid;
     grid-template-columns: repeat(24, 1fr);
     height: var(--playlist-song-height);
+}
+
+.not-playing {
     background-color: var(--clr-bg-main);
 }
 
-.song:hover {
+.not-playing:hover {
     background-color: var(--clr-bg-main-hvr);
+}
+
+.playing {
+    background-color: var(--clr-highlight);
+    color: var(--clr-txt);
+}
+
+.playing:hover {
+    background-color: var(--clr-highlight-hvr);
 }
 
 .song-field {

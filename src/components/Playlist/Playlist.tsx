@@ -50,7 +50,6 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
                     _id: playlist._id,
                     songs: playlist.songs
                 });
-                console.log(playlist);
                 if (playlist.songs) setSongs(playlist.songs);
                 setSongsPanelType("playlist");
             })

@@ -51,7 +51,7 @@ interface SongProps {
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL } = useServer();
-    const { currentSong, setCurrentSong } = useLayout();
+    const { currentSong, setCurrentSong, currentPlaylist } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl } = useControl();
 
     const formatDuration = (duration: number) => {
@@ -61,7 +61,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     }
 
     const handlePlaySong = async () => {
-        if (!currentSong || currentSong?._id !== songId) { //no song playing or song change
+        if (!currentSong || currentSong?._id !== songId || currentSong.parentPlaylistId !== parentPlaylistId) { //no song playing or song change or playlist change
             const songURL = await getSongURL(s3_key);
             if (songURL) {
                 setCurrentSong({
@@ -90,9 +90,9 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     }
 
     return (
-        <div className="song clickable">
+        <div className={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId ? "song playing clickable" : "song not-playing clickable"}>
             {
-                currentSong?._id === songId && playing 
+                currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing 
                     ? PauseIcon(handlePauseSong)
                     : PlayIcon(handlePlaySong)
                 
