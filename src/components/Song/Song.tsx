@@ -90,7 +90,10 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     }
 
     return (
-        <div className={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId ? "song playing clickable" : "song not-playing clickable"}>
+        <div 
+            className={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId ? "song playing clickable" : "song not-playing clickable"}
+            onDoubleClick={handlePlaySong}
+        >
             {
                 currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing 
                     ? PauseIcon(handlePauseSong)
