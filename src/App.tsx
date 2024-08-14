@@ -2,7 +2,7 @@ import "./App.css";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"; 
 import { LoginPage, RegisterPage, HomePage } from "./pages";
 import { PrivateRoute } from "./components";
-import { FirebaseProvider, ServerProvider, LayoutProvider } from "./ContextProviders";
+import { FirebaseProvider, ServerProvider, LayoutProvider, ControlProvider } from "./ContextProviders";
 
 function App() {
     return (
@@ -16,7 +16,9 @@ function App() {
                             <Route path="/home" element={
                                 <PrivateRoute redirectPath="/login">
                                         <LayoutProvider>
-                                            <HomePage />
+                                            <ControlProvider>
+                                                <HomePage />
+                                            </ControlProvider>
                                         </LayoutProvider>
                                 </PrivateRoute>
                             }/>
