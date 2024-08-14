@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { MouseEventHandler, MouseEvent, RefObject } from "react";
-import { useLayout } from "../../ContextProviders";
+import { useLayout, useServer } from "../../ContextProviders";
 import "./Playlist.css";
 
 const DotsIcon = (handleClick: MouseEventHandler<SVGSVGElement>, dotsRef: RefObject<SVGSVGElement>) => (
@@ -24,7 +24,8 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const { currentPlaylist, setCurrentPlaylist, setSongsPanelType, openPlaylistSettings} = useLayout();
+    const { currentPlaylist, setCurrentPlaylist, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
+    const { getPlaylist } = useServer();
 
     const handleOpenSettings: MouseEventHandler<SVGSVGElement> = (e) => {
         openPlaylistSettings(e, playlistId, name);
@@ -35,15 +36,24 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
             const clickedElement = e.target as HTMLElement;
             if (clickedElement !== thisPlaylistDivRef.current && clickedElement !== thisPlaylistSpanRef.current) return;
         }
-        //TODO call setCurrentPlaylist with actual info from API
+
         if (currentPlaylist?._id === playlistId) return;
-        setCurrentPlaylist({
-            name: name,
-            _id: playlistId,
-            owner: "temp owner",
-            songs: []
-        });
-        setSongsPanelType("playlist");
+        getPlaylist(playlistId)
+            .then(playlist => {
+                if (!playlist) {
+                    setCurrentPlaylist(null);
+                    setSongsPanelType(null);
+                    return
+                }
+                setCurrentPlaylist({
+                    name: playlist.name,
+                    _id: playlist._id,
+                    owner: playlist.owner,
+                    songs: playlist.songs
+                });
+                setSongs(playlist.songs);
+                setSongsPanelType("playlist");
+            })
     }
 
     return (

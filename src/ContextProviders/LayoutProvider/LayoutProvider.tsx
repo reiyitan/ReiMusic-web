@@ -16,8 +16,8 @@ interface TempSongType {
     uploader: string
 }
 interface LayoutContextInterface {
-    songs: TempSongType[],
-    setSongs: Dispatch<SetStateAction<TempSongType[]>>,
+    songs: SongType[],
+    setSongs: Dispatch<SetStateAction<SongType[]>>,
     currentSong: SongType | null, 
     setCurrentSong: Dispatch<SetStateAction<SongType | null>>,
     currentPlaylist: MainPlaylistType | null, 
@@ -38,7 +38,7 @@ interface LayoutContextInterface {
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
 
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
-    const [songs, setSongs] = useState<TempSongType[]>([]); //TODO change to SongType
+    const [songs, setSongs] = useState<SongType[]>([]); //TODO change to SongType
     const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
     const [currentPlaylist, setCurrentPlaylist] = useState<MainPlaylistType | null>(null);
     const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
