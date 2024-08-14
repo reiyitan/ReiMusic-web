@@ -12,7 +12,8 @@ export interface SongType {
     duration: number,
     uploaderId: string, 
     uploader: string, 
-    s3_key: string
+    s3_key: string,
+    parentPlaylistId: string
 }
 
 export interface PlaylistType {

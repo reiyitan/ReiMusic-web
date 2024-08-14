@@ -9,7 +9,9 @@ interface ServerContextInterface {
     getPlaylist: (playlistId: string) => Promise<PlaylistType | undefined>,
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
-    uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>
+    uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
+    getSongURL: (s3_key: string) => Promise<string>,
+    getFileFromURL: (url: string) => Promise<File | void>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
 interface ServerProviderProps {
@@ -148,8 +150,35 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
+    const getSongURL = async (s3_key: string): Promise<string> => {
+        return fetch(`http://127.0.0.1:3000/api/song/${s3_key}`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => data.url)
+            .catch(error => console.error(error));
+    }
+
+    const getFileFromURL = async (url: string) => {
+        return fetch(url)
+            .then(res => {
+                if (!res.ok) {
+                    throw new Error("Error fetching file from URL");
+                }
+                return res.blob();
+            })
+            .then(blob => {
+                const file = new File([blob], "song");
+                return file;
+            })
+            .catch(error => console.error(error));
+    }
+
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, uploadSong}}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, uploadSong, getSongURL, getFileFromURL }}>
             {children}
         </ServerContext.Provider>
     );

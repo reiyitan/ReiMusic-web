@@ -3,7 +3,6 @@ import { useState, useRef, useLayoutEffect } from "react";
 import { MouseEventHandler } from "react";
 import { Song } from "../Song";
 import { useLayout } from "../../ContextProviders";
-import { SongType } from "../../types";
 
 export const SongsPanel = () => {
     const { songs } = useLayout();
@@ -72,11 +71,15 @@ export const SongsPanel = () => {
                     {
                         songs.map(song => (
                             <Song 
+                                songId={song._id}
                                 title={song.title}
                                 artist={song.artist}
                                 duration={song.duration}
+                                uploaderId={song.uploaderId}
                                 uploader={song.uploader}
-                                key={song.title}
+                                s3_key={song.s3_key}
+                                parentPlaylistId={song.parentPlaylistId}
+                                key={song._id}
                             />
                         ))
                     }

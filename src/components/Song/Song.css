@@ -36,6 +36,10 @@
     visibility: visible; 
 }
 
+.song:hover .song-pause-icon {
+    visibility: visible; 
+}
+
 .song-play-icon {
     visibility: hidden;
     width: 20px;
@@ -47,6 +51,19 @@
 
 .song-play-icon:hover {
     fill: var(--clr-icon-hvr);
+}
+
+.song-pause-icon {
+    visibility: hidden;
+    stroke: var(--clr-icon);
+    width: 16px;
+    grid-column: 1;
+    margin-left: 7px;
+    align-self: center;
+}
+
+.song-pause-icon:hover {
+    stroke: var(--clr-icon-hvr);
 }
 
 .song:hover .song-dots-icon {

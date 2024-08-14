@@ -1,5 +1,6 @@
 import { MouseEventHandler, RefObject } from "react";
 import { useRef } from "react";
+import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./Song.css";
 
 const PlayIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
@@ -11,6 +12,17 @@ const PlayIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
         xmlns="http://www.w3.org/2000/svg"
     >
         <path d="M10.968 23V9l12.762 7-12.762 7z"/>
+    </svg>
+)
+
+const PauseIcon = (handleClick: MouseEventHandler<SVGSVGElement>) => (
+    <svg 
+        className="song-pause-icon"
+        onClick={handleClick} 
+        role="button"
+        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+    >
+        <path d="M8 5V19M16 5V19" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 )
 
@@ -27,15 +39,50 @@ const DotsIcon = (handleClick: MouseEventHandler<SVGSVGElement>, dotsRef: RefObj
     </svg>
 )
 interface SongProps {
+    songId: string,
     title: string,
     artist: string,
-    duration: string,
-    uploader: string
+    duration: number,
+    uploaderId: string,
+    uploader: string,
+    s3_key: string,
+    parentPlaylistId: string
 }
-export const Song = ({ title, artist, duration, uploader }: SongProps) => {
+export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
-    const handlePlaySong = () => {
+    const { getSongURL } = useServer();
+    const { currentSong, setCurrentSong } = useLayout();
+    const { playing, playNewHowl, resumeHowl, pauseHowl } = useControl();
 
+    const formatDuration = (duration: number) => {
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.ceil(duration % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+    }
+
+    const handlePlaySong = async () => {
+        if (!currentSong || currentSong?._id !== songId) { //no song playing or song change
+            const songURL = await getSongURL(s3_key);
+            if (songURL) {
+                setCurrentSong({
+                    _id: songId,
+                    title: title,
+                    artist: artist,
+                    duration: duration,
+                    uploaderId: uploaderId,
+                    uploader: uploader,
+                    s3_key: s3_key,
+                    parentPlaylistId: parentPlaylistId
+                });
+                playNewHowl(songURL, parentPlaylistId);
+            }
+        } else {
+            resumeHowl();
+        }
+    }
+
+    const handlePauseSong = () => {
+        pauseHowl();
     }
 
     const handleOpenSongSettings = () => {
@@ -44,10 +91,15 @@ export const Song = ({ title, artist, duration, uploader }: SongProps) => {
 
     return (
         <div className="song clickable">
-            {PlayIcon(handlePlaySong)}
+            {
+                currentSong?._id === songId && playing 
+                    ? PauseIcon(handlePauseSong)
+                    : PlayIcon(handlePlaySong)
+                
+            }
             <span className="song-field song-title prevent-select overflow-ellipsis">{title}</span>
             <span className="song-field song-artist prevent-select overflow-ellipsis">{artist}</span>
-            <span className="song-field song-duration prevent-select overflow-ellipsis">{duration}</span>
+            <span className="song-field song-duration prevent-select overflow-ellipsis">{`${formatDuration(duration)}`}</span>
             <span className="song-field song-uploader prevent-select overflow-ellipsis">{uploader}</span>
             {DotsIcon(handleOpenSongSettings, dotsRef)}
         </div>

@@ -4,7 +4,7 @@ import { MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
 import { useServer, useLayout } from "../../ContextProviders";
-import { MainPlaylistType } from "../../types";
+import { PlaylistType } from "../../types";
 
 const MinusIcon = () => (
     <svg 
