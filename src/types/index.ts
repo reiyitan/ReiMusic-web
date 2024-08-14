@@ -1,1 +1,1 @@
-export type { UserType, SongType, SidebarPlaylistType, MainPlaylistType } from "./types";
+export type { UserType, SongType, PlaylistType } from "./types";

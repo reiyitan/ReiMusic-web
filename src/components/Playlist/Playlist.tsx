@@ -48,10 +48,9 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
                 setCurrentPlaylist({
                     name: playlist.name,
                     _id: playlist._id,
-                    owner: playlist.owner,
                     songs: playlist.songs
                 });
-                setSongs(playlist.songs);
+                if (playlist.songs) setSongs(playlist.songs);
                 setSongsPanelType("playlist");
             })
     }

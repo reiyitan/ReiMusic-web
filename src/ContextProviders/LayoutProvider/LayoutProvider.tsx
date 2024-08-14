@@ -1,6 +1,6 @@
 import { useContext, createContext, useState, useRef } from "react";
 import { Dispatch, SetStateAction, RefObject } from "react";
-import { SongType, SidebarPlaylistType, MainPlaylistType } from "../../types";
+import { SongType, PlaylistType } from "../../types";
 import { tempsongs } from "./tempdata";
 
 type Callback = (e: React.MouseEvent<HTMLDivElement>) => void;
@@ -20,10 +20,10 @@ interface LayoutContextInterface {
     setSongs: Dispatch<SetStateAction<SongType[]>>,
     currentSong: SongType | null, 
     setCurrentSong: Dispatch<SetStateAction<SongType | null>>,
-    currentPlaylist: MainPlaylistType | null, 
-    setCurrentPlaylist: Dispatch<SetStateAction<MainPlaylistType | null>>,
-    playlists: SidebarPlaylistType[],
-    setPlaylists: Dispatch<SetStateAction<SidebarPlaylistType[]>>,
+    currentPlaylist: PlaylistType | null, 
+    setCurrentPlaylist: Dispatch<SetStateAction<PlaylistType | null>>,
+    playlists: PlaylistType[],
+    setPlaylists: Dispatch<SetStateAction<PlaylistType[]>>,
     handleRootDivClick: (e: React.MouseEvent<HTMLDivElement>) => void,
     registerCallback: (id: string, callback: Callback) => void,
     songsPanelType: string | null,
@@ -40,8 +40,8 @@ const LayoutContext = createContext<LayoutContextInterface | undefined>(undefine
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<SongType[]>([]); //TODO change to SongType
     const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
-    const [currentPlaylist, setCurrentPlaylist] = useState<MainPlaylistType | null>(null);
-    const [playlists, setPlaylists] = useState<SidebarPlaylistType[]>([]);
+    const [currentPlaylist, setCurrentPlaylist] = useState<PlaylistType | null>(null);
+    const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
 

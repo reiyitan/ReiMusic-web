@@ -15,14 +15,8 @@ export interface SongType {
     s3_key: string
 }
 
-export interface SidebarPlaylistType {
+export interface PlaylistType {
     _id: string,
-    name: string
-}
-
-export interface MainPlaylistType {
-    _id: string,
-    name: string
-    owner: string,
-    songs: SongType[]
+    name: string,
+    songs: SongType[] | void
 }
