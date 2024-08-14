@@ -1,19 +1,11 @@
 import { useContext, createContext, useState, useRef } from "react";
 import { Dispatch, SetStateAction, RefObject } from "react";
 import { SongType, PlaylistType } from "../../types";
-import { tempsongs } from "./tempdata";
 
 type Callback = (e: React.MouseEvent<HTMLDivElement>) => void;
 interface CallbackObject {
     id: string,
     callback: Callback
-}
-
-interface TempSongType {
-    title: string,
-    artist: string,
-    duration: string,
-    uploader: string
 }
 interface LayoutContextInterface {
     songs: SongType[],
