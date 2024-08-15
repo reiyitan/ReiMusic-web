@@ -25,7 +25,8 @@ interface LayoutContextInterface {
     settingsPanelPos: {left: number, top: number},
     setSettingsPanelPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     settingsPanelRef: RefObject<HTMLDivElement>,
-    openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => void
+    openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => void,
+    formatDuration: (duration: number) => string
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
 
@@ -72,6 +73,12 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         });
     }
 
+    const formatDuration = (duration: number) => {
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.ceil(duration % 60).toString().padStart(2, "0");
+        return `${minutes}:${seconds}`;
+    }
+
     return (
         <LayoutContext.Provider value={{
             songs, setSongs, 
@@ -83,7 +90,8 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             playlistSettingsInfo, setPlaylistSettingsInfo,
             settingsPanelPos, setSettingsPanelPos,
             settingsPanelRef,
-            openPlaylistSettings
+            openPlaylistSettings,
+            formatDuration
         }}>
             {children}
         </LayoutContext.Provider>

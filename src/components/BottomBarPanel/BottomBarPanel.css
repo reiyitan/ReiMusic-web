@@ -1,6 +1,137 @@
 #bottom-bar-panel {
     grid-column: 1 / -1;
     grid-row: 15 / -1;
-    min-width: 400px;
+    min-width: 1000px;
     min-height: 100px;
+
+    display: grid; 
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+#bottom-bar-center-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#bottom-bar-seek-container {
+    display: grid;
+    grid-template-columns: 1fr 12fr 1fr;
+}
+
+#seek-track {
+    width: 100%;
+    height: 3px;
+    border-radius: 5px;
+    align-self: center;
+}
+
+#seek-track:hover #seek-thumb {
+    visibility: visible;
+}
+
+#seek-thumb {
+    visibility: hidden;
+    background-color: var(--clr-txt);
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    outline: none;
+}
+
+.bottom-bar-timestamp {
+    text-align: center;
+}
+
+#bottom-bar-center-controls {
+    display: flex;
+    flex-direction: row; 
+    align-items: center;
+    justify-content: center;
+}
+
+#bottom-bar-shuffle-icon-active {
+    width: 29px;
+    height: 29px;
+    margin: 0 5px 0 5px;
+    fill: var(--clr-highlight);
+}
+
+#bottom-bar-shuffle-icon-active:hover {
+    fill: var(--clr-highlight-hvr);
+}
+
+#bottom-bar-shuffle-icon-inactive {
+    width: 29px;
+    height: 29px;
+    margin: 0 5px 0 5px;
+    fill: var(--clr-icon);
+}
+
+#bottom-bar-shuffle-icon-inactive:hover {
+    fill: var(--clr-txt);
+}
+
+#bottom-bar-back-icon {
+    width: 30px;
+    height: 30px;
+    transform: scale(-1, 1);
+    fill: var(--clr-icon);
+}
+
+#bottom-bar-back-icon:hover {
+    fill: var(--clr-txt);
+}
+
+#bottom-bar-play-icon {
+    width: 50px;
+    height: 50px;
+    fill: var(--clr-icon);
+}
+
+#bottom-bar-play-icon:hover {
+    fill: var(--clr-txt);
+}
+
+#bottom-bar-pause-icon {
+    width: 35px;
+    height: 35px;
+    margin: 7.5px;
+    stroke: var(--clr-icon);
+}
+
+#bottom-bar-pause-icon:hover {
+    stroke: var(--clr-txt);
+}
+
+#bottom-bar-skip-icon {
+    width: 30px;
+    height: 30px;
+    fill: var(--clr-icon);
+}
+
+#bottom-bar-skip-icon:hover {
+    fill: var(--clr-txt);
+}
+
+#bottom-bar-loop-icon-active {
+    width: 23px;
+    height: 23px;
+    margin: 0 10px 0 10px;
+    stroke: var(--clr-highlight);
+}
+
+#bottom-bar-loop-icon-active:hover {
+    stroke: var(--clr-highlight-hvr);
+}
+
+#bottom-bar-loop-icon-inactive {
+    width: 23px;
+    height: 23px;
+    margin: 0 10px 0 10px;
+    stroke: var(--clr-icon);
+}
+
+#bottom-bar-loop-icon-inactive:hover {
+    stroke: var(--clr-txt);
 }

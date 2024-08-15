@@ -51,14 +51,8 @@ interface SongProps {
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL } = useServer();
-    const { currentSong, setCurrentSong } = useLayout();
+    const { currentSong, setCurrentSong, formatDuration } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl } = useControl();
-
-    const formatDuration = (duration: number) => {
-        const minutes = Math.floor(duration / 60);
-        const seconds = Math.ceil(duration % 60).toString().padStart(2, "0");
-        return `${minutes}:${seconds}`;
-    }
 
     const handlePlaySong = async () => {
         if (!currentSong || currentSong?._id !== songId || currentSong.parentPlaylistId !== parentPlaylistId) { //no song playing or song change or playlist change
