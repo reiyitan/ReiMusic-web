@@ -72,7 +72,7 @@ const ShuffleIcon = (handleClick: MouseEventHandler<SVGSVGElement>, shuffle: boo
 )
 
 export const BottomBarPanel = () => {
-    const { volume, seek, setSeek, currentHowl, playing, shuffle, setShuffle, loop, setLoop } = useControl();
+    const { volume, seek, setSeek, currentHowl, playing, shuffle, setShuffle, loop, setLoop, rewind, skip } = useControl();
     const { currentSong, formatDuration } = useLayout(); 
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
 

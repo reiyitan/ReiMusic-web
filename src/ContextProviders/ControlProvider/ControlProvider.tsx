@@ -4,6 +4,7 @@ import { Howl, Howler } from "howler";
 import { useServer } from "../ServerProvider";
 import { useLayout } from "../LayoutProvider";
 import { SongType } from "../../types";
+import { shuffle as shuffleArray } from "lodash";
 
 interface ControlContextProps {
     currentHowl: Howl | null,
@@ -20,7 +21,10 @@ interface ControlContextProps {
     setLoop: Dispatch<SetStateAction<boolean>>,
     playNewHowl: (s3_key: string, parentPlaylistId: string) => void,
     pauseHowl: () => void,
-    resumeHowl: () => void
+    resumeHowl: () => void,
+    populateQueue: (songId: string) => void,
+    rewind: () => void,
+    skip: () => void
 }
 const ControlContext = createContext<ControlContextProps | null>(null); 
 
@@ -34,7 +38,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const [shuffle, setShuffle] = useState<boolean>(false);
     const [loop, setLoop] = useState<boolean>(false);
     const { getFileFromURL } = useServer();
-    const { currentPlaylist } = useLayout();
+    const { currentPlaylist, currentSong } = useLayout();
 
     useEffect(() => {
         Howler.volume(volume);
@@ -69,9 +73,31 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         setPlaying(true);
     }
 
-    const populateQueue = () => {
-        
+    const populateQueue = (songId: string) => {
+        const songs = currentPlaylist?.songs;
+        if (songs) {
+            if (!shuffle) {
+                let songIndex: number | undefined;
+                for (let i = 0; i < songs.length; i++) {
+                    if (songs[i]._id === songId) {
+                        songIndex = i;
+                        break;
+                    }
+                }
+                if (!songIndex && songIndex !== 0) return;
+                setQueue(songs.slice(songIndex + 1));
+            }
+            else {
+                const filteredSongs = songs.filter(song => song._id !== songId); 
+                setQueue(shuffleArray(filteredSongs));
+            }
+        }
     }
+
+    useEffect(() => {
+        if (!currentSong) return;
+        populateQueue(currentSong._id);
+    }, [shuffle]);
 
     const rewind = () => {
 
@@ -90,7 +116,9 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             seek, setSeek, 
             shuffle, setShuffle,
             loop, setLoop,
-            playNewHowl, pauseHowl, resumeHowl
+            playNewHowl, pauseHowl, resumeHowl,
+            populateQueue,
+            rewind, skip
         }}>
             {children}
         </ControlContext.Provider>
