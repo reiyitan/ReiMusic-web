@@ -19,7 +19,7 @@ interface ControlContextProps {
     loop: boolean,
     setLoop: Dispatch<SetStateAction<boolean>>,
     currentPlayingPlaylistRef: React.MutableRefObject<SongType[]>,
-    playNewHowl: (s3_key: string, parentPlaylistId: string) => void,
+    playNewHowl: (url: string, samePlaylist: boolean) => void,
     pauseHowl: () => void,
     resumeHowl: () => void,
     populateQueue: (songId: string) => void,
@@ -33,12 +33,12 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const [playing, setPlaying] = useState<boolean>(false);
     const [volume, setVolume] = useState<number>(0.5);
     const queueRef = useRef<SongType[]>([]);
-    const historyRef = useRef<SongType[]>([]);
     const [seek, setSeek ] = useState<number[]>([0]);
     const [shuffle, setShuffle] = useState<boolean>(false);
     const shuffleRef = useRef<boolean>(shuffle);
     const [loop, setLoop] = useState<boolean>(false);
     const loopRef = useRef<boolean>(loop);
+    const historyRef = useRef<SongType[]>([]);
     const currentPlayingPlaylistRef = useRef<SongType[]>([]);
     const { getSongURL, getFileFromURL } = useServer();
     const { currentSong, setCurrentSong } = useLayout();
@@ -55,7 +55,9 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         currentSongRef.current = currentSong;
     }, [loop, shuffle, currentSong]);
 
-    const playNewHowl = async (url: string) => {
+    const playNewHowl = async (url: string, samePlaylist: boolean) => {
+        if (currentSongRef.current && samePlaylist) historyRef.current.push(currentSongRef.current);
+        else if (!samePlaylist) historyRef.current = [];
         setSeek([0]);
         const file = await getFileFromURL(url);
         if (file) {
@@ -73,20 +75,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         }
     }
 
-    const pauseHowl = () => {
-        if (!howlRef.current) return;
-        howlRef.current.pause();
-        setPlaying(false);
-    }
-
-    const resumeHowl = () => {
-        if (!howlRef.current) return;
-        howlRef.current.play();
-        setPlaying(true);
-    }
-
     const handleSongEnd = async () => {
-        if (currentSongRef.current) historyRef.current.push(currentSongRef.current);
         let nextSong;
         if (queueRef.current.length > 0) {
             nextSong = queueRef.current.shift();
@@ -99,7 +88,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
 
         if (nextSong) {
             const nextSongURL = await getSongURL(nextSong.s3_key);
-            await playNewHowl(nextSongURL);
+            await playNewHowl(nextSongURL, true);
             setCurrentSong(nextSong);
         }
         else {
@@ -145,9 +134,22 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         populateQueue(currentSong._id);
     }, [shuffle, loop]);
 
-    const rewind = () => {
+    const rewind = async () => {
 
     }
+
+    const pauseHowl = () => {
+        if (!howlRef.current) return;
+        howlRef.current.pause();
+        setPlaying(false);
+    }
+
+    const resumeHowl = () => {
+        if (!howlRef.current) return;
+        howlRef.current.play();
+        setPlaying(true);
+    }
+
 
     const skip = async () => {
         if (handlingSkip.current) return;
