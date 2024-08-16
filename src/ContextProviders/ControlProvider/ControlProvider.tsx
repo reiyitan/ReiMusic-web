@@ -21,6 +21,7 @@ interface ControlContextProps {
     loop: boolean,
     setLoop: Dispatch<SetStateAction<boolean>>,
     currentPlayingPlaylistRef: React.MutableRefObject<SongType[]>,
+    historyRef: React.MutableRefObject<SongType[]>,
     playNewHowl: (url: string, samePlaylist: boolean, playingFromHistory: boolean) => void,
     pauseHowl: () => void,
     resumeHowl: () => void,
@@ -197,6 +198,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             shuffle, setShuffle,
             loop, setLoop,
             currentPlayingPlaylistRef,
+            historyRef,
             playNewHowl, pauseHowl, resumeHowl,
             populateQueue,
             rewind, skip

@@ -52,10 +52,11 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL } = useServer();
     const { currentSong, setCurrentSong, formatDuration } = useLayout();
-    const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue } = useControl();
+    const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef } = useControl();
 
     const handlePlaySong = async () => {
         if (!currentSong || currentSong?._id !== songId || currentSong.parentPlaylistId !== parentPlaylistId) { //no song playing or song change or playlist change
+            if (currentSong) historyRef.current.push(currentSong);
             const songURL = await getSongURL(s3_key);
             if (songURL) {
                 setCurrentSong({
