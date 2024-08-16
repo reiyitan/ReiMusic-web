@@ -72,7 +72,7 @@ const ShuffleIcon = (handleClick: MouseEventHandler<SVGSVGElement>, shuffle: boo
 )
 
 export const BottomBarPanel = () => {
-    const { howlRef, volume, seek, setSeek, playing, shuffle, setShuffle, loop, setLoop, rewind, skip } = useControl();
+    const { howlRef, volume, seek, setSeek, playing, shuffle, setShuffle, loop, setLoop, rewind, skip, pauseHowl, resumeHowl } = useControl();
     const { currentSong, formatDuration } = useLayout(); 
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
 
@@ -101,8 +101,6 @@ export const BottomBarPanel = () => {
         }
         setIsSeeking(false);
     }
-    
-    const temp = () => {}
 
     return (
         <div className="main-container shadow" id="bottom-bar-panel">
@@ -111,7 +109,7 @@ export const BottomBarPanel = () => {
                 <div id="bottom-bar-center-controls">
                     {ShuffleIcon(() => setShuffle(prevShuffle => !prevShuffle), shuffle)}
                     {BackIcon(rewind)}
-                    {playing ? PauseIcon(temp) : PlayIcon(temp)}
+                    {playing ? PauseIcon(pauseHowl) : PlayIcon(resumeHowl)}
                     {SkipIcon(skip)}
                     {LoopIcon(() => setLoop(prevLoop => !prevLoop), loop)}
                 </div>

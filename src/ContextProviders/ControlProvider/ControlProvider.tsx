@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Howl, Howler } from "howler";
 import { useServer } from "../ServerProvider";
 import { useLayout } from "../LayoutProvider";
-import { SongType, PlaylistType } from "../../types";
+import { SongType } from "../../types";
 import { shuffle as shuffleArray } from "lodash";
 
 interface ControlContextProps {
@@ -74,12 +74,14 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     const pauseHowl = () => {
-        howlRef.current?.pause();
+        if (!howlRef.current) return;
+        howlRef.current.pause();
         setPlaying(false);
     }
 
     const resumeHowl = () => {
-        howlRef.current?.play();
+        if (!howlRef.current) return;
+        howlRef.current.play();
         setPlaying(true);
     }
 
@@ -97,12 +99,13 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
 
         if (nextSong) {
             const nextSongURL = await getSongURL(nextSong.s3_key);
-            playNewHowl(nextSongURL);
+            await playNewHowl(nextSongURL);
             setCurrentSong(nextSong);
         }
         else {
             setCurrentSong(null);
             setPlaying(false);
+            howlRef.current = null;
         }
     }
 
