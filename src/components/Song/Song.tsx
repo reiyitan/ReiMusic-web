@@ -70,10 +70,10 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
                 });
                 populateQueue(songId);
                 if (!currentSong || currentSong.parentPlaylistId !== parentPlaylistId) {
-                    playNewHowl(songURL, false);
+                    playNewHowl(songURL, false, false);
                 }
                 else {
-                    playNewHowl(songURL, true);
+                    playNewHowl(songURL, true, false);
                 }
             }
         } else {
