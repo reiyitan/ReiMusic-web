@@ -10,8 +10,10 @@ interface ControlContextProps {
     howlRef: React.RefObject<Howl | null>,
     playing: boolean,
     setPlaying: Dispatch<SetStateAction<boolean>>,
-    volume: number,
-    setVolume: Dispatch<SetStateAction<number>>,
+    mute: boolean,
+    setMute: Dispatch<SetStateAction<boolean>>,
+    volume: number[],
+    setVolume: Dispatch<SetStateAction<number[]>>,
     seek: number[],
     setSeek: Dispatch<SetStateAction<number[]>>,
     shuffle: boolean,
@@ -31,7 +33,8 @@ const ControlContext = createContext<ControlContextProps | null>(null);
 export const ControlProvider = ({ children }: { children: React.ReactNode }) => {
     const howlRef = useRef<Howl | null>(null);
     const [playing, setPlaying] = useState<boolean>(false);
-    const [volume, setVolume] = useState<number>(0.5);
+    const [mute, setMute] = useState<boolean>(false);
+    const [volume, setVolume] = useState<number[]>([0.5]);
     const queueRef = useRef<SongType[]>([]);
     const [seek, setSeek ] = useState<number[]>([0]);
     const [shuffle, setShuffle] = useState<boolean>(false);
@@ -45,8 +48,14 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const currentSongRef = useRef<SongType | null>(currentSong);
 
     useEffect(() => {
-        Howler.volume(volume);
-    }, [volume]); 
+        if (mute) {
+            Howler.mute(true);
+        }
+        else {
+            Howler.mute(false);
+            Howler.volume(volume[0]);
+        }
+    }, [volume, mute]); 
 
     useEffect(() => {
         loopRef.current = loop;
@@ -182,6 +191,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         <ControlContext.Provider value={{
             howlRef,
             playing, setPlaying, 
+            mute, setMute,
             volume, setVolume, 
             seek, setSeek, 
             shuffle, setShuffle,
