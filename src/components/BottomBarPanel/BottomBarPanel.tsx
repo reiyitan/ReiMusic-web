@@ -155,7 +155,8 @@ export const BottomBarPanel = () => {
     return (
         <div className="main-container shadow" id="bottom-bar-panel">
             <div id="song-info-container">
-
+                <span id="bottom-bar-title" className="overflow-ellipsis">{currentSong?.title}</span>
+                <span className="overflow-ellipsis">{currentSong?.artist}</span>
             </div>
             <div id="bottom-bar-center-container">
                 <div id="bottom-bar-center-controls">

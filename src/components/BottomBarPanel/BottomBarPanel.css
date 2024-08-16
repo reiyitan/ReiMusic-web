@@ -8,6 +8,18 @@
     grid-template-columns: 1fr 2fr 1fr;
 }
 
+#song-info-container {
+    display: grid;
+    height: 40px;
+    align-self: center;
+    padding-left: 20px;
+}
+
+#bottom-bar-title {
+    font-weight: bold;
+    font-size: 18px;
+}
+
 #bottom-bar-center-container {
     display: flex;
     flex-direction: column;
