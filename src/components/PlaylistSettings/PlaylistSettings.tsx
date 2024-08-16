@@ -31,8 +31,8 @@ export const PlaylistSettings = () => {
     const { deletePlaylist, renamePlaylist } = useServer();
     const { 
         setPlaylists, 
-        currentPlaylist, 
-        setCurrentPlaylist, 
+        currentDisplayPlaylist, 
+        setCurrentDisplayPlaylist, 
         setSongsPanelType, 
         playlistSettingsInfo, setPlaylistSettingsInfo,
         settingsPanelPos,
@@ -99,8 +99,8 @@ export const PlaylistSettings = () => {
                         ));
                         return newPlaylists;
                     });
-                    if (currentPlaylist?._id === playlistSettingsInfo.playlistId) {
-                        setCurrentPlaylist(prev => {
+                    if (currentDisplayPlaylist?._id === playlistSettingsInfo.playlistId) {
+                        setCurrentDisplayPlaylist(prev => {
                             if (prev) {
                                 return ({ ...prev, name: newName })
                             }

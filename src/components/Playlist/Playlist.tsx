@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { MouseEventHandler, MouseEvent, RefObject } from "react";
-import { useLayout, useServer } from "../../ContextProviders";
+import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./Playlist.css";
 
 const DotsIcon = (handleClick: MouseEventHandler<SVGSVGElement>, dotsRef: RefObject<SVGSVGElement>) => (
@@ -24,7 +24,8 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const { currentPlaylist, setCurrentPlaylist, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
+    const { setCurrentPlayingPlaylist } = useControl();
+    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
     const { getPlaylist } = useServer();
 
     const handleOpenSettings: MouseEventHandler<SVGSVGElement> = (e) => {
@@ -32,20 +33,21 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     }
 
     const handlePlaylistClick: MouseEventHandler<HTMLDivElement> = (e: MouseEvent<HTMLElement>) => {
-        if (thisPlaylistDivRef.current && thisPlaylistSpanRef.current) {
+        if (thisPlaylistDivRef.current && thisPlaylistSpanRef.current) { //clicking on dots will not open playlist
             const clickedElement = e.target as HTMLElement;
             if (clickedElement !== thisPlaylistDivRef.current && clickedElement !== thisPlaylistSpanRef.current) return;
         }
 
-        if (currentPlaylist?._id === playlistId) return;
+        if (currentDisplayPlaylist?._id === playlistId) return;
         getPlaylist(playlistId)
             .then(playlist => {
                 if (!playlist) {
-                    setCurrentPlaylist(null);
+                    setCurrentDisplayPlaylist(null);
                     setSongsPanelType(null);
                     return
                 }
-                setCurrentPlaylist({
+                if (playlist.songs) setCurrentPlayingPlaylist(playlist.songs);
+                setCurrentDisplayPlaylist({
                     name: playlist.name,
                     _id: playlist._id,
                     songs: playlist.songs

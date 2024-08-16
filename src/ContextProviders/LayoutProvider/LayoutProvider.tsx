@@ -12,8 +12,8 @@ interface LayoutContextInterface {
     setSongs: Dispatch<SetStateAction<SongType[]>>,
     currentSong: SongType | null, 
     setCurrentSong: Dispatch<SetStateAction<SongType | null>>,
-    currentPlaylist: PlaylistType | null, 
-    setCurrentPlaylist: Dispatch<SetStateAction<PlaylistType | null>>,
+    currentDisplayPlaylist: PlaylistType | null, 
+    setCurrentDisplayPlaylist: Dispatch<SetStateAction<PlaylistType | null>>,
     playlists: PlaylistType[],
     setPlaylists: Dispatch<SetStateAction<PlaylistType[]>>,
     handleRootDivClick: (e: React.MouseEvent<HTMLDivElement>) => void,
@@ -33,7 +33,7 @@ const LayoutContext = createContext<LayoutContextInterface | undefined>(undefine
 export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [songs, setSongs] = useState<SongType[]>([]); //TODO change to SongType
     const [currentSong, setCurrentSong] = useState<SongType| null>(null); 
-    const [currentPlaylist, setCurrentPlaylist] = useState<PlaylistType | null>(null);
+    const [currentDisplayPlaylist, setCurrentDisplayPlaylist] = useState<PlaylistType | null>(null);
     const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
@@ -83,7 +83,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         <LayoutContext.Provider value={{
             songs, setSongs, 
             currentSong, setCurrentSong, 
-            currentPlaylist, setCurrentPlaylist, 
+            currentDisplayPlaylist, setCurrentDisplayPlaylist, 
             playlists, setPlaylists, 
             handleRootDivClick, registerCallback,
             songsPanelType, setSongsPanelType,

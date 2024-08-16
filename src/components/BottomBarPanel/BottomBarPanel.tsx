@@ -123,7 +123,7 @@ export const BottomBarPanel = () => {
                         max={currentSong ? currentSong.duration : 1}
                         disabled={!currentSong}
                         step={1}
-                        values={seek}
+                        values={currentSong ? seek : [0]}
                         onChange={handleSeekChange}
                         onFinalChange={handleFinalChange}
                         renderTrack={({ props, children }) => (

@@ -8,7 +8,7 @@ export const SongsPanel = () => {
     const { songs } = useLayout();
     const songListRef = useRef<HTMLDivElement | null>(null);
     const [categoriesWidth, setCategoriesWidth] = useState<number>(0);
-    const { songsPanelType, currentPlaylist, openPlaylistSettings } = useLayout();
+    const { songsPanelType, currentDisplayPlaylist, openPlaylistSettings } = useLayout();
 
     const updateCategoriesWidth = () => {
         if (songListRef.current) {
@@ -27,8 +27,8 @@ export const SongsPanel = () => {
     const songsPanelHeaderRef = useRef<HTMLHeadingElement>(null);
 
     const handleOpenPlaylistSettings: MouseEventHandler<HTMLHeadingElement> = (e) => {
-        if (!currentPlaylist) return;
-        openPlaylistSettings(e, currentPlaylist._id, currentPlaylist.name);
+        if (!currentDisplayPlaylist) return;
+        openPlaylistSettings(e, currentDisplayPlaylist._id, currentDisplayPlaylist.name);
     }
 
     return (
@@ -45,7 +45,7 @@ export const SongsPanel = () => {
                             role="button"
                             ref={songsPanelHeaderRef}
                         >
-                            {currentPlaylist?.name}
+                            {currentDisplayPlaylist?.name}
                         </h1>
                     </>
                 }
