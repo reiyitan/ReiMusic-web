@@ -24,7 +24,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const { setCurrentPlayingPlaylist } = useControl();
+    const { currentPlayingPlaylistRef } = useControl();
     const { currentDisplayPlaylist, setCurrentDisplayPlaylist, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
     const { getPlaylist } = useServer();
 
@@ -46,7 +46,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
                     setSongsPanelType(null);
                     return
                 }
-                if (playlist.songs) setCurrentPlayingPlaylist(playlist.songs);
+                if (playlist.songs) currentPlayingPlaylistRef.current = playlist.songs;
                 setCurrentDisplayPlaylist({
                     name: playlist.name,
                     _id: playlist._id,

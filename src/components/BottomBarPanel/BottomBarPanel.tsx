@@ -72,38 +72,37 @@ const ShuffleIcon = (handleClick: MouseEventHandler<SVGSVGElement>, shuffle: boo
 )
 
 export const BottomBarPanel = () => {
-    const { volume, seek, setSeek, currentHowl, playing, shuffle, setShuffle, loop, setLoop, rewind, skip } = useControl();
+    const { howlRef, volume, seek, setSeek, playing, shuffle, setShuffle, loop, setLoop, rewind, skip } = useControl();
     const { currentSong, formatDuration } = useLayout(); 
     const [isSeeking, setIsSeeking] = useState<boolean>(false);
 
     useEffect(() => {
         let interval: NodeJS.Timeout; 
-        if (playing && currentHowl && !isSeeking) {
+        if (playing && howlRef.current && !isSeeking) {
             interval = setInterval(() => {
-                setSeek([currentHowl.seek()]);
+                if (howlRef.current) setSeek([howlRef.current.seek()]);
             }, 100);
         }
 
         return () => clearInterval(interval);
-    }, [playing, currentHowl, isSeeking]); 
+    }, [playing, isSeeking]); 
 
     const handleSeekChange = (values: number[]) => {
         setIsSeeking(true);
-        if (currentHowl) currentHowl.mute(true);
+        if (howlRef.current) howlRef.current.mute(true);
         setSeek(values);
     }
 
     const handleFinalChange = (values: number[]) => {
         setSeek(values); 
-        if (currentHowl) {
-            currentHowl.seek(values[0]); 
-            currentHowl.mute(false);
+        if (howlRef.current) {
+            howlRef.current.seek(values[0]); 
+            howlRef.current.mute(false);
         }
         setIsSeeking(false);
     }
-
+    
     const temp = () => {}
-
 
     return (
         <div className="main-container shadow" id="bottom-bar-panel">
@@ -111,9 +110,9 @@ export const BottomBarPanel = () => {
             <div id="bottom-bar-center-container">
                 <div id="bottom-bar-center-controls">
                     {ShuffleIcon(() => setShuffle(prevShuffle => !prevShuffle), shuffle)}
-                    {BackIcon(temp)}
+                    {BackIcon(rewind)}
                     {playing ? PauseIcon(temp) : PlayIcon(temp)}
-                    {SkipIcon(temp)}
+                    {SkipIcon(skip)}
                     {LoopIcon(() => setLoop(prevLoop => !prevLoop), loop)}
                 </div>
                 <div id="bottom-bar-seek-container">

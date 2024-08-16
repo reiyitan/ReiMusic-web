@@ -7,8 +7,7 @@ import { SongType, PlaylistType } from "../../types";
 import { shuffle as shuffleArray } from "lodash";
 
 interface ControlContextProps {
-    currentHowl: Howl | null,
-    setCurrentHowl: Dispatch<SetStateAction<Howl | null>>,
+    howlRef: React.RefObject<Howl | null>,
     playing: boolean,
     setPlaying: Dispatch<SetStateAction<boolean>>,
     volume: number,
@@ -19,8 +18,7 @@ interface ControlContextProps {
     setShuffle: Dispatch<SetStateAction<boolean>>,
     loop: boolean,
     setLoop: Dispatch<SetStateAction<boolean>>,
-    currentPlayingPlaylist: SongType[] | null,
-    setCurrentPlayingPlaylist: Dispatch<SetStateAction<SongType[] | null>>,
+    currentPlayingPlaylistRef: React.MutableRefObject<SongType[]>,
     playNewHowl: (s3_key: string, parentPlaylistId: string) => void,
     pauseHowl: () => void,
     resumeHowl: () => void,
@@ -31,36 +29,33 @@ interface ControlContextProps {
 const ControlContext = createContext<ControlContextProps | null>(null); 
 
 export const ControlProvider = ({ children }: { children: React.ReactNode }) => {
-    const [currentHowl, setCurrentHowl] = useState<Howl | null>(null);
+    const howlRef = useRef<Howl | null>(null);
     const [playing, setPlaying] = useState<boolean>(false);
     const [volume, setVolume] = useState<number>(0.5);
-    const [queue, setQueue] = useState<SongType[]>([]);
-    const queueRef = useRef<SongType[]>(queue);
-    const [history, setHistory] = useState<SongType[]>([]);
+    const queueRef = useRef<SongType[]>([]);
+    const historyRef = useRef<SongType[]>([]);
     const [seek, setSeek ] = useState<number[]>([0]);
     const [shuffle, setShuffle] = useState<boolean>(false);
+    const shuffleRef = useRef<boolean>(shuffle);
     const [loop, setLoop] = useState<boolean>(false);
     const loopRef = useRef<boolean>(loop);
-    const [currentPlayingPlaylist, setCurrentPlayingPlaylist] = useState<SongType[]| null>(null);
-    const currentPlayingPlaylistRef = useRef<SongType[] | null>(currentPlayingPlaylist);
+    const currentPlayingPlaylistRef = useRef<SongType[]>([]);
     const { getSongURL, getFileFromURL } = useServer();
     const { currentSong, setCurrentSong } = useLayout();
     const currentSongRef = useRef<SongType | null>(currentSong);
+    const handlingSkip = useRef<boolean>(false);
 
     useEffect(() => {
         Howler.volume(volume);
     }, [volume]); 
 
     useEffect(() => {
-        queueRef.current = queue;
         loopRef.current = loop;
+        shuffleRef.current = shuffle;
         currentSongRef.current = currentSong;
-        currentPlayingPlaylistRef.current = currentPlayingPlaylist
-    }, [queue, loop, currentSong, currentPlayingPlaylist]);
+    }, [loop, shuffle, currentSong]);
 
     const playNewHowl = async (url: string) => {
-        currentHowl?.stop();
-        currentHowl?.unload();
         setSeek([0]);
         const file = await getFileFromURL(url);
         if (file) {
@@ -70,42 +65,34 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
                 format: ["mp3"],
                 onend: handleSongEnd
             });
-            setCurrentHowl(sound);
+            howlRef.current?.stop();
+            howlRef.current?.unload();
+            howlRef.current = sound;
             sound.play();
             setPlaying(true);
         }
     }
 
     const pauseHowl = () => {
-        if (!currentHowl) return;
-        currentHowl.pause();
+        howlRef.current?.pause();
         setPlaying(false);
     }
 
     const resumeHowl = () => {
-        if (!currentHowl) return;
-        currentHowl.play();
+        howlRef.current?.play();
         setPlaying(true);
     }
 
     const handleSongEnd = async () => {
-        currentHowl?.unload();
-        setHistory(prevHistory => {
-            const newHistory = prevHistory; 
-            if (currentSongRef.current) newHistory.push(currentSongRef.current); 
-            return newHistory
-        })
+        if (currentSongRef.current) historyRef.current.push(currentSongRef.current);
         let nextSong;
-        const currentQueue = queueRef.current;
-        console.log(currentQueue);
-        if (currentQueue.length > 0) {
-            nextSong = currentQueue[0];
-            setQueue(prevQueue => prevQueue.slice(1));
+        if (queueRef.current.length > 0) {
+            nextSong = queueRef.current.shift();
         }
         else if (loopRef.current && currentSongRef.current) {
             const newQueue = generateQueue(currentSongRef.current._id);
             nextSong = newQueue[0];
-            setQueue(newQueue.slice(1));
+            queueRef.current = newQueue.slice(1);
         }
 
         if (nextSong) {
@@ -120,9 +107,6 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     const generateQueue = (songId: string): SongType[] => {
-        if (!currentPlayingPlaylistRef.current) {
-            return [];
-        }
         const songs = currentPlayingPlaylistRef.current;
         if (songs) {
             if (!shuffle) {
@@ -150,7 +134,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     const populateQueue = (songId: string) => {
-        setQueue(generateQueue(songId));
+        queueRef.current = generateQueue(songId);
     }
 
     useEffect(() => {
@@ -162,20 +146,25 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
 
     }
 
-    const skip = () => {
-
+    const skip = async () => {
+        if (handlingSkip.current) return;
+        handlingSkip.current = true;
+        howlRef.current?.stop();
+        howlRef.current?.unload();
+        await handleSongEnd();
+        handlingSkip.current = false;
     }
 
 
     return (
         <ControlContext.Provider value={{
-            currentHowl, setCurrentHowl, 
+            howlRef,
             playing, setPlaying, 
             volume, setVolume, 
             seek, setSeek, 
             shuffle, setShuffle,
             loop, setLoop,
-            currentPlayingPlaylist, setCurrentPlayingPlaylist,
+            currentPlayingPlaylistRef,
             playNewHowl, pauseHowl, resumeHowl,
             populateQueue,
             rewind, skip
