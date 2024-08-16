@@ -59,7 +59,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
 
     return (
         <div 
-            className="playlist clickable"
+            className={playlistId === currentDisplayPlaylist?._id ? "playlist-active clickable" : "playlist clickable"}
             ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
         >
