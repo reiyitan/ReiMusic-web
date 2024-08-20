@@ -111,6 +111,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             setCurrentSong(null);
             setPlaying(false);
             howlRef.current = null;
+            setSeek([0]);
         }
     }
 

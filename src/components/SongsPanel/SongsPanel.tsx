@@ -33,8 +33,14 @@ export const SongsPanel = () => {
 
     return (
         <div className="main-container shadow" id="songs-panel">
-                {!songsPanelType && <h1 className="prevent-select" id="songs-panel-header-nonplaylist">Open a playlist or search for some songs!</h1>}
-                {songsPanelType === "search" && <h1 className="prevent-select" id="songs-panel-header-nonplaylist">Search results</h1>}
+                {
+                    (!songsPanelType || songsPanelType === "search")
+                    && <>
+                        <h1 className="prevent-select" id="songs-panel-header-nonplaylist">
+                            Search for songs
+                        </h1>
+                    </>
+                }
                 {
                     songsPanelType === "playlist" && 
                     <>
@@ -49,24 +55,21 @@ export const SongsPanel = () => {
                         </h1>
                     </>
                 }
-                {
-                    (songsPanelType === "playlist" || songsPanelType === "search") &&
-                    <div id="song-list-categories-container">
-                        <div 
-                            id="song-list-categories"
-                            style={{
-                                width: categoriesWidth
-                            }}
-                        >
-                            <span id="song-list-category-title" className="song-list-category prevent-select">Title</span>
-                            <span id="song-list-category-artist" className="song-list-category prevent-select">Artist</span>
-                            <span id="song-list-category-duration" className="song-list-category prevent-select">Duration</span>
-                            <span id="song-list-category-uploader" className="song-list-category prevent-select">Uploader</span>
-                            <span id="song-list-category-settings-filler"></span>
-                        </div>
-                        <span id="song-list-category-filler" className="song-list-category"></span>
+                <div id="song-list-categories-container">
+                    <div 
+                        id="song-list-categories"
+                        style={{
+                            width: categoriesWidth
+                        }}
+                    >
+                        <span id="song-list-category-title" className="song-list-category prevent-select">Title</span>
+                        <span id="song-list-category-artist" className="song-list-category prevent-select">Artist</span>
+                        <span id="song-list-category-duration" className="song-list-category prevent-select">Duration</span>
+                        <span id="song-list-category-uploader" className="song-list-category prevent-select">Uploader</span>
+                        <span id="song-list-category-settings-filler"></span>
                     </div>
-                }
+                    <span id="song-list-category-filler" className="song-list-category"></span>
+                </div>
                 <div id="song-list" className="scroller" ref={songListRef}>
                     {
                         songs.map(song => (

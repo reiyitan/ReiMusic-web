@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
-import { useServer, useAuth } from "../../ContextProviders";
+import { useServer, useAuth, useLayout, useControl } from "../../ContextProviders";
 import "./UploadSearchPanel.css"; 
 
 const UploadIcon = () => (
@@ -39,7 +39,9 @@ export const UploadSearchPanel = () => {
     const [duration, setDuration] = useState<number | undefined>(undefined);
     const [msg, setMsg] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>(""); 
-    const { uploadSong, getUser } = useServer();
+    const { uploadSong, getUser, getSongs } = useServer();
+    const { songsPanelType, setSongsPanelType, setSongs } = useLayout();
+    const { currentPlayingPlaylistRef } = useControl();
     const auth = useAuth();
     const [waiting, setWaiting] = useState<boolean>(false);
 
@@ -119,6 +121,18 @@ export const UploadSearchPanel = () => {
         if (e.target.value.length <= 30) setArtist(e.target.value);
     }
 
+    const handleShowSearch = async () => {
+        if (songsPanelType !== "search") {
+            setSongsPanelType("search");
+            setSearchValue("");
+            const allSongs = (await getSongs()).map(song => {
+                return { ...song, parentPlaylistId: "search" };
+            })
+            setSongs(allSongs);
+            currentPlayingPlaylistRef.current = allSongs;
+        }
+    }
+
     return (
         <div className="main-container shadow" id="upload-search-panel">
             <div 
@@ -145,14 +159,14 @@ export const UploadSearchPanel = () => {
                     <button id={waiting ? "cancel-button-waiting" : "upload-cancel-button"} onClick={closeUploadMenu} disabled={waiting}>Cancel</button>
                 </Modal>
             </div>
-            <div id="search-container" className="upload-search-panel-control">
+            <div 
+                id="search-container" 
+                className="upload-search-panel-control"
+                role="button" 
+                onClick={handleShowSearch}
+            >
                 {SearchIcon()}
-                <input 
-                    onChange={handleChange}
-                    value={searchValue}
-                    spellCheck={false}
-                    placeholder="Search for songs"
-                />
+                <p className="prevent-select">Search</p>
             </div>
         </div>
     );

@@ -15,13 +15,13 @@
     padding-left: 10px;
 }
 
+.upload-search-panel-control:hover {
+    background-color: var(--clr-bg-main-hvr);
+}
+
 .upload-search-panel-control p {
     display: flex; 
     align-items: center;
-}
-
-#upload-container:hover {
-    background-color: var(--clr-bg-main-hvr);
 }
 
 .upload-search-icon {

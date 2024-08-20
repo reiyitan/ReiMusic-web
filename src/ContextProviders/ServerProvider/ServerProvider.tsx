@@ -10,6 +10,7 @@ interface ServerContextInterface {
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
     uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
+    getSongs: () => Promise<SongType[]>,
     getSongURL: (s3_key: string) => Promise<string>,
     getFileFromURL: (url: string) => Promise<File | void>
 }
@@ -129,6 +130,18 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
 
     // }
 
+    const getSongs = async (): Promise<SongType[]> => {
+        return fetch("http://127.0.0.1:3000/api/song", {
+            method: "GET", 
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            }
+        })
+            .then(res => res.json()) 
+            .then(data => data.songs.toReversed())
+            .catch(error => console.error(error));
+    }
+
 
     const uploadSong = async (title: string, artist: string, duration: number, file: File, username: string): Promise<SongType> => {    
         const formData = new FormData();
@@ -178,7 +191,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, uploadSong, getSongURL, getFileFromURL }}>
+        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, getSongs, uploadSong, getSongURL, getFileFromURL }}>
             {children}
         </ServerContext.Provider>
     );
