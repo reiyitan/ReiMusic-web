@@ -129,7 +129,7 @@ export const UploadSearchPanel = () => {
                 return { ...song, parentPlaylistId: "search" };
             })
             setSongs(allSongs);
-            currentPlayingPlaylistRef.current = allSongs;
+            currentPlayingPlaylistRef.current = allSongs.slice();
         }
     }
 
