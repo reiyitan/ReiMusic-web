@@ -47,6 +47,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const { getSongURL, getFileFromURL } = useServer();
     const { currentSong, setCurrentSong } = useLayout();
     const currentSongRef = useRef<SongType | null>(currentSong);
+    const cancelRef = useRef<boolean>(false);
 
     useEffect(() => {
         if (mute) {
@@ -83,6 +84,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             howlRef.current?.stop();
             howlRef.current?.unload();
             howlRef.current = sound;
+            if (cancelRef.current) return;
             sound.play();
             setPlaying(true);
         }
@@ -171,12 +173,14 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
 
     const pauseHowl = () => {
         if (!howlRef.current) return;
+        cancelRef.current = true;
         howlRef.current.pause();
         setPlaying(false);
     }
 
     const resumeHowl = () => {
         if (!howlRef.current) return;
+        cancelRef.current = false;
         howlRef.current.play();
         setPlaying(true);
     }
