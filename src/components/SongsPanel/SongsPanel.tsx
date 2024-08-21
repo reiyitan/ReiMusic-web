@@ -37,7 +37,7 @@ export const SongsPanel = () => {
                     (!songsPanelType || songsPanelType === "search")
                     && <>
                         <h1 className="prevent-select" id="songs-panel-header-nonplaylist">
-                            Search for songs
+                            Library
                         </h1>
                     </>
                 }

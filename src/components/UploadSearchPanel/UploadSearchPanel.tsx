@@ -137,7 +137,7 @@ export const UploadSearchPanel = () => {
         <div className="main-container shadow" id="upload-search-panel">
             <div 
                 id="upload-container" 
-                className="upload-search-panel-control"
+                className="upload-search-panel-control clickable"
                 role="button"
                 onClick={handleOpen}
             >
@@ -161,7 +161,7 @@ export const UploadSearchPanel = () => {
             </div>
             <div 
                 id="search-container" 
-                className="upload-search-panel-control"
+                className="upload-search-panel-control clickable"
                 role="button" 
                 onClick={handleShowSearch}
             >

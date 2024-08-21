@@ -1,4 +1,5 @@
-import { useContext, createContext, useState, useRef } from "react";
+import { useContext, createContext, useState, useRef, useEffect } from "react";
+import { useServer } from "../ServerProvider";
 import { Dispatch, SetStateAction, RefObject } from "react";
 import { SongType, PlaylistType } from "../../types";
 
@@ -37,6 +38,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
+    const { getSongs } = useServer();
 
     //playlist settings panel
     const [playlistSettingsInfo, setPlaylistSettingsInfo] = useState<{playlistId: string, playlistName: string} | null>(null); 
@@ -78,6 +80,18 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         const seconds = Math.ceil(duration % 60).toString().padStart(2, "0");
         return `${minutes}:${seconds}`;
     }
+
+    useEffect(() => {
+        getSongs()
+            .then(songs => {
+                setSongs(songs.map(song => {
+                    return {
+                        ...song,
+                        parentPlaylistId: "search"
+                    };
+                }));
+            });
+    }, []);
 
     return (
         <LayoutContext.Provider value={{
