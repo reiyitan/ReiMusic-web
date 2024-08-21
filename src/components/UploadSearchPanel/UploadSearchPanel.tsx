@@ -46,7 +46,7 @@ export const UploadSearchPanel = () => {
     const [waiting, setWaiting] = useState<boolean>(false);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (e.target.value.length <= 30) setSearchValue(e.target.value);
+        if (e.target.value.length <= 50) setSearchValue(e.target.value);
     }
 
     const closeUploadMenu = () => {
@@ -114,11 +114,11 @@ export const UploadSearchPanel = () => {
     }
 
     const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (e.target.value.length <= 30) setTitle(e.target.value); 
+        if (e.target.value.length <= 50) setTitle(e.target.value); 
     }
 
     const handleArtistChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
-        if (e.target.value.length <= 30) setArtist(e.target.value);
+        if (e.target.value.length <= 50) setArtist(e.target.value);
     }
 
     const handleShowSearch = async () => {
