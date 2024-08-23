@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
 import { useServer, useAuth, useLayout, useControl } from "../../ContextProviders";
@@ -39,11 +39,32 @@ export const UploadSearchPanel = () => {
     const [duration, setDuration] = useState<number | undefined>(undefined);
     const [msg, setMsg] = useState<string>("");
     const [searchValue, setSearchValue] = useState<string>(""); 
+    const [showSearch, setShowSearch] = useState<boolean>(false);
+    const searchRef = useRef<HTMLInputElement>(null);
+    const searchDivRef = useRef<HTMLDivElement>(null);
     const { uploadSong, getUser, getSongs } = useServer();
-    const { songsPanelType, setSongsPanelType, setSongs } = useLayout();
+    const { songsPanelType, setSongsPanelType, setSongs, registerCallback } = useLayout();
     const { currentPlayingPlaylistRef } = useControl();
     const auth = useAuth();
     const [waiting, setWaiting] = useState<boolean>(false);
+
+    const checkSearchClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (searchDivRef.current) {
+            if (!searchDivRef.current.contains(e.target as Node)) {
+                setShowSearch(false);
+            }
+        }
+    }
+
+    useEffect(() => {
+        registerCallback("check-search-click", checkSearchClick);
+    }, []);
+
+    useEffect(() => {
+        if (searchRef.current && showSearch) {
+            searchRef.current.focus();
+        }
+    }, [showSearch]);
 
     const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         if (e.target.value.length <= 50) setSearchValue(e.target.value);
@@ -122,6 +143,9 @@ export const UploadSearchPanel = () => {
     }
 
     const handleShowSearch = async () => {
+        if (!showSearch) {
+            setShowSearch(true);
+        }
         if (songsPanelType !== "search") {
             setSongsPanelType("search");
             setSearchValue("");
@@ -161,12 +185,23 @@ export const UploadSearchPanel = () => {
             </div>
             <div 
                 id="search-container" 
-                className="upload-search-panel-control clickable"
+                className={showSearch ? "search-panel-selected" : "upload-search-panel-control clickable"}
                 role="button" 
                 onClick={handleShowSearch}
+                ref={searchDivRef}
             >
                 {SearchIcon()}
-                <p className="prevent-select">Search</p>
+                {
+                    showSearch 
+                    ? <input 
+                        onChange={handleChange}
+                        ref={searchRef}
+                        value={searchValue}
+                        spellCheck={false}
+                        placeholder="Search for songs"
+                    />
+                    : <p className="prevent-select">Search</p>
+                }
             </div>
         </div>
     );
