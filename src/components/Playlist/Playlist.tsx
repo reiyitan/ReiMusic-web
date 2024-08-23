@@ -25,7 +25,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
     const { currentPlayingPlaylistRef } = useControl();
-    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
+    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
     const { getPlaylist } = useServer();
 
     const handleOpenSettings: MouseEventHandler<SVGSVGElement> = (e) => {
@@ -59,7 +59,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
 
     return (
         <div 
-            className={playlistId === currentDisplayPlaylist?._id ? "playlist-active clickable" : "playlist clickable"}
+            className={(playlistId === currentDisplayPlaylist?._id && songsPanelType === "playlist") ? "playlist-active clickable" : "playlist clickable"}
             ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
         >
