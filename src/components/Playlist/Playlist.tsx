@@ -43,7 +43,6 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
             .then(playlist => {
                 if (!playlist) {
                     setCurrentDisplayPlaylist(null);
-                    setSongsPanelType(null);
                     return
                 }
                 if (playlist.songs) currentPlayingPlaylistRef.current = playlist.songs.slice();

@@ -1,14 +1,31 @@
 import "./SongsPanel.css";
-import { useState, useRef, useLayoutEffect } from "react";
+import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { MouseEventHandler } from "react";
 import { Song } from "../Song";
-import { useLayout } from "../../ContextProviders";
+import { useLayout, useControl, useServer } from "../../ContextProviders";
 
 export const SongsPanel = () => {
-    const { songs } = useLayout();
+    const { songs, setSongs } = useLayout();
+    const { currentPlayingPlaylistRef } = useControl();
+    const { getSongs } = useServer();
     const songListRef = useRef<HTMLDivElement | null>(null);
     const [categoriesWidth, setCategoriesWidth] = useState<number>(0);
     const { songsPanelType, currentDisplayPlaylist, openPlaylistSettings } = useLayout();
+
+    useEffect(() => {
+        getSongs()
+            .then(songs => {
+                const mappedSongs = songs.map(song => {
+                    return {
+                        ...song,
+                        parentPlaylistId: "search"
+                    };
+                })
+                setSongs(mappedSongs);
+                currentPlayingPlaylistRef.current = mappedSongs.slice();
+            });
+    }, []);
+
 
     const updateCategoriesWidth = () => {
         if (songListRef.current) {

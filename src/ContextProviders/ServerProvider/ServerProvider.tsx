@@ -10,7 +10,7 @@ interface ServerContextInterface {
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
     uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
-    getSongs: () => Promise<SongType[]>,
+    getSongs: (query?: string) => Promise<SongType[]>,
     getSongURL: (s3_key: string) => Promise<string>,
     getFileFromURL: (url: string) => Promise<File | void>
 }
@@ -130,8 +130,8 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
 
     // }
 
-    const getSongs = async (): Promise<SongType[]> => {
-        return fetch("http://127.0.0.1:3000/api/song", {
+    const getSongs = async (query?: string): Promise<SongType[]> => {
+        return fetch(`http://127.0.0.1:3000/api/song?q=${query ? query.trim() : ""}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`

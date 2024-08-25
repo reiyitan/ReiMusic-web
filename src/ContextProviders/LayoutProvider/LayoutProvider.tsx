@@ -1,5 +1,4 @@
-import { useContext, createContext, useState, useRef, useEffect } from "react";
-import { useServer } from "../ServerProvider";
+import { useContext, createContext, useState, useRef } from "react";
 import { Dispatch, SetStateAction, RefObject } from "react";
 import { SongType, PlaylistType } from "../../types";
 
@@ -19,8 +18,8 @@ interface LayoutContextInterface {
     setPlaylists: Dispatch<SetStateAction<PlaylistType[]>>,
     handleRootDivClick: (e: React.MouseEvent<HTMLDivElement>) => void,
     registerCallback: (id: string, callback: Callback) => void,
-    songsPanelType: string | null,
-    setSongsPanelType: Dispatch<SetStateAction<string | null>>,
+    songsPanelType: string,
+    setSongsPanelType: Dispatch<SetStateAction<string>>,
     playlistSettingsInfo: {playlistId: string, playlistName: string} | null,
     setPlaylistSettingsInfo: Dispatch<SetStateAction<{playlistId: string, playlistName: string} | null>>,
     settingsPanelPos: {left: number, top: number},
@@ -37,8 +36,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [currentDisplayPlaylist, setCurrentDisplayPlaylist] = useState<PlaylistType | null>(null);
     const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
-    const [songsPanelType, setSongsPanelType] = useState<string | null>(null);
-    const { getSongs } = useServer();
+    const [songsPanelType, setSongsPanelType] = useState<string>("search");
 
     //playlist settings panel
     const [playlistSettingsInfo, setPlaylistSettingsInfo] = useState<{playlistId: string, playlistName: string} | null>(null); 
@@ -80,18 +78,6 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
         const seconds = Math.ceil(duration % 60).toString().padStart(2, "0");
         return `${minutes}:${seconds}`;
     }
-
-    useEffect(() => {
-        getSongs()
-            .then(songs => {
-                setSongs(songs.map(song => {
-                    return {
-                        ...song,
-                        parentPlaylistId: "search"
-                    };
-                }));
-            });
-    }, []);
 
     return (
         <LayoutContext.Provider value={{

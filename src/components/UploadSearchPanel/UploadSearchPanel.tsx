@@ -66,8 +66,33 @@ export const UploadSearchPanel = () => {
         }
     }, [showSearch]);
 
-    const handleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const handleShowSearch = async () => {
+        if (!showSearch) {
+            setShowSearch(true);
+        }
+        if (songsPanelType !== "search") {
+            setCurrentDisplayPlaylist(null);
+            setSongsPanelType("search");
+            setSearchValue("");
+            const allSongs = (await getSongs()).map(song => {
+                return { ...song, parentPlaylistId: "search" };
+            })
+            setSongs(allSongs);
+            currentPlayingPlaylistRef.current = allSongs.slice();
+        }
+    }
+
+    const handleSearchChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
         if (e.target.value.length <= 50) setSearchValue(e.target.value);
+    }
+
+    const handleSearchKeydown = async (e: React.KeyboardEvent) => {
+        if (e.key === "Enter") {
+            const newSongs = await getSongs(searchValue);
+            if (newSongs) {
+                setSongs(newSongs);
+            }
+        }
     }
 
     const closeUploadMenu = () => {
@@ -142,22 +167,6 @@ export const UploadSearchPanel = () => {
         if (e.target.value.length <= 50) setArtist(e.target.value);
     }
 
-    const handleShowSearch = async () => {
-        if (!showSearch) {
-            setShowSearch(true);
-        }
-        if (songsPanelType !== "search") {
-            setCurrentDisplayPlaylist(null);
-            setSongsPanelType("search");
-            setSearchValue("");
-            const allSongs = (await getSongs()).map(song => {
-                return { ...song, parentPlaylistId: "search" };
-            })
-            setSongs(allSongs);
-            currentPlayingPlaylistRef.current = allSongs.slice();
-        }
-    }
-
     return (
         <div className="main-container shadow" id="upload-search-panel">
             <div 
@@ -195,7 +204,8 @@ export const UploadSearchPanel = () => {
                 {
                     showSearch 
                     ? <input 
-                        onChange={handleChange}
+                        onChange={handleSearchChange}
+                        onKeyDown={handleSearchKeydown}
                         ref={searchRef}
                         value={searchValue}
                         spellCheck={false}
