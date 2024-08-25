@@ -43,7 +43,7 @@ export const UploadSearchPanel = () => {
     const searchRef = useRef<HTMLInputElement>(null);
     const searchDivRef = useRef<HTMLDivElement>(null);
     const { uploadSong, getUser, getSongs } = useServer();
-    const { songsPanelType, setSongsPanelType, setSongs, registerCallback } = useLayout();
+    const { songsPanelType, setSongsPanelType, setSongs, registerCallback, setCurrentDisplayPlaylist } = useLayout();
     const { currentPlayingPlaylistRef } = useControl();
     const auth = useAuth();
     const [waiting, setWaiting] = useState<boolean>(false);
@@ -147,6 +147,7 @@ export const UploadSearchPanel = () => {
             setShowSearch(true);
         }
         if (songsPanelType !== "search") {
+            setCurrentDisplayPlaylist(null);
             setSongsPanelType("search");
             setSearchValue("");
             const allSongs = (await getSongs()).map(song => {
