@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
-import { useServer, useLayout } from "../../ContextProviders";
+import { useServer, useLayout, useControl } from "../../ContextProviders";
 import { PlaylistType } from "../../types";
 
 const MinusIcon = () => (
@@ -28,7 +28,7 @@ const RenameIcon = () => (
 
 export const PlaylistSettings = () => {
     const [newName, setNewName] = useState<string>("");
-    const { deletePlaylist, renamePlaylist } = useServer();
+    const { deletePlaylist, renamePlaylist, getSongs } = useServer();
     const { 
         setPlaylists, 
         currentDisplayPlaylist, 
@@ -37,8 +37,10 @@ export const PlaylistSettings = () => {
         playlistSettingsInfo, setPlaylistSettingsInfo,
         settingsPanelPos,
         settingsPanelRef,
-        registerCallback
+        registerCallback,
+        setSongs
     } = useLayout();
+    const { currentPlayingPlaylistRef } = useControl();
     const [renameModalVisible, setRenameModalVisible] = useState<boolean>(false);
     const [deleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
 
@@ -72,13 +74,16 @@ export const PlaylistSettings = () => {
     const handleDelete = () => {
         if (!playlistSettingsInfo) return;
         deletePlaylist(playlistSettingsInfo.playlistId)
-            .then(status => {
+            .then(async status => {
                 if (status && status === 204) {
                     setPlaylists(prevPlaylists => {
                         const newPlaylists = prevPlaylists.filter(playlist => playlist._id !== playlistSettingsInfo.playlistId); 
                         return newPlaylists;
                     });
-                    setSongsPanelType(null);
+                    setSongsPanelType("search");
+                    const newSongs = await getSongs(); 
+                    setSongs(newSongs); 
+                    currentPlayingPlaylistRef.current = newSongs.slice();
                     closePanel();
                 }
             })

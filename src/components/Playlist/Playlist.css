@@ -22,6 +22,10 @@
     background-color: var(--clr-highlight-hvr);
 }
 
+.playlist-active:hover .sidebar-playlist-dots-icon {
+    visibility: visible;
+}
+
 .sidebar-playlist-name {
     display: inline-block;
     line-height: var(--playlist-song-height);
