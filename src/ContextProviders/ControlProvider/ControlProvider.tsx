@@ -27,7 +27,8 @@ interface ControlContextProps {
     resumeHowl: () => void,
     populateQueue: (songId: string) => void,
     rewind: () => void,
-    skip: () => void
+    skip: () => void,
+    cancelRef: React.MutableRefObject<boolean>
 }
 const ControlContext = createContext<ControlContextProps | null>(null); 
 
@@ -118,7 +119,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     const generateQueue = (songId: string): SongType[] => {
-        const songs = currentPlayingPlaylistRef.current;
+        const songs = currentPlayingPlaylistRef.current.slice();
         if (songs) {
             if (!shuffle) {
                 let songIndex: number | undefined;
@@ -189,6 +190,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const skip = async () => {
         howlRef.current?.stop();
         howlRef.current?.unload();
+        cancelRef.current = false;
         await handleSongEnd();
     }
 
@@ -206,7 +208,8 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             historyRef,
             playNewHowl, pauseHowl, resumeHowl,
             populateQueue,
-            rewind, skip
+            rewind, skip,
+            cancelRef
         }}>
             {children}
         </ControlContext.Provider>
