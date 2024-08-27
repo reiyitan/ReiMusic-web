@@ -35,7 +35,7 @@ const DotsIcon = (handleClick: MouseEventHandler<SVGSVGElement>, dotsRef: RefObj
         xmlns="http://www.w3.org/2000/svg"
         role="button"
     >
-        <path d="M18 12H18.01M12 12H12.01M6 12H6.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM19 12C19 12.5523 18.5523 13 18 13C17.4477 13 17 12.5523 17 12C17 11.4477 17.4477 11 18 11C18.5523 11 19 11.4477 19 12ZM7 12C7 12.5523 6.55228 13 6 13C5.44772 13 5 12.5523 5 12C5 11.4477 5.44772 11 6 11C6.55228 11 7 11.4477 7 12Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path className="song-dots-path" d="M18 12H18.01M12 12H12.01M6 12H6.01M13 12C13 12.5523 12.5523 13 12 13C11.4477 13 11 12.5523 11 12C11 11.4477 11.4477 11 12 11C12.5523 11 13 11.4477 13 12ZM19 12C19 12.5523 18.5523 13 18 13C17.4477 13 17 12.5523 17 12C17 11.4477 17.4477 11 18 11C18.5523 11 19 11.4477 19 12ZM7 12C7 12.5523 6.55228 13 6 13C5.44772 13 5 12.5523 5 12C5 11.4477 5.44772 11 6 11C6.55228 11 7 11.4477 7 12Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
 )
 interface SongProps {
@@ -52,9 +52,17 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL } = useServer();
     const { currentSong, setCurrentSong, formatDuration } = useLayout();
-    const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef } = useControl();
+    const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef, cancelRef } = useControl();
+    const songDivRef = useRef<HTMLDivElement>(null);
 
-    const handlePlaySong = async () => {
+    const handlePlaySong = async (e: React.MouseEvent) => {
+        if (songDivRef.current) {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains("song-dots-icon") || target.classList.contains("song-dots-path")) {
+                return; 
+            }
+        }
+        
         if (!currentSong || currentSong?._id !== songId || currentSong.parentPlaylistId !== parentPlaylistId) { //no song playing or song change or playlist change
             if (currentSong) historyRef.current.push(currentSong);
             const songURL = await getSongURL(s3_key);
@@ -70,6 +78,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
                     parentPlaylistId: parentPlaylistId
                 });
                 populateQueue(songId);
+                cancelRef.current = false;
                 if (!currentSong || currentSong.parentPlaylistId !== parentPlaylistId) {
                     playNewHowl(songURL, false, false);
                 }
@@ -82,7 +91,13 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
         }
     }
 
-    const handlePauseSong = () => {
+    const handlePauseSong = (e: React.MouseEvent) => {
+        if (songDivRef.current) {
+            const target = e.target as HTMLElement;
+            if (target.classList.contains("song-dots-icon") || target.classList.contains("song-dots-path")) {
+                return; 
+            }
+        }
         pauseHowl();
     }
 
@@ -94,6 +109,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
         <div 
             className={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId ? "song playing clickable" : "song not-playing clickable"}
             onDoubleClick={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing ? handlePauseSong : handlePlaySong}
+            ref={songDivRef}
         >
             {
                 currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing 
