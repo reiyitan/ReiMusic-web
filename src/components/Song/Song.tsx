@@ -51,7 +51,7 @@ interface SongProps {
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL } = useServer();
-    const { currentSong, setCurrentSong, formatDuration } = useLayout();
+    const { currentSong, setCurrentSong, formatDuration, openSongSettings } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef, cancelRef } = useControl();
     const songDivRef = useRef<HTMLDivElement>(null);
 
@@ -101,8 +101,8 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
         pauseHowl();
     }
 
-    const handleOpenSongSettings = () => {
-
+    const handleOpenSongSettings = (e: React.MouseEvent<SVGSVGElement>) => {
+        openSongSettings(e, songId, title, parentPlaylistId);
     }
 
     return (

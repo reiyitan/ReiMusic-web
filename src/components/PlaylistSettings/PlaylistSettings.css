@@ -30,18 +30,22 @@
     align-self: center;
 }
 
-.sidebar-playlist-minus-icon {
-    stroke: var(--clr-icon);
+.sidebar-playlist-trash-icon {
+    stroke: var(--clr-txt);
+    width: 24px;
+    margin-left: 1px;
 }
 
 .sidebar-playlist-rename-icon {
-    fill: var(--clr-icon);
+    fill: var(--clr-txt);
+    margin-left: 4px;
 }
 
 .settings-control-text {
     grid-column: 2 / -1;
     display: flex;
     align-items: center;
+    font-size: 12px;
 }
 
 .rename-button-confirm {

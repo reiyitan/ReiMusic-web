@@ -9,6 +9,7 @@ interface ServerContextInterface {
     getPlaylist: (playlistId: string) => Promise<PlaylistType | undefined>,
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
+    addToPlaylist: (playlistId: string, songId: string) => Promise<number | void>,
     uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
     getSongs: (query?: string) => Promise<SongType[]>,
     getSongURL: (s3_key: string) => Promise<string>,
@@ -122,9 +123,22 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
-    // const addToPlaylist = () => {
-
-    // }
+    const addToPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
+        return fetch(`http://127.0.0.1:3000/api/playlist/add/${auth.currentUser?.uid}/${playlistId}`, {
+            method: "PATCH", 
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            },
+            body: JSON.stringify({
+                songId: songId
+            })
+        })
+            .then(res => {
+                return res.status;
+            })
+            .catch(error => console.error(error));
+    }
 
     // const removeFromPlaylist = () => {
 
@@ -191,7 +205,11 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     return (
-        <ServerContext.Provider value={{createUser, getUser, createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, getSongs, uploadSong, getSongURL, getFileFromURL }}>
+        <ServerContext.Provider value={{
+                createUser, getUser, 
+                createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, addToPlaylist,
+                getSongs, uploadSong, getSongURL, getFileFromURL 
+            }}>
             {children}
         </ServerContext.Provider>
     );

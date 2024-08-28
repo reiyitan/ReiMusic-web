@@ -20,12 +20,20 @@ interface LayoutContextInterface {
     registerCallback: (id: string, callback: Callback) => void,
     songsPanelType: string,
     setSongsPanelType: Dispatch<SetStateAction<string>>,
+    vanisherMsg: string, 
+    setVanisherMsg: Dispatch<SetStateAction<string>>,
     playlistSettingsInfo: {playlistId: string, playlistName: string} | null,
     setPlaylistSettingsInfo: Dispatch<SetStateAction<{playlistId: string, playlistName: string} | null>>,
     settingsPanelPos: {left: number, top: number},
     setSettingsPanelPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     settingsPanelRef: RefObject<HTMLDivElement>,
     openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => void,
+    songSettingsInfo: {songId: string, songName: string, parentPlaylistId: string} | null,
+    setSongSettingsInfo: Dispatch<SetStateAction<{songId: string, songName: string, parentPlaylistId: string} | null>>,
+    songSettingsPos: {left: number, top: number}, 
+    setSongSettingsPos: Dispatch<SetStateAction<{left: number, top: number}>>,
+    songSettingsRef: RefObject<HTMLDivElement>,
+    openSongSettings: (e: React.MouseEvent<SVGSVGElement>, songId: string, songName: string, parentPlaylistId: string) => void,
     formatDuration: (duration: number) => string
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
@@ -37,6 +45,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [playlists, setPlaylists] = useState<PlaylistType[]>([]);
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string>("search");
+    const [vanisherMsg, setVanisherMsg] = useState<string>("");
 
     //playlist settings panel
     const [playlistSettingsInfo, setPlaylistSettingsInfo] = useState<{playlistId: string, playlistName: string} | null>(null); 
@@ -49,7 +58,19 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             setSettingsPanelPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3})
         }
     }
-    
+
+    //song settings panel 
+    const [songSettingsInfo, setSongSettingsInfo] = useState<{songId: string, songName: string, parentPlaylistId: string} | null>(null);
+    const [songSettingsPos, setSongSettingsPos] = useState<{left: number, top: number}>({left: 0, top: 0});
+    const songSettingsRef = useRef<HTMLDivElement>(null);
+    const openSongSettings = (e: React.MouseEvent<SVGSVGElement>, songId: string, songName: string, parentPlaylistId: string) => {
+        setSongSettingsInfo({songId: songId, songName: songName, parentPlaylistId: parentPlaylistId});
+        if (songSettingsRef.current) {
+            const settingsRect = songSettingsRef.current.getBoundingClientRect(); 
+            setSongSettingsPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3});
+        }
+    }
+
     const registerCallback = (id: string, callback: Callback): void => {
         setCallbacks(prevCallbacks => {
             const filteredCallbacks = prevCallbacks.filter(prevCallback => prevCallback.id === id);
@@ -87,10 +108,15 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             playlists, setPlaylists, 
             handleRootDivClick, registerCallback,
             songsPanelType, setSongsPanelType,
+            vanisherMsg, setVanisherMsg,
             playlistSettingsInfo, setPlaylistSettingsInfo,
             settingsPanelPos, setSettingsPanelPos,
             settingsPanelRef,
             openPlaylistSettings,
+            songSettingsInfo, setSongSettingsInfo,
+            songSettingsPos, setSongSettingsPos,
+            songSettingsRef,
+            openSongSettings,
             formatDuration
         }}>
             {children}
