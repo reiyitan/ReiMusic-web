@@ -145,7 +145,7 @@ export const SongSettings = () => {
         >
             <div 
                 className="settings-control"
-                onMouseEnter={() => setOverlayVisible(true)}
+                onClick={() => setOverlayVisible(true)}
                 onMouseLeave={() => setOverlayVisible(false)}
             >
                 {PlusIcon()}
