@@ -1,9 +1,9 @@
 import "./HomePage.css"; 
-import { SongsPanel, PlaylistsPanel, BottomBarPanel, PlaylistSettings, UploadSearchPanel } from "../../components";
+import { SongsPanel, PlaylistsPanel, BottomBarPanel, PlaylistSettings, SongSettings, UploadSearchPanel, Vanisher } from "../../components";
 import { useLayout } from "../../ContextProviders";
 
 export const HomePage = () => {
-    const { handleRootDivClick } = useLayout();
+    const { handleRootDivClick, vanisherMsg, setVanisherMsg } = useLayout();
 
     return (
         <div
@@ -18,6 +18,8 @@ export const HomePage = () => {
             <SongsPanel />
             <BottomBarPanel />
             <PlaylistSettings />
+            <SongSettings />
+            <Vanisher msg={vanisherMsg} setMsg={setVanisherMsg} />
         </div>
     );
 }

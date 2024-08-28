@@ -7,3 +7,5 @@ export { BottomBarPanel } from "./BottomBarPanel";
 export { PlaylistSettings } from "./PlaylistSettings";
 export { UploadSearchPanel } from "./UploadSearchPanel";
 export { Playlist } from "./Playlist";
+export { SongSettings } from "./SongSettings";
+export { Vanisher } from "./Vanisher";
