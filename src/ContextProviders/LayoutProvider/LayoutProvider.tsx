@@ -28,12 +28,22 @@ interface LayoutContextInterface {
     setSettingsPanelPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     settingsPanelRef: RefObject<HTMLDivElement>,
     openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => void,
-    songSettingsInfo: {songId: string, songName: string, parentPlaylistId: string} | null,
-    setSongSettingsInfo: Dispatch<SetStateAction<{songId: string, songName: string, parentPlaylistId: string} | null>>,
+    songSettingsInfo: SongType | null,
+    setSongSettingsInfo: Dispatch<SetStateAction<SongType | null>>,
     songSettingsPos: {left: number, top: number}, 
     setSongSettingsPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     songSettingsRef: RefObject<HTMLDivElement>,
-    openSongSettings: (e: React.MouseEvent<SVGSVGElement>, songId: string, songName: string, parentPlaylistId: string) => void,
+    openSongSettings: (
+        e: React.MouseEvent<SVGSVGElement>, 
+        _id: string, 
+        title: string, 
+        artist: string,
+        duration: number,
+        uploaderId: string,
+        uploader: string,
+        s3_key: string,
+        parentPlaylistId: string
+    ) => void,
     formatDuration: (duration: number) => string
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
@@ -60,11 +70,30 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     //song settings panel 
-    const [songSettingsInfo, setSongSettingsInfo] = useState<{songId: string, songName: string, parentPlaylistId: string} | null>(null);
+    const [songSettingsInfo, setSongSettingsInfo] = useState<SongType | null>(null);
     const [songSettingsPos, setSongSettingsPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const songSettingsRef = useRef<HTMLDivElement>(null);
-    const openSongSettings = (e: React.MouseEvent<SVGSVGElement>, songId: string, songName: string, parentPlaylistId: string) => {
-        setSongSettingsInfo({songId: songId, songName: songName, parentPlaylistId: parentPlaylistId});
+    const openSongSettings = (
+        e: React.MouseEvent<SVGSVGElement>, 
+        _id: string, 
+        title: string, 
+        artist: string,
+        duration: number,
+        uploaderId: string,
+        uploader: string,
+        s3_key: string,
+        parentPlaylistId: string
+    ) => {
+        setSongSettingsInfo({
+            _id: _id,
+            title: title,
+            artist: artist,
+            duration: duration,
+            uploaderId: uploaderId,
+            uploader: uploader,
+            s3_key: s3_key,
+            parentPlaylistId: parentPlaylistId
+        });
         if (songSettingsRef.current) {
             const settingsRect = songSettingsRef.current.getBoundingClientRect(); 
             setSongSettingsPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3});

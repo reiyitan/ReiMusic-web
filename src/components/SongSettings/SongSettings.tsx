@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./SongSettings.css";
+import { SongsPanel } from "../SongsPanel";
 
 const PlusIcon = () => (
     <svg 
@@ -45,14 +46,26 @@ const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
 
     const handleAddToPlaylist = (playlistId: string, playlistName: string) => {
         if (!songSettingsInfo) return;
-        addToPlaylist(playlistId, songSettingsInfo.songId)
+        addToPlaylist(playlistId, songSettingsInfo._id)
             .then(status => {
                 if (status === 403) {
                     setVanisherMsg("Song already in playlist");
-                    //currentPlayingPlaylistRef.current.push(
                 }
                 else if (status === 204) {
-                    setVanisherMsg(`Added ${songSettingsInfo.songName} to ${playlistName}`);
+                    if (playlistId === currentPlayingPlaylistRef.current.playlistId) {
+                        currentPlayingPlaylistRef.current.songs.push({
+                            _id: songSettingsInfo._id,
+                            title: songSettingsInfo.title,
+                            artist: songSettingsInfo.artist,
+                            duration: songSettingsInfo.duration,
+                            uploaderId: songSettingsInfo.uploaderId,
+                            uploader: songSettingsInfo.uploader,
+                            s3_key: songSettingsInfo.s3_key,
+                            parentPlaylistId: playlistId
+                        });
+                        populateQueue(songSettingsInfo._id);
+                    }
+                    setVanisherMsg(`Added ${songSettingsInfo.title} to ${playlistName}`);
                 }
             });
     }

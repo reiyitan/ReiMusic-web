@@ -106,7 +106,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
     }
 
     const handleOpenSongSettings = (e: React.MouseEvent<SVGSVGElement>) => {
-        openSongSettings(e, songId, title, parentPlaylistId);
+        openSongSettings(e, songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId);
     }
 
     return (
