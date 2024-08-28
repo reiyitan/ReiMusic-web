@@ -120,7 +120,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
 
     const generateQueue = (songId: string): SongType[] => {
         const songs = currentPlayingPlaylistRef.current.songs.slice();
-        if (songs) {
+        if (songs.length > 0) {
             if (!shuffle) {
                 let songIndex: number | undefined;
                 for (let i = 0; i < songs.length; i++) {

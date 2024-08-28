@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./SongSettings.css";
-import { SongsPanel } from "../SongsPanel";
 
 const PlusIcon = () => (
     <svg 
@@ -96,8 +95,10 @@ const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
 }
 
 export const SongSettings = () => {
-    const { songSettingsInfo, setSongSettingsInfo, songSettingsRef, songSettingsPos, registerCallback } = useLayout(); 
+    const { songSettingsInfo, setSongSettingsInfo, songSettingsRef, songSettingsPos, registerCallback, setSongs } = useLayout(); 
+    const { currentPlayingPlaylistRef, populateQueue } = useControl();
     const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
+    const { removeFromPlaylist } = useServer();
 
     const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (songSettingsRef.current) {
@@ -115,7 +116,17 @@ export const SongSettings = () => {
     }
 
     const handleDeleteFromPlaylist = (songId: string, parentPlaylistId: string) => {
-        
+        if (songId.length === 0 || parentPlaylistId.length === 0) return; 
+        removeFromPlaylist(parentPlaylistId, songId)
+            .then(status => {
+                if (status === 204) {
+                    currentPlayingPlaylistRef.current.songs = currentPlayingPlaylistRef.current.songs.filter(song => song._id !== songId);
+                    populateQueue(songId);
+                    setSongs(prevSongs => {
+                        return prevSongs.filter(song => song._id !== songId);
+                    });
+                }
+            });
     }
 
     useEffect(() => {
@@ -145,7 +156,7 @@ export const SongSettings = () => {
             {
                 songSettingsInfo?.parentPlaylistId !== "search" && 
                 <div className="settings-control" 
-                    onClick={() => console.log("todo")}
+                    onClick={() => handleDeleteFromPlaylist(songSettingsInfo?._id || "", songSettingsInfo?.parentPlaylistId || "")}
                 >
                     {TrashIcon()}
                     <p className="settings-control-text prevent-select">Remove from this playlist</p>

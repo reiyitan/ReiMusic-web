@@ -10,6 +10,7 @@ interface ServerContextInterface {
     deletePlaylist: (playlistId: string) => Promise<number | void>,
     renamePlaylist: (playlistId: string, newName: string) => Promise<number | void>,
     addToPlaylist: (playlistId: string, songId: string) => Promise<number | void>,
+    removeFromPlaylist: (playlistId: string, songId: string) => Promise<number | void>,
     uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
     getSongs: (query?: string) => Promise<SongType[]>,
     getSongURL: (s3_key: string) => Promise<string>,
@@ -140,9 +141,25 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
-    // const removeFromPlaylist = () => {
-
-    // }
+    const removeFromPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
+        return fetch(`http://127.0.0.1:3000/api/playlist/remove/${auth.currentUser?.uid}/${playlistId}`, {
+            method: "PATCH", 
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            },
+            body: JSON.stringify({songId: songId})
+        })
+            .then(res => {
+                if (res.status === 204) {
+                    return res.status;
+                }
+                else {
+                    throw new Error("Error removing from playlist");
+                }
+            })
+            .catch(error => console.error(error));
+    }
 
     const getSongs = async (query?: string): Promise<SongType[]> => {
         return fetch(`http://127.0.0.1:3000/api/song?q=${query ? query.trim() : ""}`, {
@@ -207,7 +224,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     return (
         <ServerContext.Provider value={{
                 createUser, getUser, 
-                createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, addToPlaylist,
+                createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, addToPlaylist, removeFromPlaylist,
                 getSongs, uploadSong, getSongURL, getFileFromURL 
             }}>
             {children}
