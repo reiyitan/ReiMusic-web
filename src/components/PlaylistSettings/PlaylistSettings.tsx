@@ -82,7 +82,7 @@ export const PlaylistSettings = () => {
                     setSongsPanelType("search");
                     const newSongs = await getSongs(); 
                     setSongs(newSongs); 
-                    currentPlayingPlaylistRef.current = newSongs.slice();
+                    currentPlayingPlaylistRef.current = {playlistId: "search", songs: newSongs.slice()};
                     closePanel();
                 }
             })

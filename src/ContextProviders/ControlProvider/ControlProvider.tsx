@@ -20,7 +20,7 @@ interface ControlContextProps {
     setShuffle: Dispatch<SetStateAction<boolean>>,
     loop: boolean,
     setLoop: Dispatch<SetStateAction<boolean>>,
-    currentPlayingPlaylistRef: React.MutableRefObject<SongType[]>,
+    currentPlayingPlaylistRef: React.MutableRefObject<{playlistId: string, songs: SongType[]}>,
     historyRef: React.MutableRefObject<SongType[]>,
     playNewHowl: (url: string, samePlaylist: boolean, playingFromHistory: boolean) => void,
     pauseHowl: () => void,
@@ -44,7 +44,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     const [loop, setLoop] = useState<boolean>(false);
     const loopRef = useRef<boolean>(loop);
     const historyRef = useRef<SongType[]>([]);
-    const currentPlayingPlaylistRef = useRef<SongType[]>([]);
+    const currentPlayingPlaylistRef = useRef<{playlistId: string, songs: SongType[]}>({playlistId: "", songs: []});
     const { getSongURL, getFileFromURL } = useServer();
     const { currentSong, setCurrentSong } = useLayout();
     const currentSongRef = useRef<SongType | null>(currentSong);
@@ -119,7 +119,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     const generateQueue = (songId: string): SongType[] => {
-        const songs = currentPlayingPlaylistRef.current.slice();
+        const songs = currentPlayingPlaylistRef.current.songs.slice();
         if (songs) {
             if (!shuffle) {
                 let songIndex: number | undefined;

@@ -22,7 +22,7 @@ export const SongsPanel = () => {
                     };
                 })
                 setSongs(mappedSongs);
-                currentPlayingPlaylistRef.current = mappedSongs.slice();
+                currentPlayingPlaylistRef.current = {playlistId: "search", songs: mappedSongs.slice()};
             });
     }, []);
 

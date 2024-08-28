@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLayout, useServer } from "../../ContextProviders";
+import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./SongSettings.css";
 
 const PlusIcon = () => (
@@ -41,6 +41,7 @@ const ArrowIcon = () => (
 const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
     const { playlists, songSettingsInfo, setVanisherMsg } = useLayout(); 
     const { addToPlaylist } = useServer();
+    const { currentPlayingPlaylistRef, populateQueue } = useControl();
 
     const handleAddToPlaylist = (playlistId: string, playlistName: string) => {
         if (!songSettingsInfo) return;
@@ -48,6 +49,7 @@ const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
             .then(status => {
                 if (status === 403) {
                     setVanisherMsg("Song already in playlist");
+                    //currentPlayingPlaylistRef.current.push(
                 }
                 else if (status === 204) {
                     setVanisherMsg(`Added ${songSettingsInfo.songName} to ${playlistName}`);
