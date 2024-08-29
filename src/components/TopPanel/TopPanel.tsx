@@ -9,7 +9,7 @@ const ProfileIcon = () => (
     </svg>
 )
 export const TopPanel = () => {
-    const { username } = useFirebase(); 
+    const { username, logout } = useFirebase(); 
     const [menuOpen, setMenuOpen] = useState<boolean>(false);
     const menuOpenRef = useRef<boolean>(false);
     const [menuPos, setMenuPos] = useState<{right: number, top: number}>({right: 0, top: 0});
@@ -67,7 +67,7 @@ export const TopPanel = () => {
                     ref={menuRef}
                 >
                     <div className="profile-menu-button prevent-select">Manage your songs</div>
-                    <div className="profile-menu-button prevent-select">Log out</div>
+                    <div className="profile-menu-button prevent-select" onClick={logout}>Log out</div>
                 </div>
             </div>
         </div>

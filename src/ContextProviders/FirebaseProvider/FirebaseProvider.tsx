@@ -4,6 +4,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, setPersistence, browserLocalPersistence, onAuthStateChanged, signOut, Auth } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from "react-router-dom";
+import { Howler } from "howler";
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -20,6 +21,7 @@ const fsDb = getFirestore(fbApp);
 
 interface FirebaseContextInterface {
     login: (email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>) => void,
+    logout: () => void,
     register: (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function) => void,
     username: string,
 }
@@ -64,7 +66,6 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     const login = (email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>): void => {
         setPersistence(auth, browserLocalPersistence)
         .then(() => signInWithEmailAndPassword(auth, email, pass))
-        .then(data => console.log(data))
         .catch(error => {
             switch (error.code) {
                 case "auth/invalid-email":
@@ -78,6 +79,12 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
                     break;
             }
         });
+    }
+
+    const logout = () => {
+        signOut(auth)
+            .then(_ => Howler.unload())
+            .catch(error => console.error(error));
     }
 
     const register = async (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function): Promise<void> => {
@@ -114,7 +121,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{login, register, username}}>
+        <FirebaseContext.Provider value={{login, logout, register, username}}>
             {!isLoading && children}
         </FirebaseContext.Provider>
     );
