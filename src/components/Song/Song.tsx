@@ -51,7 +51,7 @@ interface SongProps {
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const { getSongURL, getPlaylist } = useServer();
-    const { currentSong, setCurrentSong, formatDuration, openSongSettings, songs } = useLayout();
+    const { currentSong, setCurrentSong, formatDuration, openSongSettings, songs, setPlaylistSettingsInfo } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef, cancelRef, currentPlayingPlaylistRef } = useControl();
     const songDivRef = useRef<HTMLDivElement>(null);
 
@@ -119,6 +119,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
 
     const handleSongClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        setPlaylistSettingsInfo(null);
         handleOpenSongSettings(e);
 
     }

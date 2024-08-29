@@ -24,7 +24,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs, currentSong } = useLayout();
+    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs, currentSong, setSongSettingsInfo } = useLayout();
     const { getPlaylist } = useServer();
 
     const handleOpenSettings = (e: React.MouseEvent<SVGSVGElement | HTMLDivElement>) => {
@@ -56,6 +56,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
 
     const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
         e.preventDefault();
+        setSongSettingsInfo(null);
         handleOpenSettings(e);
     }
 
