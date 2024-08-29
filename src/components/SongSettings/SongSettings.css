@@ -84,8 +84,9 @@
 }
 
 .playlist-overlay-playlist {
-    height: 50px;
-    min-height: 50px;
+    height: 30px;
+    min-height: 30px;
+    font-size: 14px;
     background-color: var(--clr-bg-main);
     align-content: center;
     padding-left: 10px;

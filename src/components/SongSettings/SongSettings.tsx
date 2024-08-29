@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useLayoutEffect, Dispatch, SetStateAction} from "react";
 import { useLayout, useServer, useControl } from "../../ContextProviders";
 import "./SongSettings.css";
 
@@ -38,10 +38,30 @@ const ArrowIcon = () => (
     </svg>
 )
 
-const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
-    const { playlists, songSettingsInfo, setVanisherMsg } = useLayout(); 
+const PlaylistOverlay = ({ isVisible }: { isVisible: boolean}) => {
+    const { playlists, songSettingsInfo, setVanisherMsg, windowRef, songSettingsRef } = useLayout(); 
     const { addToPlaylist } = useServer();
     const { currentPlayingPlaylistRef, populateQueue } = useControl();
+    const [overlayPos, setOverlayPos] = useState<{right: number, top: number}>({right: 0, top: 0});
+
+    const updatePos = () => {
+        if (windowRef.current && songSettingsRef.current) {
+            const windowRect = windowRef.current.getBoundingClientRect(); 
+            const containerRect = songSettingsRef.current.getBoundingClientRect(); 
+            const rightEdge = containerRect.right + containerRect.width; 
+            const rightPos = windowRect.right - rightEdge; 
+            if (rightPos <= 0) {
+                setOverlayPos({right: windowRect.right - containerRect.left, top: containerRect.top});
+            }
+            else {
+                setOverlayPos({right: rightPos, top: containerRect.top});
+            }
+        }
+    }
+
+    useLayoutEffect(() => {
+        updatePos();
+    }, [isVisible]);
 
     const handleAddToPlaylist = (playlistId: string, playlistName: string) => {
         if (!songSettingsInfo) return;
@@ -70,7 +90,14 @@ const PlaylistOverlay = ({ isVisible }: { isVisible: boolean }) => {
     }
 
     return isVisible && (
-        <div id="playlist-overlay" className="shadow">
+        <div 
+            id="playlist-overlay" 
+            className="shadow" 
+            style={{
+                right: overlayPos.right,
+                top: overlayPos.top
+            }}
+        >
             <h1>
                 Choose a playlist:
             </h1>
@@ -145,8 +172,7 @@ export const SongSettings = () => {
         >
             <div 
                 className="settings-control"
-                onClick={() => setOverlayVisible(true)}
-                onMouseLeave={() => setOverlayVisible(false)}
+                onMouseEnter={() => setOverlayVisible(true)}
             >
                 {PlusIcon()}
                 <p className="settings-control-add-to-playlist prevent-select">Add to a playlist</p>
@@ -157,6 +183,7 @@ export const SongSettings = () => {
                 songSettingsInfo?.parentPlaylistId !== "search" && 
                 <div className="settings-control" 
                     onClick={() => handleDeleteFromPlaylist(songSettingsInfo?._id || "", songSettingsInfo?.parentPlaylistId || "")}
+                    onMouseEnter={() => setOverlayVisible(false)}
                 >
                     {TrashIcon()}
                     <p className="settings-control-text prevent-select">Remove from this playlist</p>
