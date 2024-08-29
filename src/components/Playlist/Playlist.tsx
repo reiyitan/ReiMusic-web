@@ -27,7 +27,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
     const { getPlaylist } = useServer();
 
-    const handleOpenSettings: MouseEventHandler<SVGSVGElement> = (e) => {
+    const handleOpenSettings = (e: React.MouseEvent<SVGSVGElement | HTMLDivElement>) => {
         openPlaylistSettings(e, playlistId, name);
     }
 
@@ -54,11 +54,17 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
             })
     }
 
+    const handleRightClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        handleOpenSettings(e);
+    }
+
     return (
         <div 
             className={(playlistId === currentDisplayPlaylist?._id && songsPanelType === "playlist") ? "playlist-active clickable" : "playlist clickable"}
             ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
+            onContextMenu={handleRightClick}
         >
             <span ref={thisPlaylistSpanRef} className="sidebar-playlist-name prevent-select overflow-ellipsis">{name}</span>
             {DotsIcon(handleOpenSettings, dotsRef)}

@@ -28,7 +28,7 @@ interface LayoutContextInterface {
     settingsPanelPos: {left: number, top: number},
     setSettingsPanelPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     settingsPanelRef: RefObject<HTMLDivElement>,
-    openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => void,
+    openPlaylistSettings: (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement | HTMLDivElement>, playlistId: string, playlistName: string) => void,
     songSettingsInfo: SongType | null,
     setSongSettingsInfo: Dispatch<SetStateAction<SongType | null>>,
     songSettingsPos: {left: number, top: number}, 
@@ -63,11 +63,18 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [playlistSettingsInfo, setPlaylistSettingsInfo] = useState<{playlistId: string, playlistName: string} | null>(null); 
     const [settingsPanelPos, setSettingsPanelPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const settingsPanelRef = useRef<HTMLDivElement>(null);
-    const openPlaylistSettings = (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement>, playlistId: string, playlistName: string) => {
+    const openPlaylistSettings = (e: React.MouseEvent<SVGSVGElement | HTMLHeadingElement | HTMLDivElement>, playlistId: string, playlistName: string) => {
         setPlaylistSettingsInfo({playlistId: playlistId, playlistName: playlistName});
-        if (settingsPanelRef.current) {
+        if (windowRef.current && settingsPanelRef.current) {
+            const windowRect = windowRef.current.getBoundingClientRect();
             const settingsRect = settingsPanelRef.current.getBoundingClientRect();
-            setSettingsPanelPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3})
+            const newLeft = e.clientX - settingsRect.width; 
+            if (newLeft <= windowRect.left) {
+                setSettingsPanelPos({left: e.clientX, top: e.clientY + 3});
+            }
+            else {
+                setSettingsPanelPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3});
+            }
         }
     }
 
