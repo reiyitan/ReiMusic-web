@@ -50,8 +50,8 @@ interface SongProps {
 }
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
-    const { getSongURL, getPlaylist } = useServer();
-    const { currentSong, setCurrentSong, formatDuration, openSongSettings } = useLayout();
+    const { getSongURL, getPlaylist, getSongs } = useServer();
+    const { currentSong, setCurrentSong, formatDuration, openSongSettings, songs } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef, cancelRef, currentPlayingPlaylistRef } = useControl();
     const songDivRef = useRef<HTMLDivElement>(null);
 
@@ -65,9 +65,17 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
         
         if (!currentSong || currentSong?._id !== songId || currentSong.parentPlaylistId !== parentPlaylistId) { //no song playing or song change or playlist change
             if (currentSong) historyRef.current.push(currentSong);
-            const playlist = await getPlaylist(parentPlaylistId);
-            if (playlist && playlist.songs) {
-                currentPlayingPlaylistRef.current = {playlistId: parentPlaylistId, songs: playlist.songs.slice()};
+            if (parentPlaylistId === "search") {
+                currentPlayingPlaylistRef.current = {
+                    playlistId: "search", 
+                    songs: songs.slice().map(song => ({ ...song, parentPlaylistId: "search" }))
+                };
+            }
+            else {
+                const playlist = await getPlaylist(parentPlaylistId);
+                if (playlist && playlist.songs) {
+                    currentPlayingPlaylistRef.current = {playlistId: parentPlaylistId, songs: playlist.songs.slice()};
+                }
             }
             const songURL = await getSongURL(s3_key);
             if (songURL) {

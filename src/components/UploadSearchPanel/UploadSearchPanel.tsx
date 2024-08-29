@@ -90,7 +90,9 @@ export const UploadSearchPanel = () => {
         if (e.key === "Enter") {
             const newSongs = await getSongs(searchValue);
             if (newSongs) {
-                setSongs(newSongs);
+                const mappedSongs = newSongs.map(song => ({ ...song, parentPlaylistId: "search" }));
+                setSongs(mappedSongs);
+                currentPlayingPlaylistRef.current = {playlistId: "search", songs: mappedSongs.slice()};
             }
         }
     }
