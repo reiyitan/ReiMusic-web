@@ -10,20 +10,24 @@
     background-color: var(--clr-bg-main-hvr);
 }
 
-.playlist-active {
-    display: grid; 
-    grid-template-columns: repeat(5, 1fr);
-    background-color: var(--clr-highlight);
-    height: var(--playlist-song-height);
-    padding-left: 15px;
+.playlist:hover .sidebar-playlist-dots-icon {
+    visibility: visible;
 }
 
-.playlist-active:hover {
+.playlist-playing {
+    background-color: var(--clr-highlight);
+}
+
+.playlist-playing:hover {
     background-color: var(--clr-highlight-hvr);
 }
 
-.playlist-active:hover .sidebar-playlist-dots-icon {
+.playlist-playing:hover .sidebar-playlist-dots-icon {
     visibility: visible;
+}
+
+.playlist-selected {
+    background-color: var(--clr-bg-main-hvr);
 }
 
 .sidebar-playlist-name {
@@ -40,12 +44,6 @@
     margin-right: 5px;
     stroke: var(--clr-icon);
 }
-
-.playlist:hover .sidebar-playlist-dots-icon {
-    visibility: visible;
-}
-
-
 
 .sidebar-playlist-dots-icon:hover {
     stroke: var(--clr-icon-hvr);

@@ -24,7 +24,7 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
     const thisPlaylistDivRef = useRef<HTMLDivElement>(null);
     const thisPlaylistSpanRef = useRef<HTMLSpanElement>(null);
-    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs } = useLayout();
+    const { currentDisplayPlaylist, setCurrentDisplayPlaylist, songsPanelType, setSongsPanelType, openPlaylistSettings, setSongs, currentSong } = useLayout();
     const { getPlaylist } = useServer();
 
     const handleOpenSettings = (e: React.MouseEvent<SVGSVGElement | HTMLDivElement>) => {
@@ -61,7 +61,13 @@ export const Playlist = ({ name, playlistId }: PlaylistProps) => {
 
     return (
         <div 
-            className={(playlistId === currentDisplayPlaylist?._id && songsPanelType === "playlist") ? "playlist-active clickable" : "playlist clickable"}
+            className={
+                (currentSong?.parentPlaylistId === playlistId)
+                    ? "playlist playlist-playing clickable" 
+                    : (playlistId === currentDisplayPlaylist?._id && songsPanelType === "playlist") 
+                    ? "playlist playlist-selected clickable" 
+                    : "playlist clickable"
+            }
             ref={thisPlaylistDivRef}
             onClick={handlePlaylistClick}
             onContextMenu={handleRightClick}
