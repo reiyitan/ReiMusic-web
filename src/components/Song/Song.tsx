@@ -113,8 +113,14 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
         pauseHowl();
     }
 
-    const handleOpenSongSettings = (e: React.MouseEvent<SVGSVGElement>) => {
+    const handleOpenSongSettings = (e: React.MouseEvent<SVGSVGElement | HTMLDivElement>) => {
         openSongSettings(e, songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId);
+    }
+
+    const handleSongClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        handleOpenSongSettings(e);
+
     }
 
     return (
@@ -122,6 +128,7 @@ export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3
             className={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId ? "song playing clickable" : "song not-playing clickable"}
             onDoubleClick={currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing ? handlePauseSong : handlePlaySong}
             ref={songDivRef}
+            onContextMenu={handleSongClick}
         >
             {
                 currentSong?._id === songId && currentSong.parentPlaylistId === parentPlaylistId && playing 

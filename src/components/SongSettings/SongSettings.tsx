@@ -39,7 +39,7 @@ const ArrowIcon = () => (
 )
 
 const PlaylistOverlay = ({ isVisible }: { isVisible: boolean}) => {
-    const { playlists, songSettingsInfo, setVanisherMsg, windowRef, songSettingsRef } = useLayout(); 
+    const { playlists, songSettingsInfo, setVanisherMsg, windowRef, songSettingsRef, songSettingsPos } = useLayout(); 
     const { addToPlaylist } = useServer();
     const { currentPlayingPlaylistRef, populateQueue } = useControl();
     const [overlayPos, setOverlayPos] = useState<{right: number, top: number}>({right: 0, top: 0});
@@ -61,7 +61,7 @@ const PlaylistOverlay = ({ isVisible }: { isVisible: boolean}) => {
 
     useLayoutEffect(() => {
         updatePos();
-    }, [isVisible]);
+    }, [isVisible, songSettingsPos]);
 
     const handleAddToPlaylist = (playlistId: string, playlistName: string) => {
         if (!songSettingsInfo) return;

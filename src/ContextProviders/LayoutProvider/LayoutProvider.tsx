@@ -35,7 +35,7 @@ interface LayoutContextInterface {
     setSongSettingsPos: Dispatch<SetStateAction<{left: number, top: number}>>,
     songSettingsRef: RefObject<HTMLDivElement>,
     openSongSettings: (
-        e: React.MouseEvent<SVGSVGElement>, 
+        e: React.MouseEvent<SVGSVGElement | HTMLDivElement>, 
         _id: string, 
         title: string, 
         artist: string,
@@ -76,7 +76,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [songSettingsPos, setSongSettingsPos] = useState<{left: number, top: number}>({left: 0, top: 0});
     const songSettingsRef = useRef<HTMLDivElement>(null);
     const openSongSettings = (
-        e: React.MouseEvent<SVGSVGElement>, 
+        e: React.MouseEvent<SVGSVGElement | HTMLDivElement>, 
         _id: string, 
         title: string, 
         artist: string,
