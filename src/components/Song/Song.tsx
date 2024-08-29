@@ -50,7 +50,7 @@ interface SongProps {
 }
 export const Song = ({ songId, title, artist, duration, uploaderId, uploader, s3_key, parentPlaylistId }: SongProps) => {
     const dotsRef = useRef<SVGSVGElement>(null);
-    const { getSongURL, getPlaylist, getSongs } = useServer();
+    const { getSongURL, getPlaylist } = useServer();
     const { currentSong, setCurrentSong, formatDuration, openSongSettings, songs } = useLayout();
     const { playing, playNewHowl, resumeHowl, pauseHowl, populateQueue, historyRef, cancelRef, currentPlayingPlaylistRef } = useControl();
     const songDivRef = useRef<HTMLDivElement>(null);
