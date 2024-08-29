@@ -4,7 +4,6 @@ import { MouseEventHandler, ChangeEventHandler, MouseEvent } from "react";
 import { Modal } from "../Modal";
 import { TextInput } from "../TextInput";
 import { useServer, useLayout, useControl } from "../../ContextProviders";
-import { PlaylistType } from "../../types";
 
 const TrashIcon = () => (
     <svg 

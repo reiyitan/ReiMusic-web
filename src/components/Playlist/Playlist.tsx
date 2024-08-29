@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { MouseEventHandler, MouseEvent, RefObject } from "react";
-import { useLayout, useServer, useControl } from "../../ContextProviders";
+import { useLayout, useServer } from "../../ContextProviders";
 import "./Playlist.css";
 
 const DotsIcon = (handleClick: MouseEventHandler<SVGSVGElement>, dotsRef: RefObject<SVGSVGElement>) => (
