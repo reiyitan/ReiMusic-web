@@ -147,6 +147,7 @@ export const SongSettings = () => {
         removeFromPlaylist(parentPlaylistId, songId)
             .then(status => {
                 if (status === 204) {
+                    setSongSettingsInfo(null);
                     currentPlayingPlaylistRef.current.songs = currentPlayingPlaylistRef.current.songs.filter(song => song._id !== songId);
                     populateQueue(songId);
                     setSongs(prevSongs => {
