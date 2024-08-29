@@ -1,0 +1,79 @@
+#top-panel {
+    position: relative;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    min-height: 50px;
+
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+#top-panel-center {
+    grid-column: 2;
+    display: flex;
+    flex-direction: row; 
+    justify-content: center;
+}
+
+#top-panel-center h1 {
+    background-color: var(--clr-highlight);
+    font-weight: bold;
+    font-size: 30px;
+    padding: 7.5px 30px 7.5px 30px;
+}
+
+#top-panel-right {
+    grid-column: 3;
+    display: flex; 
+    flex-direction: row;
+    justify-content: right;
+    align-items: center;
+}
+
+#profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: var(--clr-bg-main);
+    padding: 5px 20px 5px 15px;
+    max-width: 200px;
+    height: 50px;
+}
+
+#profile:hover {
+    background-color: var(--clr-bg-main-hvr);
+}
+
+#profile-icon {
+    min-width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
+#profile-menu {
+    position: fixed;
+    width: 200px;
+    z-index: 5;
+    background-color: var(--clr-bg-main);
+}
+
+.visible {
+    visibility: visible;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.profile-menu-button {
+    height: 30px;
+    background-color: var(--clr-bg-main);
+    align-content: center;
+    padding-left: 10px;
+    font-size: 14px;
+}
+
+.profile-menu-button:hover {
+    height: 30px;
+    background-color: var(--clr-bg-main-hvr);
+}

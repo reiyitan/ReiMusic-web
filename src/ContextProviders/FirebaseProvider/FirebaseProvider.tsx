@@ -20,7 +20,8 @@ const fsDb = getFirestore(fbApp);
 
 interface FirebaseContextInterface {
     login: (email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>) => void,
-    register: (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function) => void
+    register: (username: string, email: string, pass: string, setMsg: Dispatch<SetStateAction<string>>, createUser: Function) => void,
+    username: string,
 }
 const FirebaseContext = createContext<FirebaseContextInterface | undefined>(undefined);
 
@@ -32,6 +33,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     const navigate = useNavigate(); 
     const location = useLocation();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const [username, setUsername] = useState<string>("");
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async user => {
@@ -46,6 +48,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
                 .then(res => res.json())
                 .then(data => {
                     if (data.user) {
+                        setUsername(data.user.username);
                         navigate("/home");
                     }
                 })
@@ -111,7 +114,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     }
 
     return (
-        <FirebaseContext.Provider value={{login, register}}>
+        <FirebaseContext.Provider value={{login, register, username}}>
             {!isLoading && children}
         </FirebaseContext.Provider>
     );

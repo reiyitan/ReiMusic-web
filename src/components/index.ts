@@ -9,3 +9,4 @@ export { UploadSearchPanel } from "./UploadSearchPanel";
 export { Playlist } from "./Playlist";
 export { SongSettings } from "./SongSettings";
 export { Vanisher } from "./Vanisher";
+export { TopPanel } from "./TopPanel";

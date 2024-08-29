@@ -22,6 +22,7 @@ interface LayoutContextInterface {
     setSongsPanelType: Dispatch<SetStateAction<string>>,
     vanisherMsg: string, 
     setVanisherMsg: Dispatch<SetStateAction<string>>,
+    windowRef: RefObject<HTMLDivElement>,
     playlistSettingsInfo: {playlistId: string, playlistName: string} | null,
     setPlaylistSettingsInfo: Dispatch<SetStateAction<{playlistId: string, playlistName: string} | null>>,
     settingsPanelPos: {left: number, top: number},
@@ -56,6 +57,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
     const [callbacks, setCallbacks] = useState<CallbackObject[]>([]);
     const [songsPanelType, setSongsPanelType] = useState<string>("search");
     const [vanisherMsg, setVanisherMsg] = useState<string>("");
+    const windowRef = useRef<HTMLDivElement>(null);
 
     //playlist settings panel
     const [playlistSettingsInfo, setPlaylistSettingsInfo] = useState<{playlistId: string, playlistName: string} | null>(null); 
@@ -138,6 +140,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             handleRootDivClick, registerCallback,
             songsPanelType, setSongsPanelType,
             vanisherMsg, setVanisherMsg,
+            windowRef,
             playlistSettingsInfo, setPlaylistSettingsInfo,
             settingsPanelPos, setSettingsPanelPos,
             settingsPanelRef,
