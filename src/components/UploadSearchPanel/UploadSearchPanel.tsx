@@ -165,7 +165,6 @@ export const UploadSearchPanel = () => {
                 }
                 closeUploadMenu();
             });
-        //TODO create loading component and display while waiting
     }
 
     const handleTitleChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
