@@ -70,6 +70,7 @@ export const TopPanel = () => {
     const [songManagerOpen, setSongManagerOpen] = useState<boolean>(false);
     const songManagerOpenRef = useRef<boolean>(songManagerOpen);
     const [userSongs, setUserSongs] = useState<SongType[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
         songManagerOpenRef.current = songManagerOpen;
@@ -77,6 +78,7 @@ export const TopPanel = () => {
             getUserSongs()
                 .then(newSongs => {
                     setUserSongs(newSongs)
+                    setLoading(false);
                 })
         }
     }, [songManagerOpen]);
@@ -147,9 +149,13 @@ export const TopPanel = () => {
                 </div>
             </div>
             <Modal isVisible={songManagerOpen} header="Your songs:">
-                <div id="user-songs-container" className="scroller">
+                <div id="user-songs-container" className={loading || userSongs.length === 0 ? "" : "has-scroll scroller"}>
                     {
-                        userSongs.map(song => {
+                        loading ? 
+                        <div className="info-div">Loading...</div>
+                        : userSongs.length === 0
+                        ? <div className="info-div">You haven't uploaded any songs</div>
+                        : userSongs.map(song => {
                             return <UserSong 
                                 songId={song._id}
                                 s3_key={song.s3_key}

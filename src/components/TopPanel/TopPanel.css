@@ -82,8 +82,15 @@
 #user-songs-container {
     width: 450px;
     max-height: 200px;
-    overflow-y: scroll;
     margin-bottom: 25px;
+}
+
+.has-scroll {
+    overflow-y: scroll;
+}
+
+.info-div {
+    text-align: center;
 }
 
 .user-song {
