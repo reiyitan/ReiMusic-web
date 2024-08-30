@@ -154,8 +154,15 @@ export const UploadSearchPanel = () => {
         setWaiting(true);
         uploadSong(title, artist, duration, file, user.username)
             .then(song => {
-                console.log(song);
                 setWaiting(false);
+                if (songsPanelType === "search") {
+                    const newSong = {...song, parentPlaylistId: "search"};
+                    setSongs(prevSongs => {
+                        return [newSong, ...prevSongs]
+                    });
+                    const currentSongs = currentPlayingPlaylistRef.current.songs;
+                    currentPlayingPlaylistRef.current = {playlistId: "search", songs: [newSong, ...currentSongs]};
+                }
                 closeUploadMenu();
             });
         //TODO create loading component and display while waiting
