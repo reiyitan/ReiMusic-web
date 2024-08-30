@@ -1,6 +1,9 @@
 import "./TopPanel.css"; 
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
-import { useFirebase, useLayout } from "../../ContextProviders";
+import { Dispatch, SetStateAction } from "react";
+import { useFirebase, useLayout, useServer } from "../../ContextProviders";
+import { Modal } from "../Modal";
+import { SongType } from "../../types";
 
 const ProfileIcon = () => (
     <svg id="profile-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -8,17 +11,66 @@ const ProfileIcon = () => (
         <path d="M12 6.92969C9.93 6.92969 8.25 8.60969 8.25 10.6797C8.25 12.7097 9.84 14.3597 11.95 14.4197C11.98 14.4197 12.02 14.4197 12.04 14.4197C12.06 14.4197 12.09 14.4197 12.11 14.4197C12.12 14.4197 12.13 14.4197 12.13 14.4197C14.15 14.3497 15.74 12.7097 15.75 10.6797C15.75 8.60969 14.07 6.92969 12 6.92969Z" fill="#FFFFFF"/>
     </svg>
 )
+
+const TrashIcon = (handleClick: React.MouseEventHandler<SVGSVGElement>) => (
+    <svg 
+        className="song-manager-trash-icon"
+        viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+        onClick={handleClick}
+        role="button"
+    >
+        <path d="M5 6.77273H9.2M19 6.77273H14.8M9.2 6.77273V5.5C9.2 4.94772 9.64772 4.5 10.2 4.5H13.8C14.3523 4.5 14.8 4.94772 14.8 5.5V6.77273M9.2 6.77273H14.8M6.4 8.59091V15.8636C6.4 17.5778 6.4 18.4349 6.94673 18.9675C7.49347 19.5 8.37342 19.5 10.1333 19.5H13.8667C15.6266 19.5 16.5065 19.5 17.0533 18.9675C17.6 18.4349 17.6 17.5778 17.6 15.8636V8.59091M9.2 10.4091V15.8636M12 10.4091V15.8636M14.8 10.4091V15.8636" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
+)
+
+const UserSong = ({ songId, s3_key, title, artist, setUserSongs }: { songId: string, s3_key: string, title: string, artist: string, setUserSongs: Dispatch<SetStateAction<SongType[]>>}) => {
+    const { deleteSong } = useServer();
+
+    const handleDelete: React.EventHandler<React.MouseEvent<SVGSVGElement>> = () => {
+        deleteSong(songId, s3_key)
+            .then(res => {
+                if (res === 204) {
+                    setUserSongs(prevSongs => {
+                        return prevSongs.filter(song => song._id !== songId);
+                    });
+                }
+            });
+    }
+
+    return (
+        <div className="user-song">
+            <span className="overflow-ellipsis prevent-select">{title}</span>
+            <span className="user-song-artist overflow-ellipsis prevent-select">{artist}</span>
+            {TrashIcon(handleDelete)}
+        </div>
+    );
+}
+
 export const TopPanel = () => {
     const { username, logout } = useFirebase(); 
-    const [menuOpen, setMenuOpen] = useState<boolean>(false);
+    const { getUserSongs } = useServer();
     const menuOpenRef = useRef<boolean>(false);
     const [menuPos, setMenuPos] = useState<{right: number, top: number}>({right: 0, top: 0});
     const containerRef = useRef<HTMLDivElement>(null);
     const menuRef = useRef<HTMLDivElement>(null);
-    const { windowRef, registerCallback } = useLayout(); 
+    const { windowRef, registerCallback, profileMenuOpen, setProfileMenuOpen } = useLayout();
+    const [songManagerOpen, setSongManagerOpen] = useState<boolean>(false);
+    const songManagerOpenRef = useRef<boolean>(songManagerOpen);
+    const [userSongs, setUserSongs] = useState<SongType[]>([]);
+
     useEffect(() => {
-        menuOpenRef.current = menuOpen;
-    }, [menuOpen]);
+        songManagerOpenRef.current = songManagerOpen;
+        if (songManagerOpen) {
+            getUserSongs()
+                .then(newSongs => {
+                    setUserSongs(newSongs)
+                })
+        }
+    }, [songManagerOpen]);
+
+    useEffect(() => {
+        menuOpenRef.current = profileMenuOpen;
+    }, [profileMenuOpen]);
 
     const updateMenuPos = () => {
         if (containerRef.current && windowRef.current) {
@@ -30,12 +82,13 @@ export const TopPanel = () => {
 
     useLayoutEffect(() => {
         updateMenuPos();
-    }, [menuOpen]);
+    }, [profileMenuOpen]);
 
     const handlePageClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (songManagerOpenRef.current) return;
         if (menuRef.current && menuOpenRef.current) {
             if (!menuRef.current.contains(e.target as Node)) {
-                setMenuOpen(false);
+                setProfileMenuOpen(false);
             }
         }
     }
@@ -44,6 +97,11 @@ export const TopPanel = () => {
         registerCallback("profile-menu", handlePageClick);
     }, []);
 
+    const closeSongManager = () => {
+        setSongManagerOpen(false);
+        setProfileMenuOpen(false);
+    }
+
     return (
         <div id="top-panel">
             <div id="top-panel-center">
@@ -51,7 +109,7 @@ export const TopPanel = () => {
             </div>
             <div id="top-panel-right"> 
                 <div 
-                    onClick={() => setMenuOpen(true)}
+                    onClick={() => setProfileMenuOpen(true)}
                     id="profile" className="shadow prevent-select"
                     ref={containerRef}
                 >
@@ -59,17 +117,39 @@ export const TopPanel = () => {
                     <span id="profile-username" className="overflow-ellipsis">{username}</span>
                 </div>
                 <div 
-                    id="profile-menu" className={menuOpen ? "visible shadow" : "hidden"}
+                    id="profile-menu" className={profileMenuOpen ? "visible shadow" : "hidden"}
                     style={{
                         right: menuPos.right,
                         top: menuPos.top
                     }}
                     ref={menuRef}
                 >
-                    <div className="profile-menu-button prevent-select">Manage your songs</div>
+                    <div 
+                        className="profile-menu-button prevent-select"
+                        onClick={() => setSongManagerOpen(true)}
+                    >
+                        Manage uploaded songs
+                    </div>
                     <div className="profile-menu-button prevent-select" onClick={logout}>Log out</div>
                 </div>
             </div>
+            <Modal isVisible={songManagerOpen} header="Your songs:">
+                <div id="user-songs-container" className="scroller">
+                    {
+                        userSongs.map(song => {
+                            return <UserSong 
+                                songId={song._id}
+                                s3_key={song.s3_key}
+                                title={song.title}
+                                artist={song.artist}
+                                key={song._id}
+                                setUserSongs={setUserSongs}
+                            />
+                        })
+                    }
+                </div>
+                <button id="song-manager-btn" className="prevent-select" onClick={closeSongManager}>Close</button>
+            </Modal>
         </div>
     );
 }

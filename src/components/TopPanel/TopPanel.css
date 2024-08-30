@@ -77,3 +77,51 @@
     height: 30px;
     background-color: var(--clr-bg-main-hvr);
 }
+
+/* SONG MANAGER */
+#user-songs-container {
+    width: 450px;
+    max-height: 200px;
+    overflow-y: scroll;
+    margin-bottom: 25px;
+}
+
+.user-song {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr) minmax(0, 30px);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.user-song:hover {
+    background-color: var(--clr-bg-main-hvr);
+}
+
+.user-song-artist {
+    text-align: right;
+}
+
+#song-manager-btn {
+    font-family: var(--app-font);
+    background-color: var(--clr-bg-dark);
+}
+
+#song-manager-btn:hover {
+    background-color: var(--clr-bg-dark-hvr);
+}
+
+.song-manager-trash-icon {
+    visibility: hidden;
+    width: 20px;
+    stroke: var(--clr-icon);
+    align-self: center;
+    justify-self: right;
+}
+
+.song-manager-trash-icon:hover {
+    stroke: var(--clr-icon-hvr);
+}
+
+.user-song:hover .song-manager-trash-icon {
+    visibility: visible;
+}

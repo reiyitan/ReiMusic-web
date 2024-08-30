@@ -16,7 +16,7 @@
     flex-direction: column;
     padding: 50px;
     background-color: var(--clr-bg-main);
-    width: 400px;
+    min-width: 400px;
 }
 
 .modal h2 {

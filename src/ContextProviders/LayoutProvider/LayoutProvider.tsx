@@ -45,6 +45,8 @@ interface LayoutContextInterface {
         s3_key: string,
         parentPlaylistId: string
     ) => void,
+    profileMenuOpen: boolean,
+    setProfileMenuOpen: Dispatch<SetStateAction<boolean>>,
     formatDuration: (duration: number) => string
 }
 const LayoutContext = createContext<LayoutContextInterface | undefined>(undefined);
@@ -76,6 +78,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
                 setSettingsPanelPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3});
             }
         }
+        setProfileMenuOpen(false);
     }
 
     //song settings panel 
@@ -107,7 +110,11 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             const settingsRect = songSettingsRef.current.getBoundingClientRect(); 
             setSongSettingsPos({left: e.clientX - settingsRect.width - 3, top: e.clientY + 3});
         }
+        setProfileMenuOpen(false);
     }
+
+    //profile panel
+    const [profileMenuOpen, setProfileMenuOpen] = useState<boolean>(false);
 
     const registerCallback = (id: string, callback: Callback): void => {
         setCallbacks(prevCallbacks => {
@@ -156,6 +163,7 @@ export const LayoutProvider = ({ children }: { children: React.ReactNode }) => {
             songSettingsPos, setSongSettingsPos,
             songSettingsRef,
             openSongSettings,
+            profileMenuOpen, setProfileMenuOpen,
             formatDuration
         }}>
             {children}

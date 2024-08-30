@@ -12,7 +12,9 @@ interface ServerContextInterface {
     addToPlaylist: (playlistId: string, songId: string) => Promise<number | void>,
     removeFromPlaylist: (playlistId: string, songId: string) => Promise<number | void>,
     uploadSong: (title: string, artist: string, duration: number, file: File, username: string) => Promise<SongType>,
+    deleteSong: (songId: string, s3_key: string) => Promise<number | void>,
     getSongs: (query?: string) => Promise<SongType[]>,
+    getUserSongs: () => Promise<SongType[]>,
     getSongURL: (s3_key: string) => Promise<string>,
     getFileFromURL: (url: string) => Promise<File | void>
 }
@@ -173,6 +175,17 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
             .catch(error => console.error(error));
     }
 
+    const getUserSongs = async (): Promise<SongType[]> => {
+        return fetch(`http://127.0.0.1:3000/api/song/userSongs/${auth?.currentUser?.uid}`, {
+            method: "GET", 
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => data.songs) 
+            .catch(error => console.error(error));
+    }
 
     const uploadSong = async (title: string, artist: string, duration: number, file: File, username: string): Promise<SongType> => {    
         const formData = new FormData();
@@ -191,6 +204,26 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
         })
             .then(res => res.json()) 
             .then(data => data.song)
+            .catch(error => console.error(error));
+    }
+    
+    const deleteSong = async (songId: string, s3_key: string): Promise<number | void> => {
+        return fetch(`http://127.0.0.1:3000/api/song/delete/${auth.currentUser?.uid}/${songId}`, {
+            method: "POST", 
+            headers: {
+                "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({s3_key: s3_key})
+        })
+            .then(res => {
+                if (res.status === 204) {
+                    return res.status;
+                }
+                else {
+                    throw new Error("Error deleting song");
+                }
+            })
             .catch(error => console.error(error));
     }
 
@@ -225,7 +258,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
         <ServerContext.Provider value={{
                 createUser, getUser, 
                 createPlaylist, getPlaylists, getPlaylist, deletePlaylist, renamePlaylist, addToPlaylist, removeFromPlaylist,
-                getSongs, uploadSong, getSongURL, getFileFromURL 
+                getSongs, getUserSongs, uploadSong, deleteSong, getSongURL, getFileFromURL 
             }}>
             {children}
         </ServerContext.Provider>
