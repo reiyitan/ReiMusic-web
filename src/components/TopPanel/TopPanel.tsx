@@ -1,7 +1,7 @@
 import "./TopPanel.css"; 
 import { useState, useRef, useLayoutEffect, useEffect } from "react";
 import { Dispatch, SetStateAction } from "react";
-import { useFirebase, useLayout, useServer } from "../../ContextProviders";
+import { useFirebase, useLayout, useServer, useControl } from "../../ContextProviders";
 import { Modal } from "../Modal";
 import { SongType } from "../../types";
 
@@ -24,15 +24,28 @@ const TrashIcon = (handleClick: React.MouseEventHandler<SVGSVGElement>) => (
 )
 
 const UserSong = ({ songId, s3_key, title, artist, setUserSongs }: { songId: string, s3_key: string, title: string, artist: string, setUserSongs: Dispatch<SetStateAction<SongType[]>>}) => {
-    const { deleteSong } = useServer();
+    const { deleteSong, getSongs } = useServer();
+    const { setCurrentSong, setSongsPanelType, setCurrentDisplayPlaylist, setSongs } = useLayout(); 
+    const { clearPlayback, currentPlayingPlaylistRef } = useControl();
+
+    const handleClearPlayback = () => {
+        clearPlayback();
+        setCurrentSong(null);
+    }
 
     const handleDelete: React.EventHandler<React.MouseEvent<SVGSVGElement>> = () => {
         deleteSong(songId, s3_key)
-            .then(res => {
+            .then(async res => {
                 if (res === 204) {
                     setUserSongs(prevSongs => {
                         return prevSongs.filter(song => song._id !== songId);
                     });
+                    handleClearPlayback();
+                    setCurrentDisplayPlaylist(null);
+                    setSongsPanelType("search");
+                    const newSongs = await getSongs(); 
+                    setSongs(newSongs.map(song => ({...song, parentPlaylistId: "search"})));
+                    currentPlayingPlaylistRef.current = {playlistId: "search", songs: newSongs.slice()};
                 }
             });
     }

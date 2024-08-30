@@ -26,6 +26,7 @@ interface ControlContextProps {
     pauseHowl: () => void,
     resumeHowl: () => void,
     populateQueue: (songId: string) => void,
+    clearPlayback: () => void,
     rewind: () => void,
     skip: () => void,
     cancelRef: React.MutableRefObject<boolean>
@@ -153,6 +154,15 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
         if (!currentSong) return;
         populateQueue(currentSong._id);
     }, [shuffle, loop]);
+    
+    const clearPlayback = () => {
+        queueRef.current = [];
+        historyRef.current = [];
+        setPlaying(false);
+        currentSongRef.current = null;
+        Howler.unload();
+        howlRef.current = null;
+    }
 
     const rewind = async () => {
         if ((howlRef.current && howlRef.current.seek() > 5)) {
@@ -208,6 +218,7 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             historyRef,
             playNewHowl, pauseHowl, resumeHowl,
             populateQueue,
+            clearPlayback,
             rewind, skip,
             cancelRef
         }}>
