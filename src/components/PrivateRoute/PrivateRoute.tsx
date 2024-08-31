@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../ContextProviders";
 import "./PrivateRoute.css";
 
-const SERVER_IP = import.meta.env.VITE_SERVER_IP;
+const SERVER_ADDR = import.meta.env.VITE_SERVER_ADDR;
 interface PrivateRouteProps {
     children: React.ReactNode,
     redirectPath: string
@@ -19,7 +19,7 @@ export const PrivateRoute = ({ children, redirectPath }: PrivateRouteProps) => {
         }
         else {
             const checkUserInDb = async () => {
-                fetch(`http://${SERVER_IP}:3000/api/user/${user.uid}`, {
+                fetch(`http://${SERVER_ADDR}/api/user/${user.uid}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json", 

@@ -6,7 +6,7 @@ import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Howler } from "howler";
 
-const SERVER_IP = import.meta.env.VITE_SERVER_IP;
+const SERVER_ADDR = import.meta.env.VITE_SERVER_ADDR;
 
 const firebaseConfig = {
     apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -40,7 +40,7 @@ export const FirebaseProvider = ({ children }: FirebaseProviderProps) => {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async user => {
             if (user) {
-                fetch(`http://${SERVER_IP}:3000/api/user/${user.uid}`, {
+                fetch(`http://${SERVER_ADDR}/api/user/${user.uid}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json", 
