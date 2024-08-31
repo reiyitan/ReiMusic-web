@@ -140,7 +140,12 @@ export const ControlProvider = ({ children }: { children: React.ReactNode }) => 
             }
             else {
                 const filteredSongs = songs.filter(song => song._id !== songId); 
-                return shuffleArray(filteredSongs);
+                if (filteredSongs.length === 0) {
+                    return songs;
+                }
+                else {
+                    return shuffleArray(filteredSongs);
+                }
             }
         }
         return [];
