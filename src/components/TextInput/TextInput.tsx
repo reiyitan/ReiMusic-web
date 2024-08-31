@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction, ChangeEvent } from "react";
 import "./TextInput.css"; 
 
 interface TextInputProps {
