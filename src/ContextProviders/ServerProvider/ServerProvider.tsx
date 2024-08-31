@@ -28,7 +28,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     const auth = useAuth();
 
     const createUser = async (username: string) => {
-        fetch(`http://${SERVER_ADDR}/api/user`, {
+        fetch(`https://${SERVER_ADDR}/api/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -42,7 +42,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getUser = async (uid: string): Promise<UserType | undefined> => {
-        return fetch(`http://${SERVER_ADDR}/api/user/${uid}`, {
+        return fetch(`https://${SERVER_ADDR}/api/user/${uid}`, {
             method: "GET", 
             headers: {
                 "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const createPlaylist = async (): Promise<PlaylistType | undefined> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -81,7 +81,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getPlaylists = async (): Promise<PlaylistType[] | undefined> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -93,7 +93,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getPlaylist = async (playlistId: string): Promise<PlaylistType | undefined> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -105,7 +105,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const deletePlaylist = async (playlistId: string): Promise<number | void> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -116,7 +116,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const renamePlaylist = async (playlistId: string, newName: string): Promise<number | void> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/rename/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/rename/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -129,7 +129,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const addToPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/add/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/add/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH", 
             headers: {
                 "Content-Type": "application/json",
@@ -146,7 +146,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const removeFromPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
-        return fetch(`http://${SERVER_ADDR}/api/playlist/remove/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/playlist/remove/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH", 
             headers: {
                 "Content-Type": "application/json",
@@ -166,7 +166,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getSongs = async (query?: string): Promise<SongType[]> => {
-        return fetch(`http://${SERVER_ADDR}/api/song?q=${query ? query.trim() : ""}`, {
+        return fetch(`https://${SERVER_ADDR}/api/song?q=${query ? query.trim() : ""}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -178,7 +178,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getUserSongs = async (): Promise<SongType[]> => {
-        return fetch(`http://${SERVER_ADDR}/api/song/userSongs/${auth?.currentUser?.uid}`, {
+        return fetch(`https://${SERVER_ADDR}/api/song/userSongs/${auth?.currentUser?.uid}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -197,7 +197,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
         formData.append("username", username);
         formData.append("file", file); 
 
-        return fetch(`http://${SERVER_ADDR}/api/song`, {
+        return fetch(`https://${SERVER_ADDR}/api/song`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -210,7 +210,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
     
     const deleteSong = async (songId: string, s3_key: string): Promise<number | void> => {
-        return fetch(`http://${SERVER_ADDR}/api/song/delete/${auth.currentUser?.uid}/${songId}`, {
+        return fetch(`https://${SERVER_ADDR}/api/song/delete/${auth.currentUser?.uid}/${songId}`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`,
@@ -230,7 +230,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getSongURL = async (s3_key: string): Promise<string> => {
-        return fetch(`http://${SERVER_ADDR}/api/song/${s3_key}`, {
+        return fetch(`https://${SERVER_ADDR}/api/song/${s3_key}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`

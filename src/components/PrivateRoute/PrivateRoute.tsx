@@ -19,7 +19,7 @@ export const PrivateRoute = ({ children, redirectPath }: PrivateRouteProps) => {
         }
         else {
             const checkUserInDb = async () => {
-                fetch(`http://${SERVER_ADDR}/api/user/${user.uid}`, {
+                fetch(`https://${SERVER_ADDR}/api/user/${user.uid}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json", 
