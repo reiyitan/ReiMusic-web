@@ -19,6 +19,8 @@ interface ServerContextInterface {
     getFileFromURL: (url: string) => Promise<File | void>
 }
 const ServerContext = createContext<ServerContextInterface | undefined>(undefined);
+
+const SERVER_IP = import.meta.env.VITE_SERVER_IP;
 interface ServerProviderProps {
     children: React.ReactNode
 }
@@ -26,7 +28,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     const auth = useAuth();
 
     const createUser = async (username: string) => {
-        fetch("http://127.0.0.1:3000/api/user", {
+        fetch(`http://${SERVER_IP}:3000/api/user`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -40,7 +42,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getUser = async (uid: string): Promise<UserType | undefined> => {
-        return fetch(`http://127.0.0.1:3000/api/user/${uid}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/user/${uid}`, {
             method: "GET", 
             headers: {
                 "Content-Type": "application/json",
@@ -53,7 +55,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const createPlaylist = async (): Promise<PlaylistType | undefined> => {
-        return fetch("http://127.0.0.1:3000/api/playlist", {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -79,7 +81,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getPlaylists = async (): Promise<PlaylistType[] | undefined> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/${auth.currentUser?.uid}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -91,7 +93,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getPlaylist = async (playlistId: string): Promise<PlaylistType | undefined> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -103,7 +105,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const deletePlaylist = async (playlistId: string): Promise<number | void> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/${auth.currentUser?.uid}/${playlistId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -114,7 +116,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const renamePlaylist = async (playlistId: string, newName: string): Promise<number | void> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/rename/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/rename/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -127,7 +129,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const addToPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/add/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/add/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH", 
             headers: {
                 "Content-Type": "application/json",
@@ -144,7 +146,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const removeFromPlaylist = async (playlistId: string, songId: string): Promise<number | void> => {
-        return fetch(`http://127.0.0.1:3000/api/playlist/remove/${auth.currentUser?.uid}/${playlistId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/playlist/remove/${auth.currentUser?.uid}/${playlistId}`, {
             method: "PATCH", 
             headers: {
                 "Content-Type": "application/json",
@@ -164,7 +166,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getSongs = async (query?: string): Promise<SongType[]> => {
-        return fetch(`http://127.0.0.1:3000/api/song?q=${query ? query.trim() : ""}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/song?q=${query ? query.trim() : ""}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -176,7 +178,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getUserSongs = async (): Promise<SongType[]> => {
-        return fetch(`http://127.0.0.1:3000/api/song/userSongs/${auth?.currentUser?.uid}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/song/userSongs/${auth?.currentUser?.uid}`, {
             method: "GET", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -195,7 +197,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
         formData.append("username", username);
         formData.append("file", file); 
 
-        return fetch(`http://127.0.0.1:3000/api/song`, {
+        return fetch(`http://${SERVER_IP}:3000/api/song`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
@@ -208,7 +210,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
     
     const deleteSong = async (songId: string, s3_key: string): Promise<number | void> => {
-        return fetch(`http://127.0.0.1:3000/api/song/delete/${auth.currentUser?.uid}/${songId}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/song/delete/${auth.currentUser?.uid}/${songId}`, {
             method: "POST", 
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`,
@@ -228,7 +230,7 @@ export const ServerProvider = ({ children }: ServerProviderProps) => {
     }
 
     const getSongURL = async (s3_key: string): Promise<string> => {
-        return fetch(`http://127.0.0.1:3000/api/song/${s3_key}`, {
+        return fetch(`http://${SERVER_IP}:3000/api/song/${s3_key}`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${await auth.currentUser?.getIdToken(true)}`
