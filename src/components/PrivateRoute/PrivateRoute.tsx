@@ -1,5 +1,5 @@
 import { useEffect } from "react"; 
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../ContextProviders";
 import "./PrivateRoute.css";
 
